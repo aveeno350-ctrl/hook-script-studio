@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { DEFAULTS } from '@/lib/prompts';
+import { DEFAULTS } from "@/lib/prompts";
 
 export default function Home() {
   const [niche, setNiche] = useState(DEFAULTS.niche);
@@ -12,6 +12,27 @@ export default function Home() {
   const [content, setContent] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [runs, setRuns] = useState<number>(0);
+
+const presets = [
+    {
+      label: "Etsy Templates",
+      niche: "Etsy templates for beginners",
+      audience: "new creators, 18–34",
+      offer: "starter template pack",
+    },
+    {
+      label: "UGC Offers",
+      niche: "UGC creators pitching hotels",
+      audience: "travel marketers & boutique hotels",
+      offer: "UGC video package",
+    },
+    {
+      label: "Coaches",
+      niche: "Business coaching for solopreneurs",
+      audience: "solo founders",
+      offer: "90-minute clarity session",
+    },
+  ];
 
   useEffect(() => {
     const r = Number(localStorage.getItem('free_runs') || '0');
@@ -65,11 +86,30 @@ export default function Home() {
   return (
     <main className="mx-auto max-w-3xl p-6 space-y-6">
       <header className="space-y-2">
-        <h1 className="text-3xl font-bold">Hook &amp; Script Studio</h1>
-        <p className="text-sm opacity-70">3 free runs · then unlock unlimited</p>
-      </header>
+  <h1 className="text-3xl font-bold">Hook &amp; Script Studio</h1>
+  <p className="text-sm opacity-70">
+    Generate 20 hooks by angle + a 60s script, B-roll, and CTAs. 3 free runs, then unlock unlimited.
+  </p>
+  <p className="text-xs opacity-60">Made by Liyah · support: your@email.com</p>
+</header>
+
+
 
       <section className="grid gap-3">
+        <div className="flex flex-wrap gap-2 mb-4">
+      {presets.map((p) => (
+        <button
+          key={p.label}
+          onClick={() => {
+            setNiche(p.niche);
+            setAudience(p.audience);
+            setOffer(p.offer);
+          }}
+          className="text-xs border rounded px-2 py-1"
+        >
+          {p.label}
+        </button>
+      ))}</div>
         <input className="border rounded p-2" value={niche} onChange={e=>setNiche(e.target.value)} placeholder="Niche" />
         <input className="border rounded p-2" value={audience} onChange={e=>setAudience(e.target.value)} placeholder="Audience" />
         <input className="border rounded p-2" value={offer} onChange={e=>setOffer(e.target.value)} placeholder="Offer/Product" />
@@ -108,6 +148,12 @@ export default function Home() {
           <a className="inline-block rounded-xl px-4 py-2 bg-black text-white" href={process.env.NEXT_PUBLIC_PAYMENT_LINK} target="_blank">Buy access</a>
         </section>
       )}
+      <footer className="pt-10 text-xs opacity-60">
+  <a href="mailto:your@email.com">Support</a> ·
+  <a className="ml-2" href="/terms" target="_blank">Terms</a> ·
+  <a className="ml-2" href="/refund" target="_blank">Refund Policy</a>
+</footer>
+
     </main>
   );
 }
