@@ -56,7 +56,7 @@ export default function Page() {
 
       <h2>Contact</h2>
       <p>
-        Questions? Email <a href="mailto:aveeno350@gmail.com">support@yourdomain.com</a>.
+        Questions? Email <a href="mailto:aveeno350@gmail.com">aveeno350@gmail.com</a>.
         {/* TODO: replace with your real support email */}
       </p>
     </main>

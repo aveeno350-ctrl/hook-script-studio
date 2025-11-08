@@ -26,7 +26,7 @@ export default function Page() {
 
       <h2>How to Request</h2>
       <p>
-        Email <a href="mailto:aveeno350@gmail.com">support@yourdomain.com</a> with your order email and
+        Email <a href="mailto:aveeno350@gmail.com">aveeno350@gmail.com</a> with your order email and
         proof of purchase (e.g., Stripe receipt). We’ll respond as soon as possible.
         {/* TODO: replace with your real support email */}
       </p>
