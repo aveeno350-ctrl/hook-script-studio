@@ -15,28 +15,6 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [runs, setRuns] = useState<number>(0);
 
-  async function handleGenerate() {
-  setLoading(true);
-
-  try {
-    const res = await fetch("/api/generate", {
-      method: "POST",
-      body: JSON.stringify({
-        // Include your form fields here:
-        // angle, topic, niche, etc.
-      }),
-    });
-
-    const data = await res.json();
-
-    // handle response...
-  } catch (err) {
-    console.error(err);
-  } finally {
-    setLoading(false);
-  }
-}
-
 
 const presets = [
     {
@@ -148,8 +126,8 @@ const presets = [
           <input className="border rounded p-2" value={keywords} onChange={e=>setKeywords(e.target.value)} placeholder="Optional keywords" />
         </div>
         <button
-        type="button"
-  onClick={handleGenerate}
+  type="button"
+  onClick={generate}                 // ← use generate, not handleGenerate
   disabled={loading}
   className="rounded px-4 py-2 border"
 >
@@ -162,6 +140,7 @@ const presets = [
     "Generate"
   )}
 </button>
+
 
         <p className="text-xs opacity-60">Free runs used: {runs}/3</p>
       </section>
