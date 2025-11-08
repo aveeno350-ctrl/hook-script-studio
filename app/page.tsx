@@ -1,6 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { DEFAULTS } from "@/lib/prompts";
+import TypingWave from "./components/TypingWave";
+
 
 export default function Home() {
   const [niche, setNiche] = useState(DEFAULTS.niche);
@@ -123,7 +125,13 @@ const presets = [
           <input className="border rounded p-2" value={keywords} onChange={e=>setKeywords(e.target.value)} placeholder="Optional keywords" />
         </div>
         <button onClick={generate} disabled={loading} className="rounded-xl p-3 bg-black text-white disabled:opacity-50">
-          {loading ? 'Generating…' : 'Generate'}
+          {loading && (
+  <div className="flex items-center gap-2">
+    <TypingWave />
+    <span className="text-sm opacity-60">Generating…</span>
+  </div>
+)}
+
         </button>
         <p className="text-xs opacity-60">Free runs used: {runs}/3</p>
       </section>

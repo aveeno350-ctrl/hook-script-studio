@@ -24,3 +24,25 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes wave {
+  0% { opacity: 0.2; transform: translateY(0); }
+  20% { opacity: 1; transform: translateY(-2px); }
+  40% { opacity: 0.2; transform: translateY(0); }
+}
+
+.animate-wave1 {
+  animation: wave 1.2s infinite ease-in-out;
+  animation-delay: 0s;
+}
+
+.animate-wave2 {
+  animation: wave 1.2s infinite ease-in-out;
+  animation-delay: 0.15s;
+}
+
+.animate-wave3 {
+  animation: wave 1.2s infinite ease-in-out;
+  animation-delay: 0.3s;
+}
+
