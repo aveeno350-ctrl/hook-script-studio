@@ -148,6 +148,7 @@ const presets = [
           <input className="border rounded p-2" value={keywords} onChange={e=>setKeywords(e.target.value)} placeholder="Optional keywords" />
         </div>
         <button
+        type="button"
   onClick={handleGenerate}
   disabled={loading}
   className="rounded px-4 py-2 border"
