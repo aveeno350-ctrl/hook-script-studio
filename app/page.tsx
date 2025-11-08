@@ -15,6 +15,29 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [runs, setRuns] = useState<number>(0);
 
+  async function handleGenerate() {
+  setLoading(true);
+
+  try {
+    const res = await fetch("/api/generate", {
+      method: "POST",
+      body: JSON.stringify({
+        // Include your form fields here:
+        // angle, topic, niche, etc.
+      }),
+    });
+
+    const data = await res.json();
+
+    // handle response...
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+}
+
+
 const presets = [
     {
       label: "Etsy Templates",
@@ -124,15 +147,21 @@ const presets = [
           </select>
           <input className="border rounded p-2" value={keywords} onChange={e=>setKeywords(e.target.value)} placeholder="Optional keywords" />
         </div>
-        <button onClick={generate} disabled={loading} className="rounded-xl p-3 bg-black text-white disabled:opacity-50">
-          {loading && (
-  <div className="flex items-center gap-2">
-    <TypingWave />
-    <span className="text-sm opacity-60">Generating…</span>
-  </div>
-)}
+        <button
+  onClick={handleGenerate}
+  disabled={loading}
+  className="rounded px-4 py-2 border"
+>
+  {loading ? (
+    <span className="flex items-center gap-2">
+      <TypingWave />
+      <span>Generating…</span>
+    </span>
+  ) : (
+    "Generate"
+  )}
+</button>
 
-        </button>
         <p className="text-xs opacity-60">Free runs used: {runs}/3</p>
       </section>
 
