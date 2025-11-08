@@ -3,6 +3,16 @@ import { useState, useEffect } from 'react';
 import { DEFAULTS } from "@/lib/prompts";
 import TypingWave from "./components/TypingWave";
 
+const INPUTS_KEY = "hss_inputs_v1";
+type SavedInputs = {
+  niche: string;
+  audience: string;
+  offer: string;
+  tone: string;
+  platform: string;
+  keywords: string;
+};
+
 
 export default function Home() {
   const [niche, setNiche] = useState(DEFAULTS.niche);
@@ -36,6 +46,29 @@ const presets = [
       offer: "90-minute clarity session",
     },
   ];
+
+useEffect(() => {
+  try {
+    const raw = localStorage.getItem(INPUTS_KEY);
+    if (!raw) return;
+    const saved: Partial<SavedInputs> = JSON.parse(raw);
+    if (saved.niche) setNiche(saved.niche);
+    if (saved.audience) setAudience(saved.audience);
+    if (saved.offer) setOffer(saved.offer);
+    if (saved.tone) setTone(saved.tone);
+    if (saved.platform) setPlatform(saved.platform);
+    if (saved.keywords) setKeywords(saved.keywords);
+  } catch { /* ignore parse errors */ }
+}, []);
+
+useEffect(() => {
+  const payload: SavedInputs = { niche, audience, offer, tone, platform, keywords };
+  const id = setTimeout(() => {
+    try { localStorage.setItem(INPUTS_KEY, JSON.stringify(payload)); } catch {}
+  }, 300); // debounce
+  return () => clearTimeout(id);
+}, [niche, audience, offer, tone, platform, keywords]);
+
 
   useEffect(() => {
     const r = Number(localStorage.getItem('free_runs') || '0');
@@ -113,6 +146,25 @@ const presets = [
           {p.label}
         </button>
       ))}</div>
+
+<button
+  type="button"
+  onClick={() => {
+    // clear storage and restore your DEFAULTS
+    localStorage.removeItem(INPUTS_KEY);
+    setNiche(DEFAULTS.niche);
+    setAudience(DEFAULTS.audience);
+    setOffer(DEFAULTS.offer);
+    setTone(DEFAULTS.tone);
+    setPlatform(DEFAULTS.platform);
+    setKeywords(DEFAULTS.keywords || "");
+  }}
+  className="text-xs opacity-70 underline"
+>
+  Reset inputs
+</button>
+
+
         <input className="border rounded p-2" value={niche} onChange={e=>setNiche(e.target.value)} placeholder="Niche" />
         <input className="border rounded p-2" value={audience} onChange={e=>setAudience(e.target.value)} placeholder="Audience" />
         <input className="border rounded p-2" value={offer} onChange={e=>setOffer(e.target.value)} placeholder="Offer/Product" />
