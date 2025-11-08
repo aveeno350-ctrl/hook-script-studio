@@ -149,10 +149,15 @@ const presets = [
         </section>
       )}
       <footer className="pt-10 text-xs opacity-60">
-  <a href="mailto:your@email.com">Support</a> ·
-  <a className="ml-2" href="/terms" target="_blank">Terms</a> ·
-  <a className="ml-2" href="/refund" target="_blank">Refund Policy</a>
+  <a href="mailto:aveeno350@gmail.com">Support</a>
+  <span className="mx-2">·</span>
+  <a href="/terms">Terms</a>
+  <span className="mx-2">·</span>
+  <a href="/privacy">Privacy</a>
+  <span className="mx-2">·</span>
+  <a href="/refund">Refund Policy</a>
 </footer>
+
 
     </main>
   );
