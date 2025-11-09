@@ -1,8 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from "next/headers";
+import { COOKIE_NAME, decodeToken, encodeToken, cookieHeader } from "@/lib/rate";
+
+const MAX_FREE_RUNS = 3;
+const COOLDOWN_MS = 3000;
 
 export const runtime = 'edge'; // fast on Vercel
 
 export async function POST(req: NextRequest) {
+  const secret = process.env.HSS_SECRET || "";
+  if (!secret) {
+    return new NextResponse("Server misconfigured: HSS_SECRET missing", { status: 500 });
+  }
+
+  const jar = await cookies();        // ✅ Edge runtime: async
+const token = jar.get(COOKIE_NAME)?.value;
+  const prev = decodeToken(token, secret) || { runs: 0, ts: 0 };
+
+  const now = Date.now();
+  // 1) Cooldown (prevent rapid double-clicks)
+  if (now - prev.ts < COOLDOWN_MS) {
+    return new NextResponse(
+      JSON.stringify({ error: "Please wait a moment before generating again." }),
+      { status: 429, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
+  // 2) Free runs (server-enforced)
+  if (prev.runs >= MAX_FREE_RUNS) {
+    return new NextResponse(
+      JSON.stringify({ error: "Free limit reached. Please upgrade to continue." }),
+      { status: 402, headers: { "Content-Type": "application/json" } }
+    );
+  }
   try {
     const { niche, audience, offer, tone, platform, keywords } = await req.json();
 
