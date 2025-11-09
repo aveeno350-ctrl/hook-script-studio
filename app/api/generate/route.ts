@@ -15,11 +15,11 @@ export async function POST(req: NextRequest) {
 
   const jar = await cookies();        // ✅ Edge runtime: async
 const token = jar.get(COOKIE_NAME)?.value;
-  const prev = decodeToken(token, secret) || { runs: 0, ts: 0 };
+  const prev = token ? (await decodeToken(token, secret)) : null;
 
   const now = Date.now();
   // 1) Cooldown (prevent rapid double-clicks)
-  if (now - prev.ts < COOLDOWN_MS) {
+  if (prev && now - prev.ts < COOLDOWN_MS) {
     return new NextResponse(
       JSON.stringify({ error: "Please wait a moment before generating again." }),
       { status: 429, headers: { "Content-Type": "application/json" } }
@@ -27,7 +27,7 @@ const token = jar.get(COOKIE_NAME)?.value;
   }
 
   // 2) Free runs (server-enforced)
-  if (prev.runs >= MAX_FREE_RUNS) {
+  if (prev && prev.runs >= MAX_FREE_RUNS) {
     return new NextResponse(
       JSON.stringify({ error: "Free limit reached. Please upgrade to continue." }),
       { status: 402, headers: { "Content-Type": "application/json" } }
