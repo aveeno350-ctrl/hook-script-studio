@@ -6,25 +6,21 @@ export const runtime = "edge"; // fast + cheap on Vercel
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json().catch(() => ({}));
+    const body = await req.json().catch(() => ({} as any));
 
-    // We expect: { event: "generate_success", ...additionalProps }
-    const event = String(body?.event ?? "").trim();
+    const event =
+      typeof body?.event === "string" ? body.event.trim() : "";
+    const props =
+      body && typeof body === "object" ? (body.props as Record<string, unknown> | undefined) : undefined;
+
     if (!event) {
-      return NextResponse.json({ ok: false, error: "Missing 'event'" }, { status: 400 });
+      return NextResponse.json({ error: "Missing 'event'" }, { status: 400 });
     }
 
-    const props = { ...body };
-    delete props.event; // remove event from props so writeMetric is clean
-
-    await writeMetric(event, props);
+    await writeMetric(event, props); // ✅ high-level helper
 
     return NextResponse.json({ ok: true });
-  } catch (e) {
-    return NextResponse.json(
-      { ok: false, error: "metrics write failed" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json({ error: "metrics write failed" }, { status: 500 });
   }
 }
-
