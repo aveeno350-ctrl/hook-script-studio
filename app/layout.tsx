@@ -43,6 +43,33 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: "Hook & Script Studio",
+          applicationCategory: "BusinessApplication",
+          operatingSystem: "Web",
+          description:
+            "Generate hooks, 60s scripts, B-roll ideas, and CTAs for short-form video.",
+          offers: {
+            "@type": "Offer",
+            price: "9.00",
+            priceCurrency: "USD",
+            availability: "https://schema.org/InStock",
+          },
+          url:
+            process.env.NEXT_PUBLIC_BASE_URL ||
+            "https://hook-script-studio.vercel.app",
+          image: `https://hook-script-studio.vercel.app/og-image.png`,
+          publisher: { "@type": "Organization", name: "Hook & Script Studio" },
+        }),
+      }}
+    />
+  </head>
       <body>
         {children}
 
