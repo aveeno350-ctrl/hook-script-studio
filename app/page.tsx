@@ -101,6 +101,19 @@ export default function Home() {
       // update UI
       setContent(data.content ?? "");
 
+      // analytics: user clicked generate
+fetch("/api/metrics/write", {
+  method: "POST",
+  body: JSON.stringify({ event: "generate_clicked" }),
+});
+
+      // analytics: successful generation
+fetch("/api/metrics/write", {
+  method: "POST",
+  body: JSON.stringify({ event: "generate_success" }),
+});
+
+
       // bump free runs
       const next = runs + 1;
       setRuns(next);
@@ -113,6 +126,12 @@ export default function Home() {
         content_bytes: (data?.content ?? "").length || 0,
       });
     } catch (e: unknown) {
+      // analytics: generation error
+fetch("/api/metrics/write", {
+  method: "POST",
+  body: JSON.stringify({ event: "generate_error" }),
+});
+
       const message = e instanceof Error ? e.message : String(e);
       track("generate_error", { message });
       alert(message);
