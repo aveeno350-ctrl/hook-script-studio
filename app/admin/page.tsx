@@ -2,38 +2,32 @@
 import { Suspense } from "react";
 import AdminClient from "./AdminClient";
 
-// We must render on the server and read the query param at runtime
+// Force runtime eval; do NOT prerender
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const runtime = "edge";
 
-type SP =
-  | Record<string, string | string[] | undefined>
-  | undefined;
+type SP = Record<string, string | string[] | undefined> | undefined;
 
-export default function Page({
-  searchParams,
-}: {
-  searchParams?: SP;
-}) {
-  // 1) read the URL key
-  const keyRaw =
+export default function Page({ searchParams }: { searchParams?: SP }) {
+  // 1) read query ?key=… and normalize
+  const rawKey =
     (typeof searchParams?.key === "string"
       ? searchParams?.key
       : Array.isArray(searchParams?.key)
       ? searchParams?.key[0]
       : "") ?? "";
+  const key = rawKey.trim();
 
-  // 2) read the secret from env
-  const ADMIN = process.env.ADMIN_KEY ?? "";
+  // 2) read server env and normalize
+  const ADMIN = (process.env.ADMIN_KEY ?? "").trim();
 
-  const provided = keyRaw.length > 0;
   const hasEnv = ADMIN.length > 0;
-  const matches = hasEnv && provided && keyRaw === ADMIN;
+  const provided = key.length > 0;
+  const matches = hasEnv && provided && key === ADMIN;
 
-  // ---- DEBUG PANEL (only when ?debug=1) -----------------------------
-  const showDebug = String(searchParams?.debug) === "1";
-  const debugView = showDebug ? (
+  // Always show debug panel (temporary)
+  const debug = (
     <pre
       style={{
         background: "#0b1220",
@@ -41,22 +35,19 @@ export default function Page({
         padding: 16,
         borderRadius: 8,
         fontSize: 13,
-        lineHeight: 1.4,
+        lineHeight: 1.45,
         overflowX: "auto",
         marginTop: 16,
       }}
-    >
-{`hasEnv: ${hasEnv}
+    >{`hasEnv: ${hasEnv}
 provided: ${provided}
 matches: ${matches}
-key.len: ${keyRaw.length}
+key.len: ${key.length}
 admin.len: ${ADMIN.length}
-key.preview: ${keyRaw ? keyRaw.slice(0, 2) + "…" + keyRaw.slice(-2) : "(empty)"}
+key.preview: ${key ? key.slice(0, 2) + "…" + key.slice(-2) : "(empty)"}
 admin.preview: ${ADMIN ? ADMIN.slice(0, 2) + "…" + ADMIN.slice(-2) : "(empty)"}
-`}
-    </pre>
-  ) : null;
-  // ------------------------------------------------------------------
+`}</pre>
+  );
 
   if (!matches) {
     return (
@@ -65,7 +56,7 @@ admin.preview: ${ADMIN ? ADMIN.slice(0, 2) + "…" + ADMIN.slice(-2) : "(empty)"
         <p>
           Unauthorized. Append <code>?key=YOUR_ADMIN_KEY</code> to the URL to access analytics.
         </p>
-        {debugView}
+        {debug}
       </main>
     );
   }
@@ -76,8 +67,8 @@ admin.preview: ${ADMIN ? ADMIN.slice(0, 2) + "…" + ADMIN.slice(-2) : "(empty)"
       <Suspense fallback={<div style={{ padding: 24 }}>Loading admin…</div>}>
         <AdminClient />
       </Suspense>
+      {debug}
     </main>
   );
 }
-
 
