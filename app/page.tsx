@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { track } from "@/lib/metrics";
+import { track } from "@/lib/metric";
 import { DEFAULTS } from "@/lib/prompts";
 import TypingWave from "./components/TypingWave";
 
