@@ -1,19 +1,32 @@
 // app/api/metrics/write/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { inc } from "@/lib/metrics";
+import { writeMetric } from "@/lib/metric";
 
-export const runtime = "edge";
+export const runtime = "edge"; // cheap & fast on Vercel
 
 export async function POST(req: NextRequest) {
   try {
-    const { event } = await req.json();
-    if (!event) {
-      return NextResponse.json({ ok: false, error: "Missing event" }, { status: 400 });
+    // Be generous about input: support JSON or text/beacon
+    const ct = req.headers.get("content-type") || "";
+    let payload: any = {};
+    if (ct.includes("application/json")) {
+      payload = await req.json();
+    } else {
+      const txt = await req.text();
+      try { payload = JSON.parse(txt || "{}"); } catch { payload = {}; }
     }
 
-    await inc(event);
+    const { event, ...props } = payload ?? {};
+    if (!event || typeof event !== "string") {
+      return NextResponse.json({ error: "Missing 'event' string" }, { status: 400 });
+    }
+
+    await writeMetric(event, props);
     return NextResponse.json({ ok: true });
-  } catch (err) {
-    return NextResponse.json({ ok: false }, { status: 500 });
+  } catch (e) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Unknown error" },
+      { status: 500 }
+    );
   }
 }
