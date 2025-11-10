@@ -70,82 +70,87 @@ export default function Home() {
   }, [niche, audience, offer, tone, platform, keywords]);
 
   /** ----- generate handler with analytics + free limit ----- */
-  async function generate(): Promise<void> {
-    // free limit gate
-    if (runs >= 3) {
-      const link =
-        (process.env.NEXT_PUBLIC_PAYMENT_LINK as unknown as string) || "";
-      alert("Free limit reached. Please purchase to unlock unlimited generations.");
-      if (link) {
-        track("paywall_open", { source: "free_limit" });
-        window.open(link, "_blank");
-      }
-      return;
+async function generate(): Promise<void> {
+  // free limit gate
+  if (runs >= 3) {
+    const link =
+      (process.env.NEXT_PUBLIC_PAYMENT_LINK as unknown as string) || "";
+    alert("Free limit reached. Please purchase to unlock unlimited generations.");
+    if (link) {
+      track("paywall_open", { source: "free_limit" });
+      window.open(link, "_blank");
     }
-
-    setLoading(true);
-    try {
-      const resp = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ niche, audience, offer, tone, platform, keywords }),
-      });
-
-      if (!resp.ok) {
-        const text = await resp.text();
-        throw new Error(`HTTP ${resp.status}: ${text}`);
-      }
-
-      const data = await resp.json();
-
-      // update UI
-      setContent(data.content ?? "");
-
-      // --- analytics: user clicked + start timer
-const t0 = performance.now();
-track("generate_clicked", {
-  platform,
-  niche,
-  audience,
-  offer,
-  tone,
-  keywords_len: (keywords ?? "").split(",").map(s => s.trim()).filter(Boolean).length,
-});
-
-// --- bump free runs FIRST (we need `next` for analytics)
-const next = runs + 1;
-setRuns(next);
-localStorage.setItem("free_runs", String(next));
-
-// --- analytics: successful generation (maximalist)
-track("generate_success", {
-  platform,
-  runs: next,
-  content_bytes: (data?.content ?? "").length || 0,
-  ms: Math.round(performance.now() - t0), // t0 was set when user clicked
-});
-
-// (optional) also ping the write endpoint if you kept it
-fetch("/api/metrics/write", {
-  method: "POST",
-  body: JSON.stringify({ event: "generate_success" }),
-});
-    } catch (e: unknown) {
-      const ms = Math.round(performance.now() - t0);
-track("generate_error", {
-  platform,
-  message: e instanceof Error ? e.message : String(e),
-  ms,
-});
-
-
-      const message = e instanceof Error ? e.message : String(e);
-      track("generate_error", { message });
-      alert(message);
-    } finally {
-      setLoading(false);
-    }
+    return;
   }
+
+  setLoading(true);
+
+  try {
+    // --- analytics: user clicked + start timer (DO THIS BEFORE FETCH)
+    const t0 = performance.now();
+    track("generate_clicked", {
+      platform,
+      niche,
+      audience,
+      offer,
+      tone,
+      keywords_len: (keywords ?? "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean).length,
+    });
+
+    // call your API
+    const resp = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ niche, audience, offer, tone, platform, keywords }),
+    });
+
+    if (!resp.ok) {
+      const text = await resp.text();
+      throw new Error(`HTTP ${resp.status}: ${text}`);
+    }
+
+    const data = await resp.json();
+
+    // update UI
+    setContent(data?.content ?? "");
+
+    // --- bump free runs FIRST (we need `next` for analytics)
+    const next = runs + 1;
+    setRuns(next);
+    localStorage.setItem("free_runs", String(next));
+
+    // --- analytics: successful generation (maximalist)
+    track("generate_success", {
+      platform,
+      runs: next,
+      content_bytes: (data?.content ?? "").length || 0,
+      ms: Math.round(performance.now() - t0), // t0 was set when user clicked
+    });
+
+    // (optional) also hit our write endpoint
+    fetch("/api/metrics/write", {
+      method: "POST",
+      body: JSON.stringify({ event: "generate_success" }),
+    });
+  } catch (e: unknown) {
+    // one error event with useful context
+    const ms = Math.round(performance.now() - performance.timing?.navigationStart!); // fallback-safe
+    track("generate_error", {
+      platform,
+      message: e instanceof Error ? e.message : String(e),
+      ms,
+    });
+
+    const message = e instanceof Error ? e.message : String(e);
+    alert(message);
+  } finally {
+    setLoading(false);
+  }
+}
+
 
   /** ----- helpers ----- */
   function resetInputs() {
