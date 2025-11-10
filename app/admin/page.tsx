@@ -1,5 +1,5 @@
 // app/admin/page.tsx
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";   // ← add useEffect here
 import { cookies } from "next/headers";
 import AdminClient from "./AdminClient";
 
@@ -11,7 +11,7 @@ export const runtime = "edge";
 function KeyBridge() {
   "use client";
   // run once on mount
-  React.useEffect(() => {
+  useEffect(() => {                          // ← use useEffect (not React.useEffect)
     const sp = new URLSearchParams(window.location.search);
     const raw =
       (sp.get("key") ?? "") ||
@@ -19,11 +19,9 @@ function KeyBridge() {
       (sp.get("k") ?? "");
     const key = raw.trim();
     if (key) {
-      // 30 days, lax cookie
       document.cookie = `admin_key=${encodeURIComponent(
         key
       )}; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
-      // reload without query so we don't leak the key
       const url = new URL(window.location.href);
       url.search = "";
       window.location.replace(url.toString());
@@ -42,14 +40,12 @@ function pickParam(sp: SP, names: string[]): string {
     const raw = typeof v === "string" ? v : Array.isArray(v) ? v[0] : "";
     if (raw && raw.trim()) return raw.trim();
   }
-  // also accept any single unnamed value (?abc123) just in case
   const first = Object.values(sp)[0];
   const raw = typeof first === "string" ? first : Array.isArray(first) ? first[0] : "";
   return (raw ?? "").trim();
 }
 
 export default async function Page({ searchParams }: { searchParams?: SP }) {
-  // server reads cookie + (if present) query
   const jar = await cookies();
   const fromCookie = (jar.get("admin_key")?.value ?? "").trim();
   const fromQuery = pickParam(searchParams, ["key", "admin_key", "k"]);
@@ -88,16 +84,15 @@ admin.preview: ${ADMIN ? ADMIN.slice(0,2) + "…" + ADMIN.slice(-2) : "(empty)"}
   if (!matches) {
     return (
       <main style={{ maxWidth: 760, margin: "56px auto", fontFamily: "ui-sans-serif" }}>
-        {/* client bridge writes the cookie if ?key is present, then reloads */}
         <KeyBridge />
         <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 12 }}>Admin</h1>
         <p style={{ marginBottom: 8 }}>
           Unauthorized. Append <code>?key=YOUR_ADMIN_KEY</code> (or{" "}
           <code>?admin_key=</code> / <code>?k=</code>) to the URL. After one load,
-          the page will save a cookie so you won’t need the query again.
+          the page saves a cookie so you won’t need the query again.
         </p>
         <p style={{ opacity: 0.8 }}>
-          Tip: make sure the query is **before** any <code>#</code> fragment.
+          Ensure the query is before any <code>#</code> fragment.
         </p>
         {debug}
       </main>
