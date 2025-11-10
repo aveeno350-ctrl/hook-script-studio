@@ -112,27 +112,24 @@ track("generate_clicked", {
   keywords_len: (keywords ?? "").split(",").map(s => s.trim()).filter(Boolean).length,
 });
 
-      // ✅ analytics: successful generation (maximalist version)
+// --- bump free runs FIRST (we need `next` for analytics)
+const next = runs + 1;
+setRuns(next);
+localStorage.setItem("free_runs", String(next));
+
+// --- analytics: successful generation (maximalist)
 track("generate_success", {
   platform,
   runs: next,
   content_bytes: (data?.content ?? "").length || 0,
-  ms: performance.now() - start,
+  ms: Math.round(performance.now() - t0), // t0 was set when user clicked
 });
 
-
-      
-      // bump free runs
-      const next = runs + 1;
-      setRuns(next);
-      localStorage.setItem("free_runs", String(next));
-
-      // analytics
-      track("generate_success", {
-        platform,
-        runs: next,
-        content_bytes: (data?.content ?? "").length || 0,
-      });
+// (optional) also ping the write endpoint if you kept it
+fetch("/api/metrics/write", {
+  method: "POST",
+  body: JSON.stringify({ event: "generate_success" }),
+});
     } catch (e: unknown) {
       const ms = Math.round(performance.now() - t0);
 track("generate_error", {
