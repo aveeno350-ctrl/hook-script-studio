@@ -1,6 +1,6 @@
 // app/api/metrics/write/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { writeMetric } from "@/lib/metric";
+import { inc } from "@/lib/metrics";
 
 export const runtime = "edge"; // cheap & fast on Vercel
 
