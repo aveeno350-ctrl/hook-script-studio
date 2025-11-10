@@ -1,25 +1,30 @@
 // app/api/metrics/write/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { writeMetric } from "@/lib/metric";
-export const runtime = "edge";
+
+export const runtime = "edge"; // fast + cheap on Vercel
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
-    const event = String(body?.event ?? "").trim();
 
+    // We expect: { event: "generate_success", ...additionalProps }
+    const event = String(body?.event ?? "").trim();
     if (!event) {
-      return NextResponse.json({ error: "Missing 'event'" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "Missing 'event'" }, { status: 400 });
     }
 
-    // increment a counter per event name, e.g. evt:generate_success
-    await inc(`evt:${event}`, 1);
+    const props = { ...body };
+    delete props.event; // remove event from props so writeMetric is clean
 
-    // (optional) record a total counter for all events
-    await inc("evt:_all", 1);
+    await writeMetric(event, props);
 
     return NextResponse.json({ ok: true });
   } catch (e) {
-    return NextResponse.json({ error: "metrics write failed" }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, error: "metrics write failed" },
+      { status: 500 }
+    );
   }
 }
+
