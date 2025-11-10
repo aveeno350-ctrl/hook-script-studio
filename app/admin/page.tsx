@@ -1,42 +1,19 @@
 // app/admin/page.tsx
-import { Suspense, useEffect } from "react";   // ← add useEffect here
+import { Suspense } from "react";
 import { cookies } from "next/headers";
 import AdminClient from "./AdminClient";
+import KeyBridge from "./KeyBridge";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const runtime = "edge";
 
-/* -------- tiny client bridge: grab key from URL, save cookie, reload ------- */
-function KeyBridge() {
-  "use client";
-  // run once on mount
-  useEffect(() => {                          // ← use useEffect (not React.useEffect)
-    const sp = new URLSearchParams(window.location.search);
-    const raw =
-      (sp.get("key") ?? "") ||
-      (sp.get("admin_key") ?? "") ||
-      (sp.get("k") ?? "");
-    const key = raw.trim();
-    if (key) {
-      document.cookie = `admin_key=${encodeURIComponent(
-        key
-      )}; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
-      const url = new URL(window.location.href);
-      url.search = "";
-      window.location.replace(url.toString());
-    }
-  }, []);
-  return null;
-}
-/* -------------------------------------------------------------------------- */
-
 type SP = Record<string, string | string[] | undefined> | undefined;
 
 function pickParam(sp: SP, names: string[]): string {
   if (!sp) return "";
-  for (const want of names) {
-    const v = sp[want];
+  for (const n of names) {
+    const v = sp[n];
     const raw = typeof v === "string" ? v : Array.isArray(v) ? v[0] : "";
     if (raw && raw.trim()) return raw.trim();
   }
@@ -50,7 +27,6 @@ export default async function Page({ searchParams }: { searchParams?: SP }) {
   const fromCookie = (jar.get("admin_key")?.value ?? "").trim();
   const fromQuery = pickParam(searchParams, ["key", "admin_key", "k"]);
   const key = (fromQuery || fromCookie).trim();
-
   const ADMIN = (process.env.ADMIN_KEY ?? "").trim();
 
   const hasEnv = ADMIN.length > 0;
@@ -88,11 +64,8 @@ admin.preview: ${ADMIN ? ADMIN.slice(0,2) + "…" + ADMIN.slice(-2) : "(empty)"}
         <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 12 }}>Admin</h1>
         <p style={{ marginBottom: 8 }}>
           Unauthorized. Append <code>?key=YOUR_ADMIN_KEY</code> (or{" "}
-          <code>?admin_key=</code> / <code>?k=</code>) to the URL. After one load,
-          the page saves a cookie so you won’t need the query again.
-        </p>
-        <p style={{ opacity: 0.8 }}>
-          Ensure the query is before any <code>#</code> fragment.
+          <code>?admin_key=</code> / <code>?k=</code>) to the URL. After one load, a
+          cookie is saved so you won’t need the query again.
         </p>
         {debug}
       </main>
