@@ -11,28 +11,26 @@ type SP = Record<string, string | string[] | undefined> | undefined;
 
 function pickParam(sp: SP, names: string[]): string {
   if (!sp) return "";
-  // search case-insensitively across a few accepted names
   const entries = Object.entries(sp);
   for (const want of names) {
     const hit = entries.find(([k]) => k.toLowerCase() === want);
     if (!hit) continue;
     const v = hit[1];
-    const raw =
-      typeof v === "string" ? v : Array.isArray(v) ? v[0] : "";
+    const raw = typeof v === "string" ? v : Array.isArray(v) ? v[0] : "";
     if (raw) return raw.trim();
   }
-  // also accept the very first param if user used a weird name
   const first = entries[0]?.[1];
-  const raw =
-    typeof first === "string" ? first : Array.isArray(first) ? first[0] : "";
+  const raw = typeof first === "string" ? first : Array.isArray(first) ? first[0] : "";
   return (raw ?? "").trim();
 }
 
-export default function Page({ searchParams }: { searchParams?: SP }) {
+export default async function Page({ searchParams }: { searchParams?: SP }) {
   // Accept ?key=, ?admin_key=, or ?k=
   const fromQuery = pickParam(searchParams, ["key", "admin_key", "k"]);
-  // Optional cookie fallback (lets you avoid typing every time)
-  const fromCookie = (cookies().get("admin_key")?.value ?? "").trim();
+
+  // 🔧 Edge runtime: cookies() is async
+  const jar = await cookies();
+  const fromCookie = (jar.get("admin_key")?.value ?? "").trim();
 
   const key = (fromQuery || fromCookie).trim();
   const ADMIN = (process.env.ADMIN_KEY ?? "").trim();
@@ -70,12 +68,8 @@ admin.preview: ${ADMIN ? ADMIN.slice(0, 2) + "…" + ADMIN.slice(-2) : "(empty)"
       <main style={{ maxWidth: 760, margin: "56px auto", fontFamily: "ui-sans-serif" }}>
         <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 12 }}>Admin</h1>
         <p>
-          Unauthorized. Append <code>?key=YOUR_ADMIN_KEY</code> to the URL
-          (or use <code>?admin_key=</code> or <code>?k=</code>).
-        </p>
-        <p style={{ marginTop: 8 }}>
-          Also make sure the key is **before** any <code>#</code> fragment and that
-          the param name is lowercase.
+          Unauthorized. Append <code>?key=YOUR_ADMIN_KEY</code> (or <code>?admin_key=</code> / <code>?k=</code>) to the URL.
+          Ensure it’s before any <code>#</code> fragment.
         </p>
         {debug}
       </main>
