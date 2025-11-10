@@ -7,32 +7,54 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const runtime = "edge";
 
+/* -------- tiny client bridge: grab key from URL, save cookie, reload ------- */
+function KeyBridge() {
+  "use client";
+  // run once on mount
+  React.useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    const raw =
+      (sp.get("key") ?? "") ||
+      (sp.get("admin_key") ?? "") ||
+      (sp.get("k") ?? "");
+    const key = raw.trim();
+    if (key) {
+      // 30 days, lax cookie
+      document.cookie = `admin_key=${encodeURIComponent(
+        key
+      )}; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
+      // reload without query so we don't leak the key
+      const url = new URL(window.location.href);
+      url.search = "";
+      window.location.replace(url.toString());
+    }
+  }, []);
+  return null;
+}
+/* -------------------------------------------------------------------------- */
+
 type SP = Record<string, string | string[] | undefined> | undefined;
 
 function pickParam(sp: SP, names: string[]): string {
   if (!sp) return "";
-  const entries = Object.entries(sp);
   for (const want of names) {
-    const hit = entries.find(([k]) => k.toLowerCase() === want);
-    if (!hit) continue;
-    const v = hit[1];
+    const v = sp[want];
     const raw = typeof v === "string" ? v : Array.isArray(v) ? v[0] : "";
-    if (raw) return raw.trim();
+    if (raw && raw.trim()) return raw.trim();
   }
-  const first = entries[0]?.[1];
+  // also accept any single unnamed value (?abc123) just in case
+  const first = Object.values(sp)[0];
   const raw = typeof first === "string" ? first : Array.isArray(first) ? first[0] : "";
   return (raw ?? "").trim();
 }
 
 export default async function Page({ searchParams }: { searchParams?: SP }) {
-  // Accept ?key=, ?admin_key=, or ?k=
-  const fromQuery = pickParam(searchParams, ["key", "admin_key", "k"]);
-
-  // 🔧 Edge runtime: cookies() is async
+  // server reads cookie + (if present) query
   const jar = await cookies();
   const fromCookie = (jar.get("admin_key")?.value ?? "").trim();
-
+  const fromQuery = pickParam(searchParams, ["key", "admin_key", "k"]);
   const key = (fromQuery || fromCookie).trim();
+
   const ADMIN = (process.env.ADMIN_KEY ?? "").trim();
 
   const hasEnv = ADMIN.length > 0;
@@ -57,19 +79,25 @@ matches: ${matches}
 fromQuery.len: ${fromQuery.length}
 fromCookie.len: ${fromCookie.length}
 admin.len: ${ADMIN.length}
-fromQuery.preview: ${fromQuery ? fromQuery.slice(0, 2) + "…" + fromQuery.slice(-2) : "(empty)"}
-fromCookie.preview: ${fromCookie ? fromCookie.slice(0, 2) + "…" + fromCookie.slice(-2) : "(empty)"}
-admin.preview: ${ADMIN ? ADMIN.slice(0, 2) + "…" + ADMIN.slice(-2) : "(empty)"}
+fromQuery.preview: ${fromQuery ? fromQuery.slice(0,2) + "…" + fromQuery.slice(-2) : "(empty)"}
+fromCookie.preview: ${fromCookie ? fromCookie.slice(0,2) + "…" + fromCookie.slice(-2) : "(empty)"}
+admin.preview: ${ADMIN ? ADMIN.slice(0,2) + "…" + ADMIN.slice(-2) : "(empty)"}
 `}</pre>
   );
 
   if (!matches) {
     return (
       <main style={{ maxWidth: 760, margin: "56px auto", fontFamily: "ui-sans-serif" }}>
+        {/* client bridge writes the cookie if ?key is present, then reloads */}
+        <KeyBridge />
         <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 12 }}>Admin</h1>
-        <p>
-          Unauthorized. Append <code>?key=YOUR_ADMIN_KEY</code> (or <code>?admin_key=</code> / <code>?k=</code>) to the URL.
-          Ensure it’s before any <code>#</code> fragment.
+        <p style={{ marginBottom: 8 }}>
+          Unauthorized. Append <code>?key=YOUR_ADMIN_KEY</code> (or{" "}
+          <code>?admin_key=</code> / <code>?k=</code>) to the URL. After one load,
+          the page will save a cookie so you won’t need the query again.
+        </p>
+        <p style={{ opacity: 0.8 }}>
+          Tip: make sure the query is **before** any <code>#</code> fragment.
         </p>
         {debug}
       </main>
