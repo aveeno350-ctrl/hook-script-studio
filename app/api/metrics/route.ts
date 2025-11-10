@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { inc } from "@/lib/metrics";
+import { inc } from "@/lib/metric";
 
 export const runtime = "edge";
 
