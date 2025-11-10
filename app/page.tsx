@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { track } from "@vercel/analytics/react";
+import { track } from "@/lib/metrics";
 import { DEFAULTS } from "@/lib/prompts";
 import TypingWave from "./components/TypingWave";
 
@@ -101,19 +102,27 @@ export default function Home() {
       // update UI
       setContent(data.content ?? "");
 
-      // analytics: user clicked generate
-fetch("/api/metrics/write", {
-  method: "POST",
-  body: JSON.stringify({ event: "generate_clicked" }),
+      // --- analytics: user clicked + start timer
+const t0 = performance.now();
+track("generate_clicked", {
+  platform,
+  niche,
+  audience,
+  offer,
+  tone,
+  keywords_len: (keywords ?? "").split(",").map(s => s.trim()).filter(Boolean).length,
 });
 
-      // analytics: successful generation
-fetch("/api/metrics/write", {
-  method: "POST",
-  body: JSON.stringify({ event: "generate_success" }),
+      // ✅ analytics: successful generation (maximalist version)
+track("generate_success", {
+  platform,
+  runs: next,
+  content_bytes: (data?.content ?? "").length || 0,
+  ms: performance.now() - start,
 });
 
 
+      
       // bump free runs
       const next = runs + 1;
       setRuns(next);
@@ -126,11 +135,13 @@ fetch("/api/metrics/write", {
         content_bytes: (data?.content ?? "").length || 0,
       });
     } catch (e: unknown) {
-      // analytics: generation error
-fetch("/api/metrics/write", {
-  method: "POST",
-  body: JSON.stringify({ event: "generate_error" }),
+      const ms = Math.round(performance.now() - t0);
+track("generate_error", {
+  platform,
+  message: e instanceof Error ? e.message : String(e),
+  ms,
 });
+
 
       const message = e instanceof Error ? e.message : String(e);
       track("generate_error", { message });
