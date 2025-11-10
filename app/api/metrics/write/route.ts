@@ -1,6 +1,6 @@
 // app/api/metrics/write/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { inc } from "@/lib/metrics";   // ← use the helper your lib exports
+import { writeMetric } from "@/lib/metric";
 export const runtime = "edge";
 
 export async function POST(req: NextRequest) {
