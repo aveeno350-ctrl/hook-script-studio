@@ -92,3 +92,90 @@ body {
   animation-delay: 0.3s;
 }
 
+/* ===== Theme tokens (OG blue + purple) ===== */
+:root {
+  /* brand blues */
+  --brand-500: #5B86FF;   /* primary blue */
+  --brand-600: #4F7DFF;
+  --brand-700: #3C66F0;
+
+  /* accent purples */
+  --accent-500: #9B5CFF;  /* violet accent */
+  --accent-600: #8B4CFF;
+
+  /* neutrals (auto-dark defaults) */
+  --bg:        #0B1020;
+  --surface:   #11152A;
+  --surface-2: #0E1324;
+  --text:      #E7ECFF;
+  --muted:     #A8B3CF;
+  --border:    0 0% 100% / 0.08; /* hsla white/8% */
+}
+
+/* Light mode (optional; keeps blue/purple consistent) */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg:        #ffffff;
+    --surface:   #f8fafc;
+    --surface-2: #eef2ff;
+    --text:      #0f172a;
+    --muted:     #475569;
+    --border:    224 36% 15% / 0.1; /* slate-900/10% */
+  }
+}
+
+/* Base surfaces */
+html, body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ===== Reusable component classes ===== */
+@tailwind components;
+@layer components {
+  /* Cards / panels */
+  .card {
+    @apply rounded-xl border backdrop-blur;
+    background: color-mix(in oklab, var(--surface) 85%, transparent);
+    border-color: hsl(var(--border));
+  }
+
+  /* Inputs */
+  .input {
+    @apply w-full rounded-lg px-3 py-2 border outline-none transition;
+    background: color-mix(in oklab, var(--surface) 92%, transparent);
+    border-color: hsl(var(--border));
+  }
+  .input:focus {
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent-500) 35%, transparent);
+    border-color: color-mix(in oklab, var(--accent-500) 65%, transparent);
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition;
+  }
+  .btn-primary {
+    @apply btn text-white;
+    background-image: linear-gradient(135deg, var(--brand-600), var(--accent-500));
+  }
+  .btn-primary:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+  }
+  .btn-secondary {
+    @apply btn border;
+    background: color-mix(in oklab, var(--surface-2) 90%, transparent);
+    border-color: hsl(var(--border));
+  }
+  .btn-ghost {
+    @apply btn text-sm opacity-80 hover:opacity-100;
+    background: transparent;
+  }
+
+  /* Tiny label */
+  .kicker {
+    @apply text-xs tracking-wide uppercase opacity-60;
+  }
+}
+
