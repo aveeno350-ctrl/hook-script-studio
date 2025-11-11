@@ -342,18 +342,24 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
 
 
         {/* Upgrade box */}
-        <section className="border rounded-xl p-4 bg-gray-50 mt-10">
-          <h2 className="font-semibold mb-2">Unlock unlimited generations</h2>
-          <a
-            className="btn btn-primary"
-            href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
-            target="_blank"
-            rel="noreferrer"
-            onClick={() => track("paywall_open", { source: "cta_section" })}
-          >
-            Buy now
-          </a>
-        </section>
+        <section className="card p-6 mt-10 space-y-3">
+  <h2 className="text-lg font-semibold">Unlock unlimited generations</h2>
+
+  <p className="text-sm opacity-75 leading-relaxed">
+    Includes unlimited hooks, scripts, B-roll suggestions, and CTAs.
+  </p>
+
+  <a
+    href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
+    target="_blank"
+    rel="noreferrer"
+    onClick={() => track("paywall_open", { source: "upgrade_box" })}
+    className="btn btn-primary w-full text-center"
+  >
+    Upgrade Now
+  </a>
+</section>
+
 
         <footer className="pt-10 text-xs opacity-60">
           <div className="space-x-3">
