@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { track } from "@/lib/metric";
 import { DEFAULTS } from "@/lib/prompts";
 import TypingWave from "./components/TypingWave";
@@ -29,6 +29,9 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [runs, setRuns] = useState<number>(0);
   const [content, setContent] = useState<string>("");
+
+  const outRef = useRef<HTMLDivElement | null>(null);
+
 
   /** ----- load free-runs + saved inputs on first render ----- */
   useEffect(() => {
@@ -120,6 +123,10 @@ export default function Home() {
 
       // update UI
       setContent(data?.content ?? "");
+
+      // smooth scroll to the output card
+setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
+
 
       // bump free runs FIRST (we need `next` for analytics)
       const next = runs + 1;
@@ -277,7 +284,7 @@ export default function Home() {
 
         {/* Output */}
         {content && (
-          <section className="card p-5 mt-6 space-y-4">
+          <section ref={outRef} className="card p-5 mt-6 space-y-4">
             {/* Header row: title + inline copy */}
             <div className="flex items-center justify-between">
               <div className="kicker">Output</div>
