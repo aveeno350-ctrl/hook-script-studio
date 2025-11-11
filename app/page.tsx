@@ -269,15 +269,15 @@ export default function Home() {
 
         {/* Output */}
         {content && (
-          <section className="card p-4 md:p-6 mt-6">
+          <section className="card p-5 mt-6 space-y-4">
             {/* Header row: title + inline copy */}
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between">
               <div className="kicker">Output</div>
               <CopyButton getText={() => content ?? ""} />
             </div>
 
             {/* Extra actions */}
-            <div className="flex gap-2 mb-4">
+            <div className="flex gap-2">
               <button onClick={copyAll} className="btn btn-secondary">
   Copy All
 </button>
@@ -289,7 +289,7 @@ export default function Home() {
 
             {/* Rendered output */}
             <article
-              className="prose prose-sm max-w-none"
+              className="prose prose-invert prose-sm max-w-none leading-relaxed"
               dangerouslySetInnerHTML={{ __html: content }}
             />
           </section>
