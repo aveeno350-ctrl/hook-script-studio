@@ -199,8 +199,8 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
 
   /** ----- UI ----- */
   return (
-    
-    {/* Sticky Top Bar */}
+    <div className="min-h-screen">
+      {/* Sticky Top Bar */}
 <div className="sticky top-0 z-50 backdrop-blur border-b border-white/10 bg-[color-mix(in_oklab,var(--surface)90%,transparent)]">
   <div className="mx-auto max-w-3xl px-6 py-3 flex items-center justify-between">
     <div className="font-semibold text-sm">
@@ -218,8 +218,6 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
     </a>
   </div>
 </div>
-
-    <div className="min-h-screen">
       {/* Marketing header */}
       <header className="mx-auto max-w-3xl px-6 pt-14 pb-10 space-y-2">
   <div className="kicker">AI Video Hook Engine</div>
