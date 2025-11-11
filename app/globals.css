@@ -101,3 +101,10 @@ html, body {
   /* Tiny label */
   .kicker { @apply text-xs tracking-wide uppercase opacity-60; }
 }
+
+.brand-gradient {
+  background: linear-gradient(135deg, var(--brand-600), var(--accent-500));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
