@@ -1,118 +1,32 @@
+/* Tailwind v4 entry */
 @import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-:root {
-  /* Brand — tweak anytime */
-  --brand: #6757ff;
-  --brand-ink: #1b1b1f;
-
-  /* Surface & ink */
-  --bg: #0b0c10;        /* page background (dark slate) */
-  --card: #111318;      /* card surface */
-  --ink: #e9eef2;       /* primary text */
-  --muted: #a7b2bc;     /* secondary text */
-
-  /* Accents */
-  --ring: rgba(103, 87, 255, 0.45);
-  --chart-fill: rgba(103, 87, 255, 0.18);
-
-  /* Corners + elevation */
-  --radius: 16px;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.25);
-  --shadow-md: 0 6px 16px rgba(0,0,0,0.35);
-}
-
-html, body {
-  background: var(--bg);
-  color: var(--ink);
-}
-
-/* Generic utility tokens */
-.card {
-  background: var(--card);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-}
-
-.card:hover { box-shadow: var(--shadow-md); }
-
-.kicker {
-  font-size: 12px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.brand { color: var(--brand); }
-
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-@keyframes wave {
-  0% { opacity: 0.2; transform: translateY(0); }
-  20% { opacity: 1; transform: translateY(-2px); }
-  40% { opacity: 0.2; transform: translateY(0); }
-}
-
-.animate-wave1 {
-  animation: wave 1.2s infinite ease-in-out;
-  animation-delay: 0s;
-}
-
-.animate-wave2 {
-  animation: wave 1.2s infinite ease-in-out;
-  animation-delay: 0.15s;
-}
-
-.animate-wave3 {
-  animation: wave 1.2s infinite ease-in-out;
-  animation-delay: 0.3s;
-}
 
 /* ===== Theme tokens (OG blue + purple) ===== */
 :root {
-  /* brand blues */
-  --brand-500: #5B86FF;   /* primary blue */
+  /* Brand */
+  --brand-500: #5B86FF; /* primary blue */
   --brand-600: #4F7DFF;
   --brand-700: #3C66F0;
 
-  /* accent purples */
-  --accent-500: #9B5CFF;  /* violet accent */
+  /* Accent */
+  --accent-500: #9B5CFF; /* violet accent */
   --accent-600: #8B4CFF;
 
-  /* neutrals (auto-dark defaults) */
+  /* Neutrals (dark-first) */
   --bg:        #0B1020;
   --surface:   #11152A;
   --surface-2: #0E1324;
   --text:      #E7ECFF;
   --muted:     #A8B3CF;
-  --border:    0 0% 100% / 0.08; /* hsla white/8% */
+  --border:    0 0% 100% / 0.08; /* hsla white / 8% */
+
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.25);
+  --shadow-md: 0 6px 16px rgba(0,0,0,0.35);
+  --radius: 16px;
 }
 
-/* Light mode (optional; keeps blue/purple consistent) */
+/* Light mode (optional) */
 @media (prefers-color-scheme: light) {
   :root {
     --bg:        #ffffff;
@@ -120,7 +34,7 @@ body {
     --surface-2: #eef2ff;
     --text:      #0f172a;
     --muted:     #475569;
-    --border:    224 36% 15% / 0.1; /* slate-900/10% */
+    --border:    224 36% 15% / 0.10; /* slate-900/10% */
   }
 }
 
@@ -130,15 +44,26 @@ html, body {
   color: var(--text);
 }
 
-/* ===== Reusable component classes ===== */
+/* Typing dots */
+@keyframes wave {
+  0% { opacity: 0.2; transform: translateY(0); }
+  20% { opacity: 1;   transform: translateY(-2px); }
+  40% { opacity: 0.2; transform: translateY(0); }
+}
+.animate-wave1 { animation: wave 1.2s infinite ease-in-out; animation-delay: 0s; }
+.animate-wave2 { animation: wave 1.2s infinite ease-in-out; animation-delay: .15s; }
+.animate-wave3 { animation: wave 1.2s infinite ease-in-out; animation-delay: .3s; }
 
+/* ===== Reusable component classes ===== */
 @layer components {
   /* Cards / panels */
   .card {
     @apply rounded-xl border backdrop-blur;
     background: color-mix(in oklab, var(--surface) 85%, transparent);
     border-color: hsl(var(--border));
+    box-shadow: var(--shadow-sm);
   }
+  .card:hover { box-shadow: var(--shadow-md); }
 
   /* Inputs */
   .input {
@@ -152,13 +77,9 @@ html, body {
   }
 
   /* Buttons */
-  @layer components {
-  /* Base button */
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition;
   }
-
-  /* Variants (no @apply of .btn here) */
   .btn-primary {
     @apply text-white;
     background-image: linear-gradient(135deg, var(--brand-600), var(--accent-500));
@@ -167,23 +88,16 @@ html, body {
     filter: brightness(1.05);
     transform: translateY(-1px);
   }
-
   .btn-secondary {
     @apply border;
     background: color-mix(in oklab, var(--surface-2) 90%, transparent);
     border-color: hsl(var(--border));
   }
-
   .btn-ghost {
     @apply text-sm opacity-80 hover:opacity-100;
     background: transparent;
   }
-}
-
 
   /* Tiny label */
-  .kicker {
-    @apply text-xs tracking-wide uppercase opacity-60;
-  }
+  .kicker { @apply text-xs tracking-wide uppercase opacity-60; }
 }
-
