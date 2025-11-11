@@ -206,7 +206,7 @@ export default function Home() {
 
       {/* Main content */}
       <main className="mx-auto max-w-3xl px-6 py-8 space-y-6">
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-3 text-xs opacity-70">
           <button onClick={resetInputs} className="btn btn-ghost">
   Reset inputs
 </button>
@@ -216,7 +216,7 @@ export default function Home() {
 
         {/* Inputs */}
         <section className="card p-4 md:p-6">
-          <div className="grid gap-3 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
           <input
             className="input"
             value={niche}
