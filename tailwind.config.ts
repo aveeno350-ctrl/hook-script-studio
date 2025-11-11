@@ -15,11 +15,13 @@ const config: Config = {
           lavender: "#F6F3FF",
         },
       },
+      fontFamily: {
+        sans: ["var(--font-sans)"],        // Inter — for body text
+        display: ["var(--font-display)"],  // Plus Jakarta Sans — for headings
+      },
     },
   },
-  plugins: [
-    require("@tailwindcss/typography"),
-  ],
+  plugins: [require("@tailwindcss/typography")],
 };
 
 export default config;
