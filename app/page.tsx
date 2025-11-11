@@ -253,7 +253,7 @@ export default function Home() {
             type="button"
             onClick={generate}
             disabled={loading}
-            className="btn btn-primary w-full sm:w-auto"
+            className="btn btn-primary w-full mt-2"
           >
             {loading ? (
               <span className="flex items-center gap-2">
