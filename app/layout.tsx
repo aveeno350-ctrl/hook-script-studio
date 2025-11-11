@@ -82,7 +82,7 @@ export default function RootLayout({
       }}
     />
   </head>
-      <body>
+      <body className={`${inter.variable} ${jakarta.variable}`}>
         {children}
 
         {/* Vercel Analytics (client) */}
