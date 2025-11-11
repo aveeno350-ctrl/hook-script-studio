@@ -188,13 +188,21 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Marketing header */}
-      <header className="mx-auto max-w-3xl px-6 py-8">
-        <h1 className="text-3xl font-semibold mb-2 brand-gradient">Hook &amp; Script Studio</h1>
-        <p className="text-xs opacity-70 mb-6">
-          Generate hooks, a 60s script, B-roll, and CTAs.{" "}
-          <strong>3 free runs</strong>, then unlock unlimited.
-        </p>
-      </header>
+      <header className="mx-auto max-w-3xl px-6 py-10 space-y-2">
+  <div className="kicker">AI Video Hook Engine</div>
+
+  <h1 className="text-4xl font-semibold leading-tight">
+    <span className="bg-gradient-to-r from-[var(--brand-500)] to-[var(--accent-500)] bg-clip-text text-transparent">
+      Hook & Script Studio
+    </span>
+  </h1>
+
+  <p className="text-sm opacity-75 max-w-md">
+    Generate scroll-stopping hooks, tight 60s scripts, B-roll ideas, and CTAs — built for TikTok, Reels, and Shorts.  
+    You get <strong>3 free runs</strong>, then unlock unlimited.
+  </p>
+</header>
+
 
       {/* Main content */}
       <main className="mx-auto max-w-3xl px-6 py-8 space-y-6">
