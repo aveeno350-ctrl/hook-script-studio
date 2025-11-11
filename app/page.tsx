@@ -199,7 +199,7 @@ export default function Home() {
       {/* Main content */}
       <main className="mx-auto max-w-3xl px-6 pb-12">
         <div className="flex items-center justify-between mb-2">
-          <button onClick={resetInputs} className="btn btn-ghost text-xs">
+          <button onClick={resetInputs} className="btn btn-ghost">
   Reset inputs
 </button>
 
@@ -207,7 +207,8 @@ export default function Home() {
         </div>
 
         {/* Inputs */}
-        <section className="grid gap-3 mb-4">
+        <section className="card p-4 md:p-6">
+          <div className="grid gap-3 mb-4">
           <input
             className="input"
             value={niche}
@@ -252,7 +253,7 @@ export default function Home() {
             type="button"
             onClick={generate}
             disabled={loading}
-            className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn btn-primary w-full sm:w-auto"
           >
             {loading ? (
               <span className="flex items-center gap-2">
@@ -263,11 +264,12 @@ export default function Home() {
               "Generate"
             )}
           </button>
+          </div>
         </section>
 
         {/* Output */}
         {content && (
-          <div className="mt-6">
+          <section className="card p-4 md:p-6 mt-6">
             {/* Header row: title + inline copy */}
             <div className="flex items-center justify-between mb-2">
               <div className="kicker">Output</div>
@@ -275,12 +277,12 @@ export default function Home() {
             </div>
 
             {/* Extra actions */}
-            <div className="space-x-2 mb-2">
+            <div className="flex gap-2 mb-4">
               <button onClick={copyAll} className="btn btn-secondary">
   Copy All
 </button>
 
-              <button onClick={downloadTxt} className="rounded px-3 py-2 border">
+              <button onClick={downloadTxt} className="btn btn-secondary">
                 Download .txt
               </button>
             </div>
@@ -290,7 +292,7 @@ export default function Home() {
               className="prose prose-sm max-w-none"
               dangerouslySetInnerHTML={{ __html: content }}
             />
-          </div>
+          </section>
         )}
 
         {/* Upgrade box */}
