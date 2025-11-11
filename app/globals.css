@@ -175,3 +175,8 @@ a:hover {
   left: 120%;
 }
 
+.btn-ghost:hover {
+  background: color-mix(in oklab, var(--surface) 88%, transparent);
+  opacity: 1;
+}
+
