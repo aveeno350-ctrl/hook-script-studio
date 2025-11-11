@@ -124,3 +124,16 @@ html, body {
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite linear;
 }
+
+/* ===== Custom Link Styling ===== */
+a {
+  color: var(--brand-500);
+  text-decoration: none;
+  transition: color 0.2s ease, text-underline-offset 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent-500);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
