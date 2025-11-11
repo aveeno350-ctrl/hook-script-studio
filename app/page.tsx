@@ -199,13 +199,10 @@ export default function Home() {
       {/* Main content */}
       <main className="mx-auto max-w-3xl px-6 pb-12">
         <div className="flex items-center justify-between mb-2">
-          <button
-            type="button"
-            onClick={resetInputs}
-            className="text-xs underline opacity-70"
-          >
-            Reset inputs
-          </button>
+          <button onClick={resetInputs} className="btn btn-ghost text-xs">
+  Reset inputs
+</button>
+
           <p className="text-xs opacity-60">Free runs used: {runs}/3</p>
         </div>
 
@@ -255,7 +252,7 @@ export default function Home() {
             type="button"
             onClick={generate}
             disabled={loading}
-            className="rounded px-4 py-2 border"
+            className="btn btn-primary"
           >
             {loading ? (
               <span className="flex items-center gap-2">
@@ -279,9 +276,10 @@ export default function Home() {
 
             {/* Extra actions */}
             <div className="space-x-2 mb-2">
-              <button onClick={copyAll} className="rounded px-3 py-2 border">
-                Copy All
-              </button>
+              <button onClick={copyAll} className="btn btn-secondary">
+  Copy All
+</button>
+
               <button onClick={downloadTxt} className="rounded px-3 py-2 border">
                 Download .txt
               </button>
