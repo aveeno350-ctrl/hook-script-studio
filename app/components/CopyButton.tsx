@@ -1,19 +1,33 @@
+// app/components/CopyButton.tsx
 "use client";
+
 import { useState } from "react";
 
-export default function CopyButton({ getText }: { getText: () => string }) {
-  const [ok, setOk] = useState(false);
+type Props = { getText: () => string };
+
+export default function CopyButton({ getText }: Props) {
+  const [copied, setCopied] = useState(false);
+
+  async function onCopy() {
+    try {
+      const text = getText() ?? "";
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    } catch {
+      // ignore; we don’t want copy failures to break UI
+    }
+  }
+
   return (
     <button
-      onClick={async () => {
-        await navigator.clipboard.writeText(getText());
-        setOk(true);
-        setTimeout(() => setOk(false), 1200);
-      }}
-      className="inline-flex items-center gap-2 rounded-md border border-white/10 px-3 py-1.5 text-sm bg-white/5 hover:bg-white/10 transition"
-      aria-label="Copy output"
+      type="button"
+      onClick={onCopy}
+      className="text-xs rounded px-3 py-2 border hover:bg-gray-50 active:scale-[0.99] transition"
+      aria-label="Copy to clipboard"
+      title={copied ? "Copied!" : "Copy"}
     >
-      {ok ? "Copied!" : "Copy"}
+      {copied ? "Copied!" : "Copy"}
     </button>
   );
 }
