@@ -199,9 +199,29 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
 
   /** ----- UI ----- */
   return (
+    
+    {/* Sticky Top Bar */}
+<div className="sticky top-0 z-50 backdrop-blur border-b border-white/10 bg-[color-mix(in_oklab,var(--surface)90%,transparent)]">
+  <div className="mx-auto max-w-3xl px-6 py-3 flex items-center justify-between">
+    <div className="font-semibold text-sm">
+      Hook & Script Studio
+    </div>
+
+    <a
+      className="btn btn-secondary text-xs"
+      href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
+      target="_blank"
+      rel="noreferrer"
+      onClick={() => track("paywall_open", { source: "topbar" })}
+    >
+      Upgrade
+    </a>
+  </div>
+</div>
+
     <div className="min-h-screen">
       {/* Marketing header */}
-      <header className="mx-auto max-w-3xl px-6 py-10 space-y-2">
+      <header className="mx-auto max-w-3xl px-6 pt-14 pb-10 space-y-2">
   <div className="kicker">AI Video Hook Engine</div>
 
   <h1 className="text-4xl font-semibold leading-tight">
