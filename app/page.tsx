@@ -209,31 +209,31 @@ export default function Home() {
         {/* Inputs */}
         <section className="grid gap-3 mb-4">
           <input
-            className="border rounded px-2 py-1"
+            className="input"
             value={niche}
             onChange={(e) => setNiche(e.target.value)}
             placeholder="niche"
           />
           <input
-            className="border rounded px-2 py-1"
+            className="input"
             value={audience}
             onChange={(e) => setAudience(e.target.value)}
             placeholder="audience"
           />
           <input
-            className="border rounded px-2 py-1"
+            className="input"
             value={offer}
             onChange={(e) => setOffer(e.target.value)}
             placeholder="offer / product"
           />
           <input
-            className="border rounded px-2 py-1"
+            className="input"
             value={tone}
             onChange={(e) => setTone(e.target.value)}
             placeholder="tone (e.g., friendly, energetic)"
           />
           <select
-            className="border rounded px-2 py-1"
+            className="input"
             value={platform}
             onChange={(e) => setPlatform(e.target.value)}
           >
@@ -242,7 +242,7 @@ export default function Home() {
             <option value="Shorts">Shorts</option>
           </select>
           <input
-            className="border rounded px-2 py-1"
+            className="input"
             value={keywords}
             onChange={(e) => setKeywords(e.target.value)}
             placeholder="optional keywords"
@@ -252,7 +252,7 @@ export default function Home() {
             type="button"
             onClick={generate}
             disabled={loading}
-            className="btn btn-primary"
+            className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <span className="flex items-center gap-2">
