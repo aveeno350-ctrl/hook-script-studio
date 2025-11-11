@@ -189,7 +189,7 @@ export default function Home() {
     <div className="min-h-screen">
       {/* Marketing header */}
       <header className="mx-auto max-w-3xl px-6 py-8">
-        <h1 className="text-3xl font-semibold mb-2">Hook &amp; Script Studio</h1>
+        <h1 className="text-3xl font-semibold mb-2 brand-gradient">Hook &amp; Script Studio</h1>
         <p className="text-xs opacity-70 mb-6">
           Generate hooks, a 60s script, B-roll, and CTAs.{" "}
           <strong>3 free runs</strong>, then unlock unlimited.
@@ -197,7 +197,7 @@ export default function Home() {
       </header>
 
       {/* Main content */}
-      <main className="mx-auto max-w-3xl px-6 pb-12">
+      <main className="mx-auto max-w-3xl px-6 py-8 space-y-6">
         <div className="flex items-center justify-between mb-2">
           <button onClick={resetInputs} className="btn btn-ghost">
   Reset inputs
@@ -299,7 +299,7 @@ export default function Home() {
         <section className="border rounded-xl p-4 bg-gray-50 mt-10">
           <h2 className="font-semibold mb-2">Unlock unlimited generations</h2>
           <a
-            className="inline-block rounded-xl px-4 py-2 bg-black text-white"
+            className="btn btn-primary"
             href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
             target="_blank"
             rel="noreferrer"
