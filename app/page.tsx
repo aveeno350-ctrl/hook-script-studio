@@ -354,7 +354,7 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
     target="_blank"
     rel="noreferrer"
     onClick={() => track("paywall_open", { source: "upgrade_box" })}
-    className="btn btn-primary w-full text-center"
+    className="btn btn-primary w-full text-center !text-white"
   >
     Upgrade Now
   </a>
