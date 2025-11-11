@@ -291,24 +291,27 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
             onChange={(e) => setKeywords(e.target.value)}
             placeholder="optional keywords"
           />
-
-          <button
-            type="button"
-            onClick={generate}
-            disabled={loading}
-            className="btn btn-primary w-full mt-2"
-          >
-            {loading ? (
-              <span className="flex items-center gap-2">
-                <TypingWave />
-                <span>Generating…</span>
-              </span>
-            ) : (
-              "Generate"
-            )}
-          </button>
           </div>
         </section>
+      <div className="mt-2">
+  <button
+    type="button"
+    onClick={generate}
+    disabled={loading}
+    aria-busy={loading}
+    className="btn btn-primary w-full min-h-[44px] disabled:opacity-60 disabled:cursor-not-allowed"
+  >
+    {loading ? (
+      <span className="flex items-center justify-center gap-2">
+        <TypingWave />
+        <span>Generating…</span>
+      </span>
+    ) : (
+      "Generate"
+    )}
+  </button>
+</div>
+
 
         {/* Output */}
         {(loading || content) && (
