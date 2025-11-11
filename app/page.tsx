@@ -4,10 +4,7 @@ import { useEffect, useState } from "react";
 import { track } from "@/lib/metric";
 import { DEFAULTS } from "@/lib/prompts";
 import TypingWave from "./components/TypingWave";
-import Container from "@/components/Container";
-import PageHeader from "@/components/PageHeader";
 import CopyButton from "@/components/CopyButton";
-
 
 /** ----- simple input memory ----- */
 const INPUTS_KEY = "hss_inputs_v1";
@@ -74,87 +71,87 @@ export default function Home() {
   }, [niche, audience, offer, tone, platform, keywords]);
 
   /** ----- generate handler with analytics + free limit ----- */
-async function generate(): Promise<void> {
-  // free limit gate
-  if (runs >= 3) {
-    const link =
-      (process.env.NEXT_PUBLIC_PAYMENT_LINK as unknown as string) || "";
-    alert("Free limit reached. Please purchase to unlock unlimited generations.");
-    if (link) {
-      track("paywall_open", { source: "free_limit" });
-      window.open(link, "_blank");
+  async function generate(): Promise<void> {
+    // free limit gate
+    if (runs >= 3) {
+      const link =
+        (process.env.NEXT_PUBLIC_PAYMENT_LINK as unknown as string) || "";
+      alert("Free limit reached. Please purchase to unlock unlimited generations.");
+      if (link) {
+        track("paywall_open", { source: "free_limit" });
+        window.open(link, "_blank");
+      }
+      return;
     }
-    return;
-  }
 
-  setLoading(true);
+    setLoading(true);
 
-  try {
-    // --- analytics: user clicked + start timer (DO THIS BEFORE FETCH)
+    // start timer BEFORE fetch so both success and error can measure ms
     const t0 = performance.now();
-    track("generate_clicked", {
-      platform,
-      niche,
-      audience,
-      offer,
-      tone,
-      keywords_len: (keywords ?? "")
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean).length,
-    });
 
-    // call your API
-    const resp = await fetch("/api/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ niche, audience, offer, tone, platform, keywords }),
-    });
+    try {
+      // --- analytics: user clicked
+      track("generate_clicked", {
+        platform,
+        niche,
+        audience,
+        offer,
+        tone,
+        keywords_len: (keywords ?? "")
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean).length,
+      });
 
-    if (!resp.ok) {
-      const text = await resp.text();
-      throw new Error(`HTTP ${resp.status}: ${text}`);
+      // call your API
+      const resp = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ niche, audience, offer, tone, platform, keywords }),
+      });
+
+      if (!resp.ok) {
+        const text = await resp.text();
+        throw new Error(`HTTP ${resp.status}: ${text}`);
+      }
+
+      const data = await resp.json();
+
+      // update UI
+      setContent(data?.content ?? "");
+
+      // bump free runs FIRST (we need `next` for analytics)
+      const next = runs + 1;
+      setRuns(next);
+      localStorage.setItem("free_runs", String(next));
+
+      // analytics: successful generation
+      track("generate_success", {
+        platform,
+        runs: next,
+        content_bytes: (data?.content ?? "").length || 0,
+        ms: Math.round(performance.now() - t0),
+      });
+
+      // (optional) also hit our write endpoint
+      fetch("/api/metrics/write", {
+        method: "POST",
+        body: JSON.stringify({ event: "generate_success" }),
+      });
+    } catch (e: unknown) {
+      // one error event with useful context
+      track("generate_error", {
+        platform,
+        message: e instanceof Error ? e.message : String(e),
+        ms: Math.round(performance.now() - t0),
+      });
+
+      const message = e instanceof Error ? e.message : String(e);
+      alert(message);
+    } finally {
+      setLoading(false);
     }
-
-    const data = await resp.json();
-
-    // update UI
-    setContent(data?.content ?? "");
-
-    // --- bump free runs FIRST (we need `next` for analytics)
-    const next = runs + 1;
-    setRuns(next);
-    localStorage.setItem("free_runs", String(next));
-
-    // --- analytics: successful generation (maximalist)
-    track("generate_success", {
-      platform,
-      runs: next,
-      content_bytes: (data?.content ?? "").length || 0,
-      ms: Math.round(performance.now() - t0), // t0 was set when user clicked
-    });
-
-    // (optional) also hit our write endpoint
-    fetch("/api/metrics/write", {
-      method: "POST",
-      body: JSON.stringify({ event: "generate_success" }),
-    });
-  } catch (e: unknown) {
-    // one error event with useful context
-    const ms = Math.round(performance.now() - performance.timing?.navigationStart!); // fallback-safe
-    track("generate_error", {
-      platform,
-      message: e instanceof Error ? e.message : String(e),
-      ms,
-    });
-
-    const message = e instanceof Error ? e.message : String(e);
-    alert(message);
-  } finally {
-    setLoading(false);
   }
-}
-
 
   /** ----- helpers ----- */
   function resetInputs() {
@@ -188,144 +185,149 @@ async function generate(): Promise<void> {
 
   /** ----- UI ----- */
   return (
-    <PageHeader
-  title="Hook Script Studio"
-  subtitle="Generate scroll-stopping hooks for TikTok, Reels, Shorts, and more."
-/>
-<Container>
-  {/* existing page content goes here */}
-    <main className="mx-auto max-w-3xl px-6 py-8">
-      <h1 className="text-3xl font-semibold mb-2">Hook &amp; Script Studio</h1>
-      <p className="text-xs opacity-70 mb-6">
-        Generate hooks, a 60s script, B-roll, and CTAs. 3 free runs, then unlock unlimited.
-      </p>
+    <div className="min-h-screen">
+      {/* Marketing header */}
+      <header className="mx-auto max-w-3xl px-6 py-8">
+        <h1 className="text-3xl font-semibold mb-2">Hook &amp; Script Studio</h1>
+        <p className="text-xs opacity-70 mb-6">
+          Generate hooks, a 60s script, B-roll, and CTAs.{" "}
+          <strong>3 free runs</strong>, then unlock unlimited.
+        </p>
+      </header>
 
-      <div className="flex items-center justify-between mb-2">
-        <button
-          type="button"
-          onClick={resetInputs}
-          className="text-xs underline opacity-70"
-        >
-          Reset inputs
-        </button>
-        <p className="text-xs opacity-60">Free runs used: {runs}/3</p>
-      </div>
-
-      {/* Inputs */}
-      <section className="grid gap-3 mb-4">
-        <input
-          className="border rounded px-2 py-1"
-          value={niche}
-          onChange={(e) => setNiche(e.target.value)}
-          placeholder="niche"
-        />
-        <input
-          className="border rounded px-2 py-1"
-          value={audience}
-          onChange={(e) => setAudience(e.target.value)}
-          placeholder="audience"
-        />
-        <input
-          className="border rounded px-2 py-1"
-          value={offer}
-          onChange={(e) => setOffer(e.target.value)}
-          placeholder="offer / product"
-        />
-        <input
-          className="border rounded px-2 py-1"
-          value={tone}
-          onChange={(e) => setTone(e.target.value)}
-          placeholder="tone (e.g., friendly, energetic)"
-        />
-        <select
-          className="border rounded px-2 py-1"
-          value={platform}
-          onChange={(e) => setPlatform(e.target.value)}
-        >
-          <option value="TikTok">TikTok</option>
-          <option value="Reels">Reels</option>
-          <option value="Shorts">Shorts</option>
-        </select>
-        <input
-          className="border rounded px-2 py-1"
-          value={keywords}
-          onChange={(e) => setKeywords(e.target.value)}
-          placeholder="optional keywords"
-        />
-
-        <button
-          type="button"
-          onClick={generate}
-          disabled={loading}
-          className="rounded px-4 py-2 border"
-        >
-          {loading ? (
-            <span className="flex items-center gap-2">
-              <TypingWave />
-              <span>Generating…</span>
-            </span>
-          ) : (
-            "Generate"
-          )}
-        </button>
-      </section>
-
-      {/* Output */}
-      {content && (
-  <div className="mt-6">
-    {/* Header row: title + inline copy */}
-    <div className="flex items-center justify-between mb-2">
-      <div className="kicker">Output</div>
-      <CopyButton getText={() => content ?? ""} />
-    </div>
-
-    {/* Extra actions */}
-    <div className="space-x-2 mb-2">
-      <button onClick={copyAll} className="rounded px-3 py-2 border">
-        Copy All
-      </button>
-      <button onClick={downloadTxt} className="rounded px-3 py-2 border">
-        Download .txt
-      </button>
-    </div>
-
-    {/* Rendered output */}
-    <article
-      className="prose prose-sm max-w-none"
-      dangerouslySetInnerHTML={{ __html: content }}
-    />
-  </div>
-)}
-
-
-      {/* Upgrade box */}
-      <section className="border rounded-xl p-4 bg-gray-50 mt-10">
-        <h2 className="font-semibold mb-2">Unlock unlimited generations</h2>
-        <a
-          className="inline-block rounded-xl px-4 py-2 bg-black text-white"
-          href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
-          target="_blank"
-          rel="noreferrer"
-          onClick={() => track("paywall_open", { source: "cta_section" })}
-        >
-          Buy now
-        </a>
-      </section>
-
-      <footer className="pt-10 text-xs opacity-60">
-        <div className="space-x-3">
-          <a className="hover:underline" href="/support">Support</a>
-          <span>·</span>
-          <a className="hover:underline" href="/terms">Terms</a>
-          <span>·</span>
-          <a className="hover:underline" href="/privacy">Privacy</a>
-          <span>·</span>
-          <a className="hover:underline" href="mailto:support@yourdomain.com">
-            Email
-          </a>
+      {/* Main content */}
+      <main className="mx-auto max-w-3xl px-6 pb-12">
+        <div className="flex items-center justify-between mb-2">
+          <button
+            type="button"
+            onClick={resetInputs}
+            className="text-xs underline opacity-70"
+          >
+            Reset inputs
+          </button>
+          <p className="text-xs opacity-60">Free runs used: {runs}/3</p>
         </div>
-      </footer>
-        </Container>
-    </main>
+
+        {/* Inputs */}
+        <section className="grid gap-3 mb-4">
+          <input
+            className="border rounded px-2 py-1"
+            value={niche}
+            onChange={(e) => setNiche(e.target.value)}
+            placeholder="niche"
+          />
+          <input
+            className="border rounded px-2 py-1"
+            value={audience}
+            onChange={(e) => setAudience(e.target.value)}
+            placeholder="audience"
+          />
+          <input
+            className="border rounded px-2 py-1"
+            value={offer}
+            onChange={(e) => setOffer(e.target.value)}
+            placeholder="offer / product"
+          />
+          <input
+            className="border rounded px-2 py-1"
+            value={tone}
+            onChange={(e) => setTone(e.target.value)}
+            placeholder="tone (e.g., friendly, energetic)"
+          />
+          <select
+            className="border rounded px-2 py-1"
+            value={platform}
+            onChange={(e) => setPlatform(e.target.value)}
+          >
+            <option value="TikTok">TikTok</option>
+            <option value="Reels">Reels</option>
+            <option value="Shorts">Shorts</option>
+          </select>
+          <input
+            className="border rounded px-2 py-1"
+            value={keywords}
+            onChange={(e) => setKeywords(e.target.value)}
+            placeholder="optional keywords"
+          />
+
+          <button
+            type="button"
+            onClick={generate}
+            disabled={loading}
+            className="rounded px-4 py-2 border"
+          >
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <TypingWave />
+                <span>Generating…</span>
+              </span>
+            ) : (
+              "Generate"
+            )}
+          </button>
+        </section>
+
+        {/* Output */}
+        {content && (
+          <div className="mt-6">
+            {/* Header row: title + inline copy */}
+            <div className="flex items-center justify-between mb-2">
+              <div className="kicker">Output</div>
+              <CopyButton getText={() => content ?? ""} />
+            </div>
+
+            {/* Extra actions */}
+            <div className="space-x-2 mb-2">
+              <button onClick={copyAll} className="rounded px-3 py-2 border">
+                Copy All
+              </button>
+              <button onClick={downloadTxt} className="rounded px-3 py-2 border">
+                Download .txt
+              </button>
+            </div>
+
+            {/* Rendered output */}
+            <article
+              className="prose prose-sm max-w-none"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+          </div>
+        )}
+
+        {/* Upgrade box */}
+        <section className="border rounded-xl p-4 bg-gray-50 mt-10">
+          <h2 className="font-semibold mb-2">Unlock unlimited generations</h2>
+          <a
+            className="inline-block rounded-xl px-4 py-2 bg-black text-white"
+            href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => track("paywall_open", { source: "cta_section" })}
+          >
+            Buy now
+          </a>
+        </section>
+
+        <footer className="pt-10 text-xs opacity-60">
+          <div className="space-x-3">
+            <a className="hover:underline" href="/support">
+              Support
+            </a>
+            <span>·</span>
+            <a className="hover:underline" href="/terms">
+              Terms
+            </a>
+            <span>·</span>
+            <a className="hover:underline" href="/privacy">
+              Privacy
+            </a>
+            <span>·</span>
+            <a className="hover:underline" href="mailto:support@yourdomain.com">
+              Email
+            </a>
+          </div>
+        </footer>
+      </main>
+    </div>
   );
 }
