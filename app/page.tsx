@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { track } from "@/lib/metric";
 import { DEFAULTS } from "@/lib/prompts";
 import TypingWave from "./components/TypingWave";
-import CopyButton from "@/components/CopyButton";
+import CopyButton from "./components/CopyButton";
+
 
 /** ----- simple input memory ----- */
 const INPUTS_KEY = "hss_inputs_v1";
