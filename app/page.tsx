@@ -191,6 +191,12 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
     URL.revokeObjectURL(url);
   }
 
+  function clearOutput() {
+  setContent("");
+  try { track("output_cleared"); } catch {}
+}
+
+
   /** ----- UI ----- */
   return (
     <div className="min-h-screen">
@@ -213,12 +219,16 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
 
       {/* Main content */}
       <main className="mx-auto max-w-3xl px-6 py-8 space-y-6">
-        <div className="flex items-center justify-between mb-3 text-xs opacity-70">
+        <div className="flex items-center justify-between mb-3">
           <button onClick={resetInputs} className="btn btn-ghost">
   Reset inputs
 </button>
 
-          <p className="text-xs opacity-60">Free runs used: {runs}/3</p>
+          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs"
+       style={{ background: "color-mix(in oklab, var(--surface-2) 85%, transparent)", border: "1px solid hsl(var(--border))" }}>
+    <span className="opacity-70">Free runs</span>
+    <span className="font-medium">{Math.min(runs,3)}/3</span>
+  </div>
         </div>
 
         {/* Inputs */}
@@ -283,32 +293,35 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
         </section>
 
         {/* Output */}
-        {content && (
-          <section ref={outRef} className="card p-5 mt-6 space-y-4">
-            {/* Header row: title + inline copy */}
-            <div className="flex items-center justify-between">
-              <div className="kicker">Output</div>
-              <CopyButton getText={() => content ?? ""} />
-            </div>
+        {(loading || content) && (
+  <section ref={outRef} className="card p-5 mt-6 space-y-4">
+    <div className="flex items-center justify-between">
+      <div className="kicker">Output</div>
+      <CopyButton getText={() => content ?? ""} />
+    </div>
 
-            {/* Extra actions */}
-            <div className="flex gap-2">
-              <button onClick={copyAll} className="btn btn-secondary">
-  Copy All
-</button>
+    <div className="flex gap-2">
+      <button onClick={copyAll} className="btn btn-secondary">Copy All</button>
+      <button onClick={downloadTxt} className="btn btn-secondary">Download .txt</button>
+      <button onClick={clearOutput} className="btn btn-ghost">Clear</button>
+    </div>
 
-              <button onClick={downloadTxt} className="btn btn-secondary">
-                Download .txt
-              </button>
-            </div>
+    {loading ? (
+      <div className="space-y-2">
+        <div className="skeleton h-5 w-3/4"></div>
+        <div className="skeleton h-5 w-full"></div>
+        <div className="skeleton h-5 w-11/12"></div>
+        <div className="skeleton h-5 w-5/6"></div>
+      </div>
+    ) : (
+      <article
+        className="prose prose-invert prose-sm max-w-none leading-relaxed"
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
+    )}
+  </section>
+)}
 
-            {/* Rendered output */}
-            <article
-              className="prose prose-invert prose-sm max-w-none leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: content }}
-            />
-          </section>
-        )}
 
         {/* Upgrade box */}
         <section className="border rounded-xl p-4 bg-gray-50 mt-10">
