@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { track } from "@/lib/metric";
 import { DEFAULTS } from "@/lib/prompts";
 import TypingWave from "./components/TypingWave";
+import Container from "@/components/Container";
+import PageHeader from "@/components/PageHeader";
+import CopyButton from "@/components/CopyButton";
+
 
 /** ----- simple input memory ----- */
 const INPUTS_KEY = "hss_inputs_v1";
@@ -184,6 +188,12 @@ async function generate(): Promise<void> {
 
   /** ----- UI ----- */
   return (
+    <PageHeader
+  title="Hook Script Studio"
+  subtitle="Generate scroll-stopping hooks for TikTok, Reels, Shorts, and more."
+/>
+<Container>
+  {/* existing page content goes here */}
     <main className="mx-auto max-w-3xl px-6 py-8">
       <h1 className="text-3xl font-semibold mb-2">Hook &amp; Script Studio</h1>
       <p className="text-xs opacity-70 mb-6">
@@ -262,24 +272,31 @@ async function generate(): Promise<void> {
 
       {/* Output */}
       {content && (
-        <section>
-          <div className="space-x-2 mb-2">
-            <button onClick={copyAll} className="rounded px-3 py-2 border">
-              Copy All
-            </button>
-            <button onClick={downloadTxt} className="rounded px-3 py-2 border">
-              Download .txt
-            </button>
-          </div>
+  <div className="mt-6">
+    {/* Header row: title + inline copy */}
+    <div className="flex items-center justify-between mb-2">
+      <div className="kicker">Output</div>
+      <CopyButton getText={() => content ?? ""} />
+    </div>
 
-          <article
-            className="prose prose-sm max-w-none"
-            dangerouslySetInnerHTML={{
-              __html: content.replace(/\n/g, "<br/>"),
-            }}
-          />
-        </section>
-      )}
+    {/* Extra actions */}
+    <div className="space-x-2 mb-2">
+      <button onClick={copyAll} className="rounded px-3 py-2 border">
+        Copy All
+      </button>
+      <button onClick={downloadTxt} className="rounded px-3 py-2 border">
+        Download .txt
+      </button>
+    </div>
+
+    {/* Rendered output */}
+    <article
+      className="prose prose-sm max-w-none"
+      dangerouslySetInnerHTML={{ __html: content }}
+    />
+  </div>
+)}
+
 
       {/* Upgrade box */}
       <section className="border rounded-xl p-4 bg-gray-50 mt-10">
@@ -308,6 +325,7 @@ async function generate(): Promise<void> {
           </a>
         </div>
       </footer>
+        </Container>
     </main>
   );
 }
