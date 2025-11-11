@@ -147,3 +147,31 @@ a:hover {
   transform: translateY(-2px) scale(1.01);
   box-shadow: 0 8px 24px rgba(0,0,0,0.35);
 }
+
+/* ===== Button Shine Sweep (for btn-primary) ===== */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 120%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255,255,255,0.35) 50%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  transition: left 0.9s ease;
+}
+
+.btn-primary:hover::after {
+  left: 120%;
+}
+
