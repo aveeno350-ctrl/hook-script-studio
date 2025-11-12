@@ -5,6 +5,8 @@ import { track } from "@/lib/metric";
 import { DEFAULTS } from "@/lib/prompts";
 import TypingWave from "./components/TypingWave";
 import CopyButton from "./components/CopyButton";
+import UpdateBanner from "@/components/UpdateBanner";
+
 
 
 /** ----- simple input memory ----- */
@@ -218,6 +220,9 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
     </a>
   </div>
 </div>
+
+      <UpdateBanner />
+      
       {/* Marketing header */}
       <header className="mx-auto max-w-3xl px-6 pt-14 pb-10 space-y-2">
   <div className="kicker">AI Video Hook Engine</div>
@@ -248,12 +253,6 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
     <span className="font-medium">{Math.min(runs,3)}/3</span>
   </div>
         </div>
-
-        import UpdateBanner from "@/components/UpdateBanner";
-
-// ...inside your component’s return, after <PageHeader ... />
-<UpdateBanner />
-
 
         {/* Inputs */}
         <section className="card p-4 md:p-6">
