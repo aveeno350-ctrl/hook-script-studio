@@ -48,6 +48,7 @@ export const metadata = {
       width: 1200,
       height: 630,
       alt: "Hook & Script Studio – AI Video Hook Engine",
+      type: "image/png",
     },
   ],
 },
