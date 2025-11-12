@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { UPDATES } from "@/data/updates";
+import { UPDATES } from "../../data/updates";
 
 /**
  * Animated banner that announces the latest version.
