@@ -228,7 +228,12 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
       <UpdateBanner />
       
       {/* Marketing header */}
-      <M.div initial="hidden" animate="show" variants={fadeUp}>
+      <M.div
+  initial={{ opacity: 0, y: 12 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+  className="text-center mb-8"
+>
       <header className="mx-auto max-w-3xl px-6 pt-14 pb-10 space-y-2">
   <div className="kicker">AI Video Hook Engine</div>
 
@@ -391,7 +396,7 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
   target="_blank"
   rel="noreferrer"
   onClick={() => track("paywall_open", { source: "cta_section" })}
-  className="btn btn-primary w-full"
+  className="btn btn-primary w-full !textwhite"
   whileHover={{ y: -1, scale: 1.01 }}
   whileTap={{ scale: 0.99 }}
   transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.25 }}
