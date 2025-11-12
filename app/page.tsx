@@ -204,237 +204,236 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
 
 
   /** ----- UI ----- */
+   /** ----- UI ----- */
   return (
-  <div className="min-h-screen">
-    {/* Sticky Top Bar */}
-    <div className="sticky top-0 z-50 backdrop-blur border-b border-white/10 bg-[color-mix(in_oklab,var(--surface)90%,transparent)]">
-      <div className="mx-auto max-w-3xl px-6 py-3 flex items-center justify-between">
-        <div className="font-semibold text-sm">
-          Hook & Script Studio
-        </div>
+    <div className="min-h-screen">
+      {/* Sticky Top Bar */}
+      <div className="sticky top-0 z-50 backdrop-blur border-b border-white/10 bg-[color-mix(in_oklab,var(--surface)90%,transparent)]">
+        <div className="mx-auto max-w-3xl px-6 py-3 flex items-center justify-between">
+          <div className="font-semibold text-sm">Hook &amp; Script Studio</div>
 
-        <a
-          className="btn btn-secondary text-xs"
-          href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
-          target="_blank"
-          rel="noreferrer"
-          onClick={() => track("paywall_open", { source: "topbar" })}
-        >
-          Upgrade
-        </a>
-      </div>
-    </div>
-
-    <UpdateBanner />
-
-    {/* Marketing header */}
-    <M.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-      className="mb-8"
-    >
-      <header className="mx-auto max-w-3xl px-6 pt-14 pb-10 space-y-2">
-        <div className="kicker">AI Video Hook Engine</div>
-
-        <h1 className="font-display text-4xl font-semibold leading-tight">
-          <span className="gradient-shimmer">
-            Hook &amp; Script Studio
-          </span>
-        </h1>
-
-        <p className="text-sm opacity-75 max-w-md">
-          Generate scroll-stopping hooks, tight 60s scripts, B-roll ideas, and CTAs — built for TikTok, Reels, and Shorts.{" "}
-          You get <strong>3 free runs</strong>, then unlock unlimited.
-        </p>
-      </header>
-    </M.div>
-
-    {/* Main content */}
-    <main className="mx-auto max-w-3xl px-6 py-8 space-y-6">
-      <div className="flex items-center justify-between mb-3">
-        <button onClick={resetInputs} className="btn btn-ghost">
-          Reset inputs
-        </button>
-
-        <div
-          className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs"
-          style={{
-            background: "color-mix(in oklab, var(--surface-2) 85%, transparent)",
-            border: "1px solid hsl(var(--border))",
-          }}
-        >
-          <span className="opacity-70">Free runs</span>
-          <span className="font-medium">{Math.min(runs, 3)}/3</span>
+          <a
+            className="btn btn-secondary text-xs"
+            href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => track("paywall_open", { source: "topbar" })}
+          >
+            Upgrade
+          </a>
         </div>
       </div>
 
-      {/* Inputs card (restored hover card) */}
-      <section className="card p-4 md:p-6">
-        <M.section
-          className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2"
-          variants={stagger}
-          initial="hidden"
-          animate="show"
-        >
-          <M.div variants={item}>
-            <input
-              className="input"
-              value={niche}
-              onChange={(e) => setNiche(e.target.value)}
-              placeholder="niche"
-            />
-          </M.div>
+      <UpdateBanner />
 
-          <M.div variants={item}>
-            <input
-              className="input"
-              value={audience}
-              onChange={(e) => setAudience(e.target.value)}
-              placeholder="audience"
-            />
-          </M.div>
+      {/* Marketing header */}
+      <M.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+        className="mb-8"
+      >
+        <header className="mx-auto max-w-3xl px-6 pt-14 pb-10 space-y-2">
+          <div className="kicker">AI Video Hook Engine</div>
 
-          <M.div variants={item}>
-            <input
-              className="input"
-              value={offer}
-              onChange={(e) => setOffer(e.target.value)}
-              placeholder="offer / product"
-            />
-          </M.div>
+          <h1 className="font-display text-4xl font-semibold leading-tight">
+            <span className="gradient-shimmer">Hook &amp; Script Studio</span>
+          </h1>
 
-          <M.div variants={item}>
-            <input
-              className="input"
-              value={tone}
-              onChange={(e) => setTone(e.target.value)}
-              placeholder="tone (e.g., friendly, energetic)"
-            />
-          </M.div>
+          <p className="text-sm opacity-75 max-w-md">
+            Generate scroll-stopping hooks, tight 60s scripts, B-roll ideas, and CTAs — built for TikTok, Reels,
+            and Shorts.{" "}
+            You get <strong>3 free runs</strong>, then unlock unlimited.
+          </p>
+        </header>
+      </M.div>
 
-          <M.div variants={item}>
-            <select
-              className="input"
-              value={platform}
-              onChange={(e) => setPlatform(e.target.value)}
+      {/* Main content */}
+      <main className="mx-auto max-w-3xl px-6 py-8 space-y-6">
+        <div className="flex items-center justify-between mb-3">
+          <button onClick={resetInputs} className="btn btn-ghost">
+            Reset inputs
+          </button>
+
+          <div
+            className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs"
+            style={{
+              background: "color-mix(in oklab, var(--surface-2) 85%, transparent)",
+              border: "1px solid hsl(var(--border))",
+            }}
+          >
+            <span className="opacity-70">Free runs</span>
+            <span className="font-medium">{Math.min(runs, 3)}/3</span>
+          </div>
+        </div>
+
+        {/* Inputs card */}
+        <section className="card p-4 md:p-6">
+          <M.section
+            className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2"
+            variants={stagger}
+            initial="hidden"
+            animate="show"
+          >
+            <M.div variants={item}>
+              <input
+                className="input"
+                value={niche}
+                onChange={(e) => setNiche(e.target.value)}
+                placeholder="niche"
+              />
+            </M.div>
+
+            <M.div variants={item}>
+              <input
+                className="input"
+                value={audience}
+                onChange={(e) => setAudience(e.target.value)}
+                placeholder="audience"
+              />
+            </M.div>
+
+            <M.div variants={item}>
+              <input
+                className="input"
+                value={offer}
+                onChange={(e) => setOffer(e.target.value)}
+                placeholder="offer / product"
+              />
+            </M.div>
+
+            <M.div variants={item}>
+              <input
+                className="input"
+                value={tone}
+                onChange={(e) => setTone(e.target.value)}
+                placeholder="tone (e.g., friendly, energetic)"
+              />
+            </M.div>
+
+            <M.div variants={item}>
+              <select
+                className="input"
+                value={platform}
+                onChange={(e) => setPlatform(e.target.value)}
+              >
+                <option value="TikTok">TikTok</option>
+                <option value="Reels">Reels</option>
+                <option value="Shorts">Shorts</option>
+              </select>
+            </M.div>
+
+            <M.div variants={item}>
+              <input
+                className="input"
+                value={keywords}
+                onChange={(e) => setKeywords(e.target.value)}
+                placeholder="optional keywords"
+              />
+            </M.div>
+
+            <M.button
+              type="button"
+              onClick={generate}
+              disabled={loading}
+              aria-busy={loading}
+              className="btn btn-primary w-full md:col-span-2 min-h-[44px] disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+              whileHover={{ y: -1, scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.25 }}
             >
-              <option value="TikTok">TikTok</option>
-              <option value="Reels">Reels</option>
-              <option value="Shorts">Shorts</option>
-            </select>
-          </M.div>
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <TypingWave />
+                  <span>Generating…</span>
+                </span>
+              ) : (
+                "Generate"
+              )}
+            </M.button>
+          </M.section>
+        </section>
 
-          <M.div variants={item}>
-            <input
-              className="input"
-              value={keywords}
-              onChange={(e) => setKeywords(e.target.value)}
-              placeholder="optional keywords"
-            />
-          </M.div>
+        {/* Output */}
+        {(loading || content) && (
+          <section ref={outRef} className="card p-5 mt-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="kicker">Output</div>
+              <CopyButton getText={() => content ?? ""} />
+            </div>
 
-          <M.button
-            type="button"
-            onClick={generate}
-            disabled={loading}
-            aria-busy={loading}
-            className="btn btn-primary w-full md:col-span-2 min-h-[44px] disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+            <div className="flex gap-2">
+              <button onClick={copyAll} className="btn btn-secondary">
+                Copy All
+              </button>
+              <button onClick={downloadTxt} className="btn btn-secondary">
+                Download .txt
+              </button>
+              <button onClick={clearOutput} className="btn btn-ghost">
+                Clear
+              </button>
+            </div>
+
+            {loading ? (
+              <div className="space-y-2">
+                <div className="skeleton h-5 w-3/4" />
+                <div className="skeleton h-5 w-full" />
+                <div className="skeleton h-5 w-11/12" />
+                <div className="skeleton h-5 w-5/6" />
+              </div>
+            ) : (
+              <article
+                className="prose prose-invert prose-sm max-w-none leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: content }}
+              />
+            )}
+          </section>
+        )}
+
+        {/* Upgrade box */}
+        <section className="card p-6 mt-10 space-y-3">
+          <h2 className="font-display text-lg font-semibold">
+            Unlock unlimited generations
+          </h2>
+
+          <p className="text-sm opacity-75 leading-relaxed">
+            Includes unlimited hooks, scripts, B-roll suggestions, and CTAs.
+          </p>
+
+          <M.a
+            href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => track("paywall_open", { source: "cta_section" })}
+            className="btn btn-primary w-full text-white"
             whileHover={{ y: -1, scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
             transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.25 }}
           >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <TypingWave />
-                <span>Generating…</span>
-              </span>
-            ) : (
-              "Generate"
-            )}
-          </M.button>
-        </M.section>
-      </section>
-
-      {/* Output */}
-      {(loading || content) && (
-        <section ref={outRef} className="card p-5 mt-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="kicker">Output</div>
-            <CopyButton getText={() => content ?? ""} />
-          </div>
-
-          <div className="flex gap-2">
-            <button onClick={copyAll} className="btn btn-secondary">
-              Copy All
-            </button>
-            <button onClick={downloadTxt} className="btn btn-secondary">
-              Download .txt
-            </button>
-            <button onClick={clearOutput} className="btn btn-ghost">
-              Clear
-            </button>
-          </div>
-
-          {loading ? (
-            <div className="space-y-2">
-              <div className="skeleton h-5 w-3/4" />
-              <div className="skeleton h-5 w-full" />
-              <div className="skeleton h-5 w-11/12" />
-              <div className="skeleton h-5 w-5/6" />
-            </div>
-          ) : (
-            <article
-              className="prose prose-invert prose-sm max-w-none leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: content }}
-            />
-          )}
+            Upgrade Now
+          </M.a>
         </section>
-      )}
 
-      {/* Upgrade box */}
-      <section className="card p-6 mt-10 space-y-3">
-        <h2 className="font-display text-lg font-semibold">
-          Unlock unlimited generations
-        </h2>
-
-        <p className="text-sm opacity-75 leading-relaxed">
-          Includes unlimited hooks, scripts, B-roll suggestions, and CTAs.
-        </p>
-
-        <M.a
-          href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
-          target="_blank"
-          rel="noreferrer"
-          onClick={() => track("paywall_open", { source: "cta_section" })}
-          className="btn btn-primary w-full text-white"
-          whileHover={{ y: -1, scale: 1.01 }}
-          whileTap={{ scale: 0.99 }}
-          transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.25 }}
-        >
-          Upgrade Now
-        </M.a>
-      </section>
-
-      <footer className="pt-10 text-xs opacity-60">
-        <div className="space-x-3">
-          <a className="hover:underline" href="/support">
-            Support
-          </a>
-          <span>·</span>
-          <a className="hover:underline" href="/terms">
-            Terms
-          </a>
-          <span>·</span>
-          <a className="hover:underline" href="/privacy">
-            Privacy
-          </a>
-          <span>·</span>
-          <a className="hover:underline" href="/changelog">
-            Changelog
-          </a>
-        </div>
-      </footer>
-    </main>
-  </div>
-);
+        <footer className="pt-10 text-xs opacity-60">
+          <div className="space-x-3">
+            <a className="hover:underline" href="/support">
+              Support
+            </a>
+            <span>·</span>
+            <a className="hover:underline" href="/terms">
+              Terms
+            </a>
+            <span>·</span>
+            <a className="hover:underline" href="/privacy">
+              Privacy
+            </a>
+            <span>·</span>
+            <a className="hover:underline" href="/changelog">
+              Changelog
+            </a>
+          </div>
+        </footer>
+      </main>
+    </div>
+  );
+}
