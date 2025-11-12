@@ -30,15 +30,17 @@ export const metadata = {
   description:
     "Generate 20 scroll-stopping hooks + a tight 45–60s script, B-roll ideas & CTAs. Built for TikTok, Reels, Shorts. 3 free runs. Unlock unlimited.",
   icons: {
-    icon: [
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-    ],
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
-    shortcut: "/favicon-32x32.png",
-  },
+  icon: [
+    { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    { url: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
+    { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
+  ],
+  apple: [
+    { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+  ],
+  shortcut: "/favicon-32x32.png",
+},
   openGraph: {
     title: "Hook & Script Studio",
     description:
