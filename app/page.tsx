@@ -6,6 +6,8 @@ import { DEFAULTS } from "@/lib/prompts";
 import TypingWave from "./components/TypingWave";
 import CopyButton from "./components/CopyButton";
 import UpdateBanner from "@/app/components/UpdateBanner";
+import { M, useMotion } from "./components/Motion";
+
 
 
 
@@ -31,6 +33,8 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [runs, setRuns] = useState<number>(0);
   const [content, setContent] = useState<string>("");
+  const { fadeUp, stagger, item } = useMotion();
+
 
   const outRef = useRef<HTMLDivElement | null>(null);
 
@@ -224,6 +228,7 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
       <UpdateBanner />
       
       {/* Marketing header */}
+      <M.div initial="hidden" animate="show" variants={fadeUp}>
       <header className="mx-auto max-w-3xl px-6 pt-14 pb-10 space-y-2">
   <div className="kicker">AI Video Hook Engine</div>
 
@@ -238,6 +243,7 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
     You get <strong>3 free runs</strong>, then unlock unlimited.
   </p>
 </header>
+</M.div>
 
 
       {/* Main content */}
@@ -255,53 +261,78 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
         </div>
 
         {/* Inputs */}
-        <section className="card p-4 md:p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-          <input
-            className="input"
-            value={niche}
-            onChange={(e) => setNiche(e.target.value)}
-            placeholder="niche"
-          />
-          <input
-            className="input"
-            value={audience}
-            onChange={(e) => setAudience(e.target.value)}
-            placeholder="audience"
-          />
-          <input
-            className="input"
-            value={offer}
-            onChange={(e) => setOffer(e.target.value)}
-            placeholder="offer / product"
-          />
-          <input
-            className="input"
-            value={tone}
-            onChange={(e) => setTone(e.target.value)}
-            placeholder="tone (e.g., friendly, energetic)"
-          />
-          <select
-            className="input"
-            value={platform}
-            onChange={(e) => setPlatform(e.target.value)}
-          >
-            <option value="TikTok">TikTok</option>
-            <option value="Reels">Reels</option>
-            <option value="Shorts">Shorts</option>
-          </select>
-          <input
-            className="input"
-            value={keywords}
-            onChange={(e) => setKeywords(e.target.value)}
-            placeholder="optional keywords"
-          />
-            <button
+        <M.section
+  className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4"
+  variants={stagger}
+  initial="hidden"
+  animate="show"
+>
+  <M.div variants={item}>
+    <input
+      className="input"
+      value={niche}
+      onChange={(e) => setNiche(e.target.value)}
+      placeholder="niche"
+    />
+  </M.div>
+
+  <M.div variants={item}>
+    <input
+      className="input"
+      value={audience}
+      onChange={(e) => setAudience(e.target.value)}
+      placeholder="audience"
+    />
+  </M.div>
+
+  <M.div variants={item}>
+    <input
+      className="input"
+      value={offer}
+      onChange={(e) => setOffer(e.target.value)}
+      placeholder="offer / product"
+    />
+  </M.div>
+
+  <M.div variants={item}>
+    <input
+      className="input"
+      value={tone}
+      onChange={(e) => setTone(e.target.value)}
+      placeholder="tone (e.g., friendly, energetic)"
+    />
+  </M.div>
+
+  <M.div variants={item}>
+    <select
+      className="input"
+      value={platform}
+      onChange={(e) => setPlatform(e.target.value)}
+    >
+      <option value="TikTok">TikTok</option>
+      <option value="Reels">Reels</option>
+      <option value="Shorts">Shorts</option>
+    </select>
+  </M.div>
+
+  <M.div variants={item}>
+    <input
+      className="input"
+      value={keywords}
+      onChange={(e) => setKeywords(e.target.value)}
+      placeholder="optional keywords"
+    />
+  </M.div>
+
+  <M.button
     type="button"
     onClick={generate}
     disabled={loading}
     aria-busy={loading}
     className="btn btn-primary w-full md:col-span-2 min-h-[44px] disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+    whileHover={{ y: -1, scale: 1.01 }}
+    whileTap={{ scale: 0.99 }}
+    transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.25 }}
   >
     {loading ? (
       <span className="flex items-center justify-center gap-2">
@@ -311,9 +342,9 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
     ) : (
       "Generate"
     )}
-  </button>
-          </div>
-        </section>
+  </M.button>
+</M.section>
+
 
 
         {/* Output */}
@@ -355,15 +386,19 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
     Includes unlimited hooks, scripts, B-roll suggestions, and CTAs.
   </p>
 
-  <a
-    href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
-    target="_blank"
-    rel="noreferrer"
-    onClick={() => track("paywall_open", { source: "upgrade_box" })}
-    className="btn btn-primary w-full text-center !text-white"
-  >
-    Upgrade Now
-  </a>
+  <M.a
+  href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
+  target="_blank"
+  rel="noreferrer"
+  onClick={() => track("paywall_open", { source: "cta_section" })}
+  className="btn btn-primary w-full"
+  whileHover={{ y: -1, scale: 1.01 }}
+  whileTap={{ scale: 0.99 }}
+  transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.25 }}
+>
+  Upgrade Now
+</M.a>
+
 </section>
 
 
