@@ -31,6 +31,20 @@ export const metadata = {
   title: "Hook & Script Studio",
   description:
     "Generate scroll-stopping hooks, a tight 45–60s script, B-roll ideas, and CTAs. Built for TikTok, Reels, Shorts. 3 free runs. Unlock unlimited.",
+
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    other: [
+      { rel: "icon", url: "/android-chrome-192x192.png", sizes: "192x192" },
+      { rel: "icon", url: "/android-chrome-512x512.png", sizes: "512x512" },
+    ],
+  },
+
   openGraph: {
     url: "https://hook-script-studio.vercel.app/",
     type: "website",
@@ -47,6 +61,7 @@ export const metadata = {
       },
     ],
   },
+
   twitter: {
     card: "summary_large_image",
     title: "Hook & Script Studio",
@@ -55,6 +70,7 @@ export const metadata = {
     images: ["https://hook-script-studio.vercel.app/og-1200x630.png?v=2"],
   },
 };
+
 
 
 
