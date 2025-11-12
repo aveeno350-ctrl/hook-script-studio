@@ -5,7 +5,7 @@ import { track } from "@/lib/metric";
 import { DEFAULTS } from "@/lib/prompts";
 import TypingWave from "./components/TypingWave";
 import CopyButton from "./components/CopyButton";
-import UpdateBanner from "@/components/UpdateBanner";
+import UpdateBanner from "@/app/components/UpdateBanner";
 
 
 
