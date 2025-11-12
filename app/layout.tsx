@@ -53,7 +53,7 @@ export const metadata = {
       "Generate 20 hooks + a tight 45–60s script, B-roll ideas & CTAs. 3 free runs. Unlock unlimited.",
     images: [
       {
-        url: "https://hook-script-studio.vercel.app/og-1200x630.png?v=2",
+        url: "https://hook-script-studio.vercel.app/og-1200x630.png?v=3",
         width: 1200,
         height: 630,
         type: "image/png",
@@ -67,7 +67,7 @@ export const metadata = {
     title: "Hook & Script Studio",
     description:
       "Generate hooks, scripts, B-roll ideas, and CTAs. 3 free runs, then unlock unlimited.",
-    images: ["https://hook-script-studio.vercel.app/og-1200x630.png?v=2"],
+    images: ["https://hook-script-studio.vercel.app/og-1200x630.png?v=3"],
   },
 };
 
