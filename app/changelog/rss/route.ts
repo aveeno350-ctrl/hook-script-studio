@@ -1,4 +1,4 @@
-import { UPDATES } from "../../data/updates";
+import { UPDATES } from "@/data/updates";
 
 export async function GET() {
   const items = UPDATES.map(
