@@ -222,7 +222,7 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
       <header className="mx-auto max-w-3xl px-6 pt-14 pb-10 space-y-2">
   <div className="kicker">AI Video Hook Engine</div>
 
-  <h1 className="text-4xl font-semibold leading-tight">
+  <h1 className="font-display text-4xl font-semibold leading-tight">
     <span className="bg-gradient-to-r from-[var(--brand-500)] to-[var(--accent-500)] bg-clip-text text-transparent">
       Hook & Script Studio
     </span>
@@ -344,7 +344,7 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
 
         {/* Upgrade box */}
         <section className="card p-6 mt-10 space-y-3">
-  <h2 className="text-lg font-semibold">Unlock unlimited generations</h2>
+  <h2 className="font-display text-lg font-semibold">Unlock unlimited generations</h2>
 
   <p className="text-sm opacity-75 leading-relaxed">
     Includes unlimited hooks, scripts, B-roll suggestions, and CTAs.
