@@ -25,41 +25,37 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// app/layout.tsx
 export const metadata = {
-  title: "Hook & Script Studio — Viral Hooks ⋅ 60s Scripts in Seconds",
-  description:
-    "Generate 20 scroll-stopping hooks + a tight 45–60s script, B-roll ideas & CTAs. Built for TikTok, Reels, Shorts. 3 free runs. Unlock unlimited.",
-  icons: {
-  icon: [
-    { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-    { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-    { url: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
-    { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
-  ],
-  apple: [
-    { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-  ],
-  shortcut: "/favicon-32x32.png",
-},
-  openGraph: {
-  images: [
-    {
-      url: "/og-1200x630.png",
-      width: 1200,
-      height: 630,
-      alt: "Hook & Script Studio – AI Video Hook Engine",
-      type: "image/png",
-    },
-  ],
-},
-twitter: {
-  card: "summary_large_image",
+  metadataBase: new URL("https://hook-script-studio.vercel.app"),
   title: "Hook & Script Studio",
   description:
-    "Generate scroll-stopping hooks, scripts, B-roll ideas, and CTAs. 3 free runs, then unlock unlimited.",
-  images: ["/og-1200x630.png"], // ← using the same file
-},
+    "Generate scroll-stopping hooks, a tight 45–60s script, B-roll ideas, and CTAs. Built for TikTok, Reels, Shorts. 3 free runs. Unlock unlimited.",
+  openGraph: {
+    url: "https://hook-script-studio.vercel.app/",
+    type: "website",
+    title: "Hook & Script Studio — Viral Hooks + 60s Scripts in Seconds",
+    description:
+      "Generate 20 hooks + a tight 45–60s script, B-roll ideas & CTAs. 3 free runs. Unlock unlimited.",
+    images: [
+      {
+        url: "https://hook-script-studio.vercel.app/og-1200x630.png?v=2",
+        width: 1200,
+        height: 630,
+        type: "image/png",
+        alt: "Hook & Script Studio – AI Video Hook Engine",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hook & Script Studio",
+    description:
+      "Generate hooks, scripts, B-roll ideas, and CTAs. 3 free runs, then unlock unlimited.",
+    images: ["https://hook-script-studio.vercel.app/og-1200x630.png?v=2"],
+  },
 };
+
 
 
 
