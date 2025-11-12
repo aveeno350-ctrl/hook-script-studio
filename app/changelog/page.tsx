@@ -1,6 +1,6 @@
 import Container from "../components/Container";
 import PageHeader from "../components/PageHeader";
-import { UPDATES } from "../data/updates";
+import { UPDATES } from "../../data/updates";
 
 export const metadata = {
   title: "Changelog – Hook & Script Studio",
