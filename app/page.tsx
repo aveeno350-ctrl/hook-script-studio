@@ -364,6 +364,9 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
 
         <footer className="pt-10 text-xs opacity-60">
           <div className="space-x-3">
+            <a className="hover:underline" href="/changelog">
+              Changelog
+            </a>
             <a className="hover:underline" href="/support">
               Support
             </a>
