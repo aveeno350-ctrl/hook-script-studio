@@ -26,26 +26,40 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Hook & Script Studio — Viral Hooks & 60s Scripts in Seconds",
+  title: "Hook & Script Studio — Viral Hooks ⋅ 60s Scripts in Seconds",
   description:
-    "Generate 20 hooks by angle + a tight 45–60s script, B-roll, and CTAs. Built for TikTok, Reels, Shorts. 3 free runs, then unlock unlimited.",
+    "Generate 20 scroll-stopping hooks + a tight 45–60s script, B-roll ideas & CTAs. Built for TikTok, Reels, Shorts. 3 free runs. Unlock unlimited.",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
+  },
   openGraph: {
     title: "Hook & Script Studio",
     description:
       "Generate hooks, scripts, B-roll, and CTAs for short-form video in seconds.",
-    url: process.env.NEXT_PUBLIC_BASE_URL,
+    url: process.env.NEXT_PUBLIC_URL,      // ensure you set this env var
     siteName: "Hook & Script Studio",
     images: [
       {
-        url: "/og-image.png",   // ← UPDATE THIS to match the file in public/
+        url: "/og-image.png",                // your OG graphic you chose earlier
         width: 1200,
         height: 630,
-        alt: "Hook & Script Studio",
       },
     ],
+    locale: "en_US",
+    type: "website",
   },
-  twitter: { card: "summary_large_image" },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hook & Script Studio",
+    description:
+      "Generate hooks, scripts, B-roll & CTAs for TikTok, Reels & Shorts. Free first 3 runs.",
+    images: ["/og-image.png"],
+    creator: "@your_twitter_handle",
+  },
 };
+
 
 
 export default function RootLayout({
