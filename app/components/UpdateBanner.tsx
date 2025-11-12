@@ -1,63 +1,88 @@
-// components/UpdateBanner.tsx
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { UPDATES } from "@/data/updates";
 
-const LS_KEY = "hss_update_banner_dismissed_v1";
-
+/**
+ * Animated banner that announces the latest version.
+ * - Slides/fades in on mount
+ * - Dismiss persists per version via localStorage
+ */
 export default function UpdateBanner() {
-  const [dismissed, setDismissed] = useState<boolean>(false);
-
   const latest = useMemo(() => UPDATES[0], []);
-  const id = latest ? `${latest.version}-${latest.date}` : "";
+  const storageKey = `hss_update_banner_v${latest.version}`;
+  const [open, setOpen] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(LS_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw) as { id: string };
-      if (parsed?.id === id) setDismissed(true);
-    } catch {/* ignore */}
-  }, [id]);
+    // Show banner unless user dismissed this specific version
+    const dismissed = localStorage.getItem(storageKey) === "1";
+    setOpen(!dismissed);
+  }, [storageKey]);
 
-  if (!latest || dismissed) return null;
-
-  function onDismiss() {
-    try {
-      localStorage.setItem(LS_KEY, JSON.stringify({ id }));
-    } catch {/* ignore */}
-    setDismissed(true);
+  function dismiss() {
+    localStorage.setItem(storageKey, "1");
+    setOpen(false);
   }
 
-  return (
-    <div
-      role="status"
-      aria-live="polite"
-      className="card mb-4 border rounded-xl px-4 py-3 flex items-center justify-between"
-    >
-      <div className="min-w-0">
-        <div className="kicker">New update • {latest.version}</div>
-        <div className="truncate">
-          <span className="font-medium">{latest.title}</span>
-          {latest.body ? <span className="opacity-80"> — {latest.body}</span> : null}
-        </div>
-      </div>
+  const variants = prefersReducedMotion
+    ? { hidden: { opacity: 0 }, show: { opacity: 1 } }
+    : {
+        hidden: { opacity: 0, y: -12, filter: "blur(4px)" },
+        show: {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          transition: { type: "spring", stiffness: 420, damping: 28 },
+        },
+        exit: { opacity: 0, y: -8, transition: { duration: 0.18 } },
+      };
 
-      <div className="flex items-center gap-2 shrink-0 pl-4">
-        <Link href="/changelog" className="btn btn-secondary px-3 py-2">
-          Changelog
-        </Link>
-        <button
-          type="button"
-          aria-label="Dismiss update"
-          onClick={onDismiss}
-          className="btn btn-ghost px-3 py-2"
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          role="status"
+          aria-live="polite"
+          initial="hidden"
+          animate="show"
+          exit="exit"
+          variants={variants}
+          className="mx-auto mb-4 max-w-3xl rounded-xl border bg-[color-mix(in_oklab,var(--surface)92%,transparent)] px-4 py-3 text-sm shadow-sm"
         >
-          Dismiss
-        </button>
-      </div>
-    </div>
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="kicker mb-1">Changelog</div>
+              <div className="flex flex-wrap items-baseline gap-2">
+                <span className="font-medium">
+                  v{latest.version} — {latest.title}
+                </span>
+                <span className="opacity-60">({new Date(latest.date).toLocaleDateString()})</span>
+              </div>
+              {latest.body ? (
+                <p className="mt-1 line-clamp-2 opacity-80">{latest.body}</p>
+              ) : null}
+              <a
+                href="/changelog"
+                className="mt-2 inline-flex text-[13px] font-medium text-white/90 underline decoration-white/30 underline-offset-4 hover:text-white"
+              >
+                See what’s new →
+              </a>
+            </div>
+
+            <button
+              type="button"
+              onClick={dismiss}
+              aria-label="Dismiss update banner"
+              className="btn btn-ghost shrink-0"
+            >
+              Dismiss
+            </button>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
+
