@@ -223,7 +223,7 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
   <div className="kicker">AI Video Hook Engine</div>
 
   <h1 className="font-display text-4xl font-semibold leading-tight">
-    <span className="bg-gradient-to-r from-[var(--brand-500)] to-[var(--accent-500)] bg-clip-text text-transparent">
+    <span className="gradient-shimmer">
       Hook & Script Studio
     </span>
   </h1>
