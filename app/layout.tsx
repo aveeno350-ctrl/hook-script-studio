@@ -42,29 +42,22 @@ export const metadata = {
   shortcut: "/favicon-32x32.png",
 },
   openGraph: {
-    title: "Hook & Script Studio",
-    description:
-      "Generate hooks, scripts, B-roll, and CTAs for short-form video in seconds.",
-    url: process.env.NEXT_PUBLIC_URL,      // ensure you set this env var
-    siteName: "Hook & Script Studio",
-    images: [
-      {
-        url: "/og-image.png",                // your OG graphic you chose earlier
-        width: 1200,
-        height: 630,
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Hook & Script Studio",
-    description:
-      "Generate hooks, scripts, B-roll & CTAs for TikTok, Reels & Shorts. Free first 3 runs.",
-    images: ["/og-image.png"],
-    creator: "@your_twitter_handle",
-  },
+  images: [
+    {
+      url: "/og-1200x630.png",
+      width: 1200,
+      height: 630,
+      alt: "Hook & Script Studio – AI Video Hook Engine",
+    },
+  ],
+},
+twitter: {
+  card: "summary_large_image",
+  title: "Hook & Script Studio",
+  description:
+    "Generate scroll-stopping hooks, scripts, B-roll ideas, and CTAs. 3 free runs, then unlock unlimited.",
+  images: ["/og-1200x630.png"], // ← using the same file
+},
 };
 
 
