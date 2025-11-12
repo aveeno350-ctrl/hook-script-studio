@@ -30,10 +30,10 @@ export const metadata = {
   description:
     "Generate 20 scroll-stopping hooks + a tight 45–60s script, B-roll ideas & CTAs. Built for TikTok, Reels, Shorts. 3 free runs. Unlock unlimited.",
   icons: {
-  icon: "/favicon.ico",
-  shortcut: "/favicon.ico",
-  apple: "/favicon.ico",
-},
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
+  },
   openGraph: {
     title: "Hook & Script Studio",
     description:
