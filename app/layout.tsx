@@ -68,6 +68,9 @@ export const metadata = {
     description:
       "Generate hooks, scripts, B-roll ideas, and CTAs. 3 free runs, then unlock unlimited.",
     images: ["https://hook-script-studio.vercel.app/og-1200x630.png?v=3"],
+
+    site: "@AJGainesDev",
+    creator: "@AJGainesDev",
   },
 };
 
