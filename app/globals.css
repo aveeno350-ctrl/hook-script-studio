@@ -62,12 +62,20 @@ html, body {
 @layer components {
   /* Cards / panels */
   .card {
-    @apply rounded-xl border backdrop-blur;
-    background: color-mix(in oklab, var(--surface) 85%, transparent);
-    border-color: hsl(var(--border));
-    box-shadow: var(--shadow-sm);
-  }
-  .card:hover { box-shadow: var(--shadow-md); }
+  @apply rounded-xl border backdrop-blur transition-shadow;
+  background: color-mix(in oklab, var(--surface) 90%, transparent);
+  border-color: hsl(var(--border));
+  box-shadow: var(--shadow-sm);
+}
+
+.card:hover {
+  /* subtle glow gradient matching brand tones */
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--brand-500) 50%, transparent),
+    0 0 12px 2px color-mix(in oklab, var(--accent-500) 40%, transparent);
+  transform: translateY(-1px);
+}
+
 
   /* Inputs */
   .input {
@@ -92,6 +100,11 @@ html, body {
     filter: brightness(1.05);
     transform: translateY(-1px);
   }
+  .btn-primary:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 0 0 12px color-mix(in oklab, var(--brand-500) 45%, transparent);
+}
   .btn-secondary {
     @apply border;
     background: color-mix(in oklab, var(--surface-2) 90%, transparent);
