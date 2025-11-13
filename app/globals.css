@@ -233,3 +233,22 @@ a:hover {
   .gradient-shimmer { animation: none; }
 }
 
+@keyframes breathe-soft {
+  0% {
+    transform: translateY(0) scale(1);
+    box-shadow: var(--shadow-sm);
+  }
+  45% {
+    transform: translateY(-1px) scale(1.015);
+    box-shadow: 0 0 26px rgba(91, 134, 255, 0.35);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+/* apply to primary CTA when idle */
+.btn-pulse {
+  animation: breathe-soft 2.8s ease-in-out infinite;
+}
