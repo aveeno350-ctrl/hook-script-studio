@@ -528,32 +528,34 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
 
 
   {/* Examples gallery */}
-<GlowCard className="p-6 mt-8 space-y-4 group">
+<GlowCard className="p-6 mt-8 space-y-6 group">
+  {/* Header row */}
+  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+    <div className="space-y-1">
+      <div className="kicker">Examples</div>
 
-  <header className="space-y-1">
-    <div className="kicker">Examples</div>
+      <div className="flex items-center gap-2">
+        <h2 className="font-display text-base font-semibold">
+          What can you make with it?
+        </h2>
 
-    <div className="flex items-center gap-2">
-      <h2 className="font-display text-base font-semibold">
-        What can you make with it?
-      </h2>
-
-      <span
-        className="
-          inline-flex items-center px-2 py-[2px] rounded-full
-          text-[10px] uppercase tracking-wide
-          bg-[color-mix(in_oklab,var(--accent-500)80%,transparent)]
-          text-white/95
-        "
-      >
-        New
-      </span>
+        <span
+          className="
+            inline-flex items-center px-2 py-[2px] rounded-full
+            text-[10px] uppercase tracking-wide
+            bg-[color-mix(in_oklab,var(--accent-500)80%,transparent)]
+            text-white/95
+          "
+        >
+          New
+        </span>
+      </div>
     </div>
 
-    <p className="text-xs opacity-70 max-w-md">
+    <p className="text-xs opacity-70 md:text-right max-w-xs md:max-w-sm">
       These are sample hooks + scripts. Tweak them to sound like you.
     </p>
-  </header>
+  </div>
 
 
     <div className="grid gap-4 md:grid-cols-3">
@@ -598,23 +600,23 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
 
 
 {/* Upgrade box */}
-<GlowCard className="card p-6 md:p-7 mt-10 space-y-4 md:text-center">
-  <header className="space-y-1">
+<GlowCard className="p-6 mt-10 space-y-4 group">
+  <div className="space-y-1">
     <h2 className="font-display text-lg font-semibold">
       Unlock unlimited generations
     </h2>
 
-    <p className="text-sm opacity-75 leading-relaxed max-w-md md:mx-auto">
+    <p className="text-sm opacity-75 leading-relaxed">
       Includes unlimited hooks, scripts, B-roll suggestions, and CTAs.
     </p>
-  </header>
+  </div>
 
   <M.a
     href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
     target="_blank"
     rel="noreferrer"
     onClick={() => track("paywall_open", { source: "cta_section" })}
-    className="btn btn-primary w-full md:w-auto md:px-10 mx-auto !text-white"
+    className="btn btn-primary w-full !text-white mt-4"
     whileHover={{ y: -1, scale: 1.01 }}
     whileTap={{ scale: 0.99 }}
     transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.25 }}
@@ -622,6 +624,7 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
     Upgrade Now
   </M.a>
 </GlowCard>
+
 
 
 
