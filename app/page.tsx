@@ -598,7 +598,7 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
 
 
 {/* Upgrade box */}
-<Glowcard className="card p-6 md:p-7 mt-10 space-y-4 md:text-center">
+<GlowCard className="card p-6 md:p-7 mt-10 space-y-4 md:text-center">
   <header className="space-y-1">
     <h2 className="font-display text-lg font-semibold">
       Unlock unlimited generations
@@ -621,7 +621,7 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
   >
     Upgrade Now
   </M.a>
-</Glowcard>
+</GlowCard>
 
 
 
