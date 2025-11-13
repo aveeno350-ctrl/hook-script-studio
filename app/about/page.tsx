@@ -1,6 +1,6 @@
 // app/about/page.tsx
-import Container from "@/components/Container";
-import PageHeader from "@/components/PageHeader";
+import Container from "../components/Container";
+import PageHeader from "../components/PageHeader";
 
 export const metadata = {
   title: "About – Hook & Script Studio",
