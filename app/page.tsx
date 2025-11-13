@@ -309,22 +309,25 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
     Reset inputs
   </button>
 
-  <div
-    className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs"
-    style={{
-      background: "color-mix(in oklab, var(--surface-2) 85%, transparent)",
-      border: "1px solid hsl(var(--border))",
-    }}
-  >
-    <span className="opacity-70">Free runs used</span>
-    <span className="font-medium">{Math.min(runs, 3)} / 3</span>
+  {/* Free runs wrapper */}
+  <div className="flex flex-col items-end">
+    <div
+      className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs"
+      style={{
+        background: "color-mix(in oklab, var(--surface-2) 85%, transparent)",
+        border: "1px solid hsl(var(--border))",
+      }}
+    >
+      <span className="opacity-70">Free runs used</span>
+      <span className="font-medium">{Math.min(runs, 3)} / 3</span>
+    </div>
+
+    <p className="text-[11px] opacity-50 mt-1">
+      You get 3 free runs on this device.
+    </p>
   </div>
 </div>
 
-{/* New tiny helper under free runs */}
-<p className="text-[11px] opacity-50 -mt-2 mb-3">
-  You get 3 free runs on this device.
-</p>
 
   {/* Inputs card */}
   <GlowCard className="p-4 md:p-6 group">
