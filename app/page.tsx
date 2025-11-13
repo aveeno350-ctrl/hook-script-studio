@@ -336,22 +336,16 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
       </M.div>
 
       {/* Tips microcopy */}
-      <div className="md:col-span-2 mt-1 space-y-1">
-  <p className="text-xs opacity-70 font-medium">
+      <div className="md:col-span-2 mt-1">
+  <p className="text-xs opacity-70 font-medium mb-1">
     Tips for better results:
   </p>
 
-  <div className="flex flex-wrap gap-2 text-xs opacity-70">
-    <span className="px-2 py-[2px] rounded-full bg-white/5 border border-white/10">
-      Specific niche
-    </span>
-    <span className="px-2 py-[2px] rounded-full bg-white/5 border border-white/10">
-      Clear audience
-    </span>
-    <span className="px-2 py-[2px] rounded-full bg-white/5 border border-white/10">
-      Defined offer
-    </span>
-  </div>
+  <ul className="text-xs opacity-70 list-disc ml-4 space-y-1">
+    <li>Be specific about your niche</li>
+    <li>Mention who the content is for</li>
+    <li>Describe your offer clearly</li>
+  </ul>
 </div>
 
 
