@@ -433,9 +433,15 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
     <div className="grid gap-4 md:grid-cols-3">
       {EXAMPLES.map((ex) => (
         <article
-          key={ex.label}
-          className="rounded-lg border border-white/5 bg-[color-mix(in_oklab,var(--surface)92%,transparent)] p-3 space-y-2"
-        >
+  key={ex.label}
+  className="
+    rounded-lg border border-white/8
+    bg-[color-mix(in_oklab,var(--surface)94%,transparent)]
+    p-3 space-y-2
+    transition-transform transition-shadow duration-200
+    hover:-translate-y-0.5 hover:shadow-[0_0_32px_rgba(155,92,255,0.35)]
+  "
+>
           <div className="text-[11px] uppercase tracking-wide opacity-70">
             {ex.label}
           </div>
