@@ -203,7 +203,6 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
 }
 
 
-  /** ----- UI ----- */
    /** ----- UI ----- */
   return (
     <div className="min-h-screen">
@@ -256,15 +255,16 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
           </button>
 
           <div
-            className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs"
-            style={{
-              background: "color-mix(in oklab, var(--surface-2) 85%, transparent)",
-              border: "1px solid hsl(var(--border))",
-            }}
-          >
-            <span className="opacity-70">Free runs</span>
-            <span className="font-medium">{Math.min(runs, 3)}/3</span>
-          </div>
+  className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs"
+  style={{
+    background: "color-mix(in oklab, var(--surface-2) 85%, transparent)",
+    border: "1px solid hsl(var(--border))",
+  }}
+>
+  <span className="opacity-70">Free runs used</span>
+  <span className="font-medium">{Math.min(runs, 3)} / 3</span>
+</div>
+
         </div>
 
         {/* Inputs card */}
@@ -351,6 +351,10 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
                 "Generate"
               )}
             </M.button>
+            <p className="text-xs opacity-70 mt-1 text-center">
+  You get <strong>3 free runs</strong>. Upgrade any time — unlimited unlocks everything.
+</p>
+
           </M.section>
         </section>
 
