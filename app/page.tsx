@@ -7,6 +7,8 @@ import TypingWave from "./components/TypingWave";
 import CopyButton from "./components/CopyButton";
 import UpdateBanner from "@/app/components/UpdateBanner";
 import { M, useMotion } from "./components/Motion";
+import { EXAMPLES } from "../../data/examples";
+
 
 
 
@@ -394,6 +396,54 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
           </section>
         )}
 
+              {/* Examples gallery */}
+      <section className="card p-6 mt-8 space-y-4">
+        <div className="flex items-baseline justify-between">
+          <div>
+            <div className="kicker">Examples</div>
+            <h2 className="font-display text-base font-semibold">
+              What can you make with it?
+            </h2>
+          </div>
+          <p className="text-xs opacity-70">
+            These are sample hooks + scripts. Tweak them to sound like you.
+          </p>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          {EXAMPLES.map((ex) => (
+            <article
+              key={ex.label}
+              className="rounded-lg border border-white/5 bg-[color-mix(in_oklab,var(--surface)92%,transparent)] p-3 space-y-2"
+            >
+              <div className="text-[11px] uppercase tracking-wide opacity-70">
+                {ex.label}
+              </div>
+              <p className="text-xs opacity-80">
+                <strong>Niche:</strong> {ex.niche}
+                <br />
+                <strong>Audience:</strong> {ex.audience}
+              </p>
+
+              <div className="text-xs">
+                <div className="font-semibold mb-1">Sample hook</div>
+                <p className="opacity-90">&ldquo;{ex.hook}&rdquo;</p>
+              </div>
+
+              <details className="text-[11px] mt-1">
+                <summary className="cursor-pointer opacity-80 hover:opacity-100">
+                  View script idea
+                </summary>
+                <pre className="mt-1 text-[11px] leading-snug whitespace-pre-wrap opacity-80">
+                  {ex.script}
+                </pre>
+              </details>
+            </article>
+          ))}
+        </div>
+      </section>
+
+        
         {/* Upgrade box */}
         <section className="card p-6 mt-10 space-y-3">
           <h2 className="font-display text-lg font-semibold">
