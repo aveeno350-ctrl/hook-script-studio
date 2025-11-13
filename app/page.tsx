@@ -38,6 +38,8 @@ export default function Home() {
   const [runs, setRuns] = useState<number>(0);
   const [content, setContent] = useState<string>("");
   const { fadeUp, stagger, item } = useMotion();
+  const [history, setHistory] = useState<string[]>([]);
+
 
 
   const outRef = useRef<HTMLDivElement | null>(null);
@@ -131,12 +133,16 @@ export default function Home() {
 
       const data = await resp.json();
 
+      const nextContent = data?.content ?? "";
+
       // update UI
       setContent(data?.content ?? "");
 
       // smooth scroll to the output card
 setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
 
+      // update history (most recent first, max 5 items)
+setHistory((prev) => [nextContent, ...prev].slice(0, 5));
 
       // bump free runs FIRST (we need `next` for analytics)
       const next = runs + 1;
@@ -147,7 +153,7 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
       track("generate_success", {
         platform,
         runs: next,
-        content_bytes: (data?.content ?? "").length || 0,
+        content_bytes: nextContent.length || 0,
         ms: Math.round(performance.now() - t0),
       });
 
@@ -376,7 +382,6 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
 
 
   {/* Output */}
-  {/* Output */}
 {(loading || content) && (
   <GlowCard className="p-5 mt-6 space-y-4 group">
     <div ref={outRef} className="space-y-3">
@@ -422,6 +427,44 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
         )}
       </div>
     </div>
+  </GlowCard>
+)}
+
+         {/* Recent runs history */}
+{history.length > 1 && (
+  <GlowCard className="p-4 mt-4 space-y-2 group">
+    <div className="flex items-center justify-between">
+      <div className="kicker">Recent runs</div>
+      <span className="text-[11px] opacity-60">
+        Last {Math.min(history.length, 5)} sessions
+      </span>
+    </div>
+
+    <ul className="space-y-1 text-xs">
+      {history.map((item, idx) => (
+        <li
+          key={idx}
+          className="
+            flex items-center justify-between gap-2
+            rounded-md border border-white/5
+            bg-[color-mix(in_oklab,var(--surface)96%,transparent)]
+            px-3 py-2
+          "
+        >
+          <div className="flex-1 min-w-0">
+            <p className="font-medium opacity-80">
+              Run #{history.length - idx}
+            </p>
+            <p className="truncate opacity-70">
+              {item.replace(/\s+/g, " ").slice(0, 90)}
+              {item.length > 90 ? "…" : ""}
+            </p>
+          </div>
+
+          <CopyButton getText={() => item} />
+        </li>
+      ))}
+    </ul>
   </GlowCard>
 )}
 
