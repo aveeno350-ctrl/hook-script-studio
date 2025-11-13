@@ -56,7 +56,7 @@ export default function PricingPage() {
               href={paymentLink}
               target="_blank"
               rel="noreferrer"
-              className="btn btn-primary w-full mt-3 text-white"
+              className="btn btn-primary w-full mt-3 !text-white"
             >
               Upgrade to Creator Access
             </a>
