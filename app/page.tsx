@@ -254,6 +254,10 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
             and Shorts.{" "}
             You get <strong>3 free runs</strong>, then unlock unlimited.
           </p>
+          {/* New reassurance line */}
+    <p className="text-xs opacity-60 mt-2">
+      No login required. Just fill the inputs, generate, and start filming.
+    </p>
         </header>
       </M.div>
 
@@ -299,24 +303,28 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
       
       {/* Main content */}
        <main className="mx-auto max-w-3xl px-6 py-8 space-y-6">
-  {/* Top row: reset + free runs */}
-  <div className="flex items-center justify-between mb-3">
-    <button onClick={resetInputs} className="btn btn-ghost">
-      Reset inputs
-    </button>
+      {/* Free runs + reset row */}
+<div className="flex items-center justify-between mb-3">
+  <button onClick={resetInputs} className="btn btn-ghost">
+    Reset inputs
+  </button>
 
-    <div
-      className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs"
-      style={{
-        background:
-          "color-mix(in oklab, var(--surface-2) 85%, transparent)",
-        border: "1px solid hsl(var(--border))",
-      }}
-    >
-      <span className="opacity-70">Free runs used</span>
-      <span className="font-medium">{Math.min(runs, 3)} / 3</span>
-    </div>
+  <div
+    className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs"
+    style={{
+      background: "color-mix(in oklab, var(--surface-2) 85%, transparent)",
+      border: "1px solid hsl(var(--border))",
+    }}
+  >
+    <span className="opacity-70">Free runs used</span>
+    <span className="font-medium">{Math.min(runs, 3)} / 3</span>
   </div>
+</div>
+
+{/* New tiny helper under free runs */}
+<p className="text-[11px] opacity-50 -mt-2 mb-3">
+  You get 3 free runs on this device.
+</p>
 
   {/* Inputs card */}
   <GlowCard className="p-4 md:p-6 group">
