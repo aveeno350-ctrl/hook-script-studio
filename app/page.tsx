@@ -262,42 +262,44 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
       </M.div>
 
           {/* Quickstart helper */}
-    <section className="mx-auto max-w-3xl px-6">
-      <div className="card p-4 md:p-5 flex flex-col md:flex-row gap-4 md:items-center">
+    <GlowCard className="p-5 md:p-6 group">
+    <div className="grid gap-6 md:grid-cols-[minmax(0,1.25fr)_minmax(0,2fr)] md:items-start">
+      {/* Left column: intro */}
+      <div className="space-y-2">
+        <div className="kicker">Quickstart</div>
+        <h2 className="font-display text-base font-semibold">
+          3 steps to your first script
+        </h2>
+        <p className="text-xs opacity-75">
+          Use this flow the first time you try the app (and anytime you feel stuck).
+        </p>
+      </div>
+
+      {/* Right column: three steps */}
+      <div className="grid gap-4 md:grid-cols-3 text-xs">
         <div className="space-y-1">
-          <p className="kicker">Quickstart</p>
-          <h2 className="font-display text-sm font-semibold">
-            3 steps to your first script
-          </h2>
-          <p className="text-xs opacity-75">
-            Use this flow the first time you try the app (and anytime you feel stuck).
+          <div className="font-semibold">1. Fill the basics</div>
+          <p className="opacity-75">
+            Niche, audience, offer, and tone. The more specific, the better.
           </p>
         </div>
 
-        <ol className="flex-1 grid gap-2 text-xs md:grid-cols-3 mt-2 md:mt-0">
-          <li className="rounded-lg border border-white/10 bg-[color-mix(in_oklab,var(--surface)96%,transparent)] px-3 py-2">
-            <div className="font-semibold mb-1">1. Fill the basics</div>
-            <p className="opacity-75">
-              Niche, audience, offer, and tone. The more specific, the better.
-            </p>
-          </li>
+        <div className="space-y-1">
+          <div className="font-semibold">2. Hit Generate</div>
+          <p className="opacity-75">
+            Skim the hooks, pick 1–2 you like, and tweak the wording to sound like you.
+          </p>
+        </div>
 
-          <li className="rounded-lg border border-white/10 bg-[color-mix(in_oklab,var(--surface)96%,transparent)] px-3 py-2">
-            <div className="font-semibold mb-1">2. Hit Generate</div>
-            <p className="opacity-75">
-              Skim the hooks, pick 1–2 you like, and tweak the wording to sound like you.
-            </p>
-          </li>
-
-          <li className="rounded-lg border border-white/10 bg-[color-mix(in_oklab,var(--surface)96%,transparent)] px-3 py-2">
-            <div className="font-semibold mb-1">3. Film today</div>
-            <p className="opacity-75">
-              Use the script and B-roll notes as your shot list. Don&apos;t overthink it.
-            </p>
-          </li>
-        </ol>
+        <div className="space-y-1">
+          <div className="font-semibold">3. Film today</div>
+          <p className="opacity-75">
+            Use the script and B-roll notes as your shot list. Don&apos;t overthink it.
+          </p>
+        </div>
       </div>
-    </section>
+    </div>
+  </GlowCard>
 
 
       
@@ -591,25 +593,22 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
   </GlowCard>
 
 
-  {/* Upgrade box */}
+{/* Upgrade box */}
 <GlowCard className="p-6 mt-10 space-y-4 group">
+  <h2 className="font-display text-lg font-semibold">
+    Unlock unlimited generations
+  </h2>
 
-  <header className="space-y-1 max-w-md">
-    <h2 className="font-display text-lg font-semibold">
-      Unlock unlimited generations
-    </h2>
-
-    <p className="text-sm opacity-75 leading-relaxed">
-      Includes unlimited hooks, scripts, B-roll suggestions, and CTAs.
-    </p>
-  </header>
+  <p className="text-sm opacity-75 leading-relaxed max-w-md">
+    Includes unlimited hooks, scripts, B-roll suggestions, and CTAs.
+  </p>
 
   <M.a
     href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
     target="_blank"
     rel="noreferrer"
     onClick={() => track("paywall_open", { source: "cta_section" })}
-    className="btn btn-primary w-full !text-white"
+    className="btn btn-primary w-full !text-white mt-1"
     whileHover={{ y: -1, scale: 1.01 }}
     whileTap={{ scale: 0.99 }}
     transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.25 }}
@@ -617,6 +616,7 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
     Upgrade Now
   </M.a>
 </GlowCard>
+
 
 
   <footer className="pt-10 text-xs opacity-60">
