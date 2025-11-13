@@ -1,9 +1,7 @@
 // app/pricing/page.tsx
-import Container from "../components/Container";
-import PageHeader from "../components/PageHeader";
 
 export const metadata = {
-  title: "Pricing – Hook & Script Studio",
+  title: "Pricing — Hook & Script Studio",
   description:
     "Simple, transparent pricing for Hook & Script Studio. Start with 3 free runs, then unlock unlimited generations.",
 };
@@ -12,82 +10,91 @@ export default function PricingPage() {
   const paymentLink = process.env.NEXT_PUBLIC_PAYMENT_LINK;
 
   return (
-    <Container>
-      <PageHeader
-        title="Pricing"
-        subtitle="Start with 3 free runs. When you’re ready, unlock unlimited hooks, scripts, B-roll ideas, and CTAs."
-      />
+    <main className="mx-auto max-w-3xl px-6 py-10 space-y-6">
+      <header className="space-y-2">
+        <p className="kicker">Pricing</p>
+        <h1 className="font-display text-2xl font-semibold">
+          Simple, creator-friendly pricing
+        </h1>
+        <p className="text-sm opacity-75">
+          Start with <strong>3 free runs</strong> to feel how the tool works.
+          When you&apos;re ready, unlock unlimited hooks, scripts, B-roll ideas,
+          and CTAs with a single upgrade.
+        </p>
+      </header>
 
-      <main className="max-w-2xl">
-        <section className="card p-6 md:p-8 space-y-4">
-          <div className="flex items-baseline justify-between gap-4">
-            <div>
-              <h2 className="font-display text-xl font-semibold">
-                Creator Access
-              </h2>
-              <p className="text-sm opacity-75">
-                For creators who want a focused tool for short-form video ideas and scripts.
-              </p>
-            </div>
-
-            {/* You can update this once you pick your final price */}
-            <div className="text-right">
-              <div className="text-2xl font-semibold">$19</div>
-              <div className="text-xs opacity-70">one-time payment</div>
-              {/* or “per month” if you go subscription later */}
-            </div>
+      {/* Main pricing card */}
+      <section className="card p-6 md:p-8 space-y-4">
+        <div className="flex items-baseline justify-between gap-4">
+          <div>
+            <h2 className="font-display text-xl font-semibold">
+              Creator Access
+            </h2>
+            <p className="text-sm opacity-75">
+              For creators who want a focused tool for short-form video ideas
+              and scripts.
+            </p>
           </div>
 
-          <ul className="text-sm space-y-2">
-            <li>✔ Unlimited generations after your 3 free runs</li>
-            <li>✔ Hooks by angle + a tight 45–60s script</li>
-            <li>✔ B-roll ideas and CTA suggestions</li>
-            <li>✔ Input memory so you’re not retyping your niche every time</li>
-            <li>✔ Access to future improvements while the product is live</li>
-          </ul>
+          <div className="text-right">
+            <div className="text-2xl font-semibold">$19</div>
+            <div className="text-xs opacity-70">one-time payment</div>
+            {/* You can switch this to “per month” later if you go subscription */}
+          </div>
+        </div>
 
-          <p className="text-xs opacity-70">
-            You can test the tool with 3 free runs before upgrading. Your upgrade
-            unlocks unlimited generations for your account.
-          </p>
+        <ul className="text-sm space-y-2">
+          <li>✔ Unlimited generations after your 3 free runs</li>
+          <li>✔ Hooks by angle + a tight 45–60s script</li>
+          <li>✔ B-roll ideas and CTA suggestions</li>
+          <li>✔ Input memory so you’re not retyping your niche every time</li>
+          <li>✔ Access to future improvements while the product is live</li>
+        </ul>
 
-          {paymentLink ? (
-            <a
-              href={paymentLink}
-              target="_blank"
-              rel="noreferrer"
-              className="btn btn-primary w-full mt-3 !text-white"
-            >
-              Upgrade to Creator Access
-            </a>
-          ) : (
-            <p className="text-xs text-red-400 mt-3">
-              Payment link not configured yet. Set <code>NEXT_PUBLIC_PAYMENT_LINK</code> in your environment.
-            </p>
-          )}
-        </section>
+        <p className="text-xs opacity-70 leading-relaxed">
+          You can test the tool with 3 free runs before upgrading. Your upgrade
+          unlocks unlimited generations for your account while Hook &amp; Script
+          Studio remains available.
+        </p>
 
-        <section className="mt-8 text-xs opacity-70 space-y-2">
-          <p>
-            Questions about pricing or upgrades? Reach out via{" "}
-            <a href="/support" className="hover:underline">
-              Support
-            </a>
-            .
+        {paymentLink ? (
+          <a
+            href={paymentLink}
+            target="_blank"
+            rel="noreferrer"
+            className="btn btn-primary w-full mt-3 !text-white"
+          >
+            Upgrade to Creator Access
+          </a>
+        ) : (
+          <p className="text-xs text-red-400 mt-3">
+            Payment link not configured yet. Set{" "}
+            <code>NEXT_PUBLIC_PAYMENT_LINK</code> in your environment.
           </p>
-          <p>
-            By upgrading, you agree to the{" "}
-            <a href="/terms" className="hover:underline">
-              Terms
-            </a>{" "}
-            and{" "}
-            <a href="/privacy" className="hover:underline">
-              Privacy Policy
-            </a>
-            .
-          </p>
-        </section>
-      </main>
-    </Container>
+        )}
+      </section>
+
+      {/* Fine print / links */}
+      <section className="text-xs opacity-70 space-y-2">
+        <p>
+          Questions about pricing or upgrades? Reach out via{" "}
+          <a href="/support" className="hover:underline">
+            Support
+          </a>
+          .
+        </p>
+        <p>
+          By upgrading, you agree to the{" "}
+          <a href="/terms" className="hover:underline">
+            Terms
+          </a>{" "}
+          and{" "}
+          <a href="/privacy" className="hover:underline">
+            Privacy Policy
+          </a>
+          .
+        </p>
+      </section>
+    </main>
   );
 }
