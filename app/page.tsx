@@ -250,276 +250,276 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
       </M.div>
 
       {/* Main content */}
-      <main className="mx-auto max-w-3xl px-6 py-8 space-y-6">
-        <div className="flex items-center justify-between mb-3">
-          <button onClick={resetInputs} className="btn btn-ghost">
-            Reset inputs
-          </button>
+       <main className="mx-auto max-w-3xl px-6 py-8 space-y-6">
+  {/* Top row: reset + free runs */}
+  <div className="flex items-center justify-between mb-3">
+    <button onClick={resetInputs} className="btn btn-ghost">
+      Reset inputs
+    </button>
 
-          <div
-  className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs"
-  style={{
-    background: "color-mix(in oklab, var(--surface-2) 85%, transparent)",
-    border: "1px solid hsl(var(--border))",
-  }}
->
-  <span className="opacity-70">Free runs used</span>
-  <span className="font-medium">{Math.min(runs, 3)} / 3</span>
-</div>
-
-        </div>
-
-        {/* Inputs card */}
-        <section className:"card p-4 md:p-6">
-        <M.section
-  className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4"
-  variants={stagger}
-  initial="hidden"
-  animate="show"
->
-  <M.div variants={item}>
-    <input
-      className="input"
-      value={niche}
-      onChange={(e) => setNiche(e.target.value)}
-      placeholder="niche"
-    />
-  </M.div>
-
-  <M.div variants={item}>
-    <input
-      className="input"
-      value={audience}
-      onChange={(e) => setAudience(e.target.value)}
-      placeholder="audience"
-    />
-  </M.div>
-
-  <M.div variants={item}>
-    <input
-      className="input"
-      value={offer}
-      onChange={(e) => setOffer(e.target.value)}
-      placeholder="offer / product"
-    />
-  </M.div>
-
-  <M.div variants={item}>
-    <input
-      className="input"
-      value={tone}
-      onChange={(e) => setTone(e.target.value)}
-      placeholder="tone (e.g., friendly, energetic)"
-    />
-  </M.div>
-
-  <M.div variants={item}>
-    <select
-      className="input"
-      value={platform}
-      onChange={(e) => setPlatform(e.target.value)}
+    <div
+      className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs"
+      style={{
+        background:
+          "color-mix(in oklab, var(--surface-2) 85%, transparent)",
+        border: "1px solid hsl(var(--border))",
+      }}
     >
-      <option value="TikTok">TikTok</option>
-      <option value="Reels">Reels</option>
-      <option value="Shorts">Shorts</option>
-    </select>
-  </M.div>
+      <span className="opacity-70">Free runs used</span>
+      <span className="font-medium">{Math.min(runs, 3)} / 3</span>
+    </div>
+  </div>
 
-  <M.div variants={item}>
-    <input
-      className="input"
-      value={keywords}
-      onChange={(e) => setKeywords(e.target.value)}
-      placeholder="optional keywords"
-    />
-  </M.div>
+  {/* Inputs card */}
+  <section className="card p-4 md:p-6">
+    <M.section
+      className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2"
+      variants={stagger}
+      initial="hidden"
+      animate="show"
+    >
+      <M.div variants={item}>
+        <input
+          className="input"
+          value={niche}
+          onChange={(e) => setNiche(e.target.value)}
+          placeholder="niche"
+        />
+      </M.div>
 
-            <div className="text-xs opacity-70 leading-relaxed mb-1 md:col-span-2">
-  <strong>Tips for better results:</strong>  
-  • Be specific about your niche  
-  • Mention who the content is for  
-  • Describe your offer clearly  
-</div>
+      <M.div variants={item}>
+        <input
+          className="input"
+          value={audience}
+          onChange={(e) => setAudience(e.target.value)}
+          placeholder="audience"
+        />
+      </M.div>
 
-<M.button
-    type="button"
-    onClick={generate}
-    disabled={loading}
-    aria-busy={loading}
-    className="btn btn-primary w-full md:col-span-2 min-h-[44px] disabled:opacity-60 disabled:cursor-not-allowed mt-2"
-    whileHover={{ y: -1, scale: 1.01 }}
-    whileTap={{ scale: 0.99 }}
-    transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.25 }}
-  >
-    {loading ? (
-      <span className="flex items-center justify-center gap-2">
-        <TypingWave />
-        <span>Generating…</span>
-      </span>
-    ) : (
-      "Generate"
-    )}
-  </M.button>
-            <p className="text-xs opacity-70 mt-1 text-center">
-  You get <strong>3 free runs</strong>. Upgrade any time — unlimited unlocks everything.
-</p>
+      <M.div variants={item}>
+        <input
+          className="input"
+          value={offer}
+          onChange={(e) => setOffer(e.target.value)}
+          placeholder="offer / product"
+        />
+      </M.div>
 
-          </M.section>
-        </section>
-    
+      <M.div variants={item}>
+        <input
+          className="input"
+          value={tone}
+          onChange={(e) => setTone(e.target.value)}
+          placeholder="tone (e.g., friendly, energetic)"
+        />
+      </M.div>
 
-        {/* Output */}
-        {(loading || content) && (
-          <section ref={outRef} className="card p-5 mt-6 space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="kicker">Output</div>
-              <CopyButton getText={() => content ?? ""} />
-            </div>
+      <M.div variants={item}>
+        <select
+          className="input"
+          value={platform}
+          onChange={(e) => setPlatform(e.target.value)}
+        >
+          <option value="TikTok">TikTok</option>
+          <option value="Reels">Reels</option>
+          <option value="Shorts">Shorts</option>
+        </select>
+      </M.div>
 
-            <div className="flex gap-2">
-              <button onClick={copyAll} className="btn btn-secondary">
-                Copy All
-              </button>
-              <button onClick={downloadTxt} className="btn btn-secondary">
-                Download .txt
-              </button>
-              <button onClick={clearOutput} className="btn btn-ghost">
-                Clear
-              </button>
-            </div>
+      <M.div variants={item}>
+        <input
+          className="input"
+          value={keywords}
+          onChange={(e) => setKeywords(e.target.value)}
+          placeholder="optional keywords"
+        />
+      </M.div>
 
-            {loading ? (
-              <div className="space-y-2">
-                <div className="skeleton h-5 w-3/4" />
-                <div className="skeleton h-5 w-full" />
-                <div className="skeleton h-5 w-11/12" />
-                <div className="skeleton h-5 w-5/6" />
-              </div>
-            ) : (
-              <article
-                className="prose prose-invert prose-sm max-w-none leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: content }}
-              />
-            )}
-          </section>
+      {/* Tips microcopy */}
+      <div className="text-xs opacity-70 leading-relaxed mb-1 md:col-span-2">
+        <strong>Tips for better results:</strong>
+        {" "}
+        • Be specific about your niche
+        {"  "}
+        • Mention who the content is for
+        {"  "}
+        • Describe your offer clearly
+      </div>
+
+      {/* Generate button */}
+      <M.button
+        type="button"
+        onClick={generate}
+        disabled={loading}
+        aria-busy={loading}
+        className="btn btn-primary w-full md:col-span-2 min-h-[44px] disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+        whileHover={{ y: -1, scale: 1.01 }}
+        whileTap={{ scale: 0.99 }}
+        transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.25 }}
+      >
+        {loading ? (
+          <span className="flex items-center justify-center gap-2">
+            <TypingWave />
+            <span>Generating…</span>
+          </span>
+        ) : (
+          "Generate"
         )}
+      </M.button>
+    </M.section>
+  </section>
 
-           {/* Examples gallery */}
-<section className="card p-6 mt-8 space-y-4">
-  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-1 md:gap-2">
-    <div>
-      <div className="kicker">Examples</div>
-      <h2 className="font-display text-base font-semibold">
-        What can you make with it?
-      </h2>
+  {/* Output */}
+  {(loading || content) && (
+    <section ref={outRef} className="card p-5 mt-6 space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="kicker">Output</div>
+        <CopyButton getText={() => content ?? ""} />
+      </div>
+
+      <div className="flex gap-2">
+        <button onClick={copyAll} className="btn btn-secondary">
+          Copy All
+        </button>
+        <button onClick={downloadTxt} className="btn btn-secondary">
+          Download .txt
+        </button>
+        <button onClick={clearOutput} className="btn btn-ghost">
+          Clear
+        </button>
+      </div>
+
+      {loading ? (
+        <div className="space-y-2">
+          <div className="skeleton h-5 w-3/4" />
+          <div className="skeleton h-5 w-full" />
+          <div className="skeleton h-5 w-11/12" />
+          <div className="skeleton h-5 w-5/6" />
+        </div>
+      ) : (
+        <article
+          className="prose prose-invert prose-sm max-w-none leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+      )}
+    </section>
+  )}
+
+  {/* Examples gallery */}
+  <section className="card p-6 mt-8 space-y-4">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-1 md:gap-2">
+      <div>
+        <div className="kicker">Examples</div>
+        <h2 className="font-display text-base font-semibold">
+          What can you make with it?
+        </h2>
+      </div>
+
+      <p className="text-xs opacity-70 md:text-right">
+        These are sample hooks + scripts. Tweak them to sound like you.
+      </p>
     </div>
 
-    <p className="text-xs opacity-70 md:text-right">
-      These are sample hooks + scripts. Tweak them to sound like you.
-    </p>
-  </div>
+    <div className="grid gap-4 md:grid-cols-3">
+      {EXAMPLES.map((ex) => (
+        <article
+          key={ex.label}
+          className="rounded-lg border border-white/5 bg-[color-mix(in_oklab,var(--surface)92%,transparent)] p-3 space-y-2"
+        >
+          <div className="text-[11px] uppercase tracking-wide opacity-70">
+            {ex.label}
+          </div>
 
-  {/* Cards */}
-  <div className="grid gap-4 md:grid-cols-3">
-    {EXAMPLES.map((ex) => (
-      <article
-        key={ex.label}
-        className="rounded-lg border border-white/5 bg-[color-mix(in_oklab,var(--surface)92%,transparent)] p-3 space-y-2"
-      >
-        <div className="text-[11px] uppercase tracking-wide opacity-70">
-          {ex.label}
-        </div>
-
-        <p className="text-xs opacity-80">
-          <strong>Niche:</strong> {ex.niche}
-          <br />
-          <strong>Audience:</strong> {ex.audience}
-        </p>
-
-        <div className="text-xs">
-          <div className="font-semibold mb-1">Sample hook</div>
-          <p className="opacity-90">&ldquo;{ex.hook}&rdquo;</p>
-        </div>
-
-        <details className="text-[11px] mt-1">
-          <summary className="cursor-pointer opacity-80 hover:opacity-100">
-            View script idea
-          </summary>
-          <pre className="mt-1 text-[11px] leading-snug whitespace-pre-wrap opacity-80">
-            {ex.script}
-          </pre>
-        </details>
-      </article>
-    ))}
-  </div>
-</section>
-
-
-        
-        {/* Upgrade box */}
-        <section className="card p-6 mt-10 space-y-3">
-          <h2 className="font-display text-lg font-semibold">
-            Unlock unlimited generations
-          </h2>
-
-          <p className="text-sm opacity-75 leading-relaxed">
-            Includes unlimited hooks, scripts, B-roll suggestions, and CTAs.
+          <p className="text-xs opacity-80">
+            <strong>Niche:</strong> {ex.niche}
+            <br />
+            <strong>Audience:</strong> {ex.audience}
           </p>
 
-          <M.a
-            href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
-            target="_blank"
-            rel="noreferrer"
-            onClick={() => track("paywall_open", { source: "cta_section" })}
-            className="btn btn-primary w-full !text-white"
-            whileHover={{ y: -1, scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
-            transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.25 }}
-          >
-            Upgrade Now
-          </M.a>
-        </section>
+          <div className="text-xs">
+            <div className="font-semibold mb-1">Sample hook</div>
+            <p className="opacity-90">&ldquo;{ex.hook}&rdquo;</p>
+          </div>
 
-        <footer className="pt-10 text-xs opacity-60">
-  <div className="space-x-3">
-    <a
-  className="hover:underline opacity-80 hover:opacity-100 transition"
-  href={`mailto:aveeno350@gmail.com?subject=Hook%20%26%20Script%20Studio%20Support%20Request&body=${encodeURIComponent(
-    "Please describe the issue you're experiencing.\n\nBrowser:\nDevice:\nSteps to reproduce:\n"
-  )}`}
->
-  Contact Support
-</a>
-    <span>·</span>
-    <a className="hover:underline" href="/terms">Terms</a>
-    <span>·</span>
-    <a className="hover:underline" href="/privacy">Privacy</a>
-    <span>·</span>
-    <a className="hover:underline" href="/license">License</a>
-    <span>·</span>
-    <a className="hover:underline" href="/support">
-      Support
-    </a>
-    <span>·</span>
-    <a className="hover:underline" href="/pricing">
-      Pricing
-    </a>
-    <span>·</span>
-    <a className="hover:underline" href="/changelog">
-      Changelog
-    </a>
-    <span>·</span>
-    <a className="hover:underline" href="/about">
-      About
-    </a>
+          <details className="text-[11px] mt-1">
+            <summary className="cursor-pointer opacity-80 hover:opacity-100">
+              View script idea
+            </summary>
+            <pre className="mt-1 text-[11px] leading-snug whitespace-pre-wrap opacity-80">
+              {ex.script}
+            </pre>
+          </details>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  {/* Upgrade box */}
+  <section className="card p-6 mt-10 space-y-3">
+    <h2 className="font-display text-lg font-semibold">
+      Unlock unlimited generations
+    </h2>
+
+    <p className="text-sm opacity-75 leading-relaxed">
+      Includes unlimited hooks, scripts, B-roll suggestions, and CTAs.
+    </p>
+
+    <M.a
+      href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
+      target="_blank"
+      rel="noreferrer"
+      onClick={() => track("paywall_open", { source: "cta_section" })}
+      className="btn btn-primary w-full text-white"
+      whileHover={{ y: -1, scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
+      transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.25 }}
+    >
+      Upgrade Now
+    </M.a>
+  </section>
+
+  <footer className="pt-10 text-xs opacity-60">
+    <div className="space-x-3">
+      <a
+        className="hover:underline opacity-80 hover:opacity-100 transition"
+        href={`mailto:aveeno350@gmail.com?subject=Hook%20%26%20Script%20Studio%20Support%20Request&body=${encodeURIComponent(
+          "Please describe the issue you're experiencing.\n\nBrowser:\nDevice:\nSteps to reproduce:\n"
+        )}`}
+      >
+        Contact Support
+      </a>
+      <span>·</span>
+      <a className="hover:underline" href="/terms">
+        Terms
+      </a>
+      <span>·</span>
+      <a className="hover:underline" href="/privacy">
+        Privacy
+      </a>
+      <span>·</span>
+      <a className="hover:underline" href="/license">
+        License
+      </a>
+      <span>·</span>
+      <a className="hover:underline" href="/support">
+        Support
+      </a>
+      <span>·</span>
+      <a className="hover:underline" href="/pricing">
+        Pricing
+      </a>
+      <span>·</span>
+      <a className="hover:underline" href="/changelog">
+        Changelog
+      </a>
+      <span>·</span>
+      <a className="hover:underline" href="/about">
+        About
+      </a>
+    </div>
 
     <p className="text-xs opacity-60 mt-3">
-  Need help? We respond within 24–48 hours.
-</p>
-
-          </div>
-        </footer>
-      </main>
-    </div>
-  );
-}
+      Need help? We respond within 24–48 hours.
+    </p>
+  </footer>
+</main>
