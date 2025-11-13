@@ -262,9 +262,11 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
       </M.div>
 
           {/* Quickstart helper */}
-    <GlowCard className="p-5 md:p-6 group">
+    <section className="mx-auto max-w-3xl px-6 mt-6">
+     <GlowCard className="p-5 md:p-6 group">
     <div className="grid gap-6 md:grid-cols-[minmax(0,1.25fr)_minmax(0,2fr)] md:items-start">
-      {/* Left column: intro */}
+      
+      {/* Left column */}
       <div className="space-y-2">
         <div className="kicker">Quickstart</div>
         <h2 className="font-display text-base font-semibold">
@@ -275,7 +277,7 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
         </p>
       </div>
 
-      {/* Right column: three steps */}
+      {/* Right column */}
       <div className="grid gap-4 md:grid-cols-3 text-xs">
         <div className="space-y-1">
           <div className="font-semibold">1. Fill the basics</div>
@@ -294,12 +296,14 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
         <div className="space-y-1">
           <div className="font-semibold">3. Film today</div>
           <p className="opacity-75">
-            Use the script and B-roll notes as your shot list. Don&apos;t overthink it.
+            Use the script and B-roll notes as your shot list. Don’t overthink it.
           </p>
         </div>
       </div>
+
     </div>
   </GlowCard>
+</section>
 
 
       
