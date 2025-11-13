@@ -522,34 +522,33 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
 
 
   {/* Examples gallery */}
-  <GlowCard className="p-6 mt-8 space-y-4 group">
+<GlowCard className="p-6 mt-8 space-y-4 group">
 
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-1 md:gap-2">
-    <div>
-      <div className="kicker">Examples</div>
+  <header className="space-y-1">
+    <div className="kicker">Examples</div>
 
-      <div className="flex items-center gap-2">
-        <h2 className="font-display text-base font-semibold">
-          What can you make with it?
-        </h2>
+    <div className="flex items-center gap-2">
+      <h2 className="font-display text-base font-semibold">
+        What can you make with it?
+      </h2>
 
-        <span
-          className="
-            inline-flex items-center px-2 py-[2px] rounded-full
-            text-[10px] uppercase tracking-wide
-            bg-[color-mix(in_oklab,var(--accent-500)80%,transparent)]
-            text-white/95
-          "
-        >
-          New
-        </span>
-      </div>
+      <span
+        className="
+          inline-flex items-center px-2 py-[2px] rounded-full
+          text-[10px] uppercase tracking-wide
+          bg-[color-mix(in_oklab,var(--accent-500)80%,transparent)]
+          text-white/95
+        "
+      >
+        New
+      </span>
     </div>
 
-    <p className="text-xs opacity-70 md:text-right">
+    <p className="text-xs opacity-70 max-w-md">
       These are sample hooks + scripts. Tweak them to sound like you.
     </p>
-  </div>
+  </header>
+
 
     <div className="grid gap-4 md:grid-cols-3">
       {EXAMPLES.map((ex) => (
