@@ -518,8 +518,12 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
       </a>
     </div>
 
-    <p className="text-xs opacity-60 mt-3">
+        <p className="text-xs opacity-60 mt-3">
       Need help? We respond within 24–48 hours.
     </p>
   </footer>
 </main>
+</div>
+);
+}
+
