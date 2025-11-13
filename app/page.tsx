@@ -377,14 +377,14 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
 
   {/* Output */}
   {(loading || content) && (
-    <GlowCard className="p-5 mt-6 space-y-4 group" ref={outRef as any}>
-
+  <GlowCard className="p-5 mt-6 space-y-4 group">
+    <div ref={outRef}>
       <div className="flex items-center justify-between">
         <div className="kicker">Output</div>
         <CopyButton getText={() => content ?? ""} />
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 mt-3">
         <button onClick={copyAll} className="btn btn-secondary">
           Copy All
         </button>
@@ -397,7 +397,7 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
       </div>
 
       {loading ? (
-        <div className="space-y-2">
+        <div className="space-y-2 mt-4">
           <div className="skeleton h-5 w-3/4" />
           <div className="skeleton h-5 w-full" />
           <div className="skeleton h-5 w-11/12" />
@@ -405,12 +405,14 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
         </div>
       ) : (
         <article
-          className="prose prose-invert prose-sm max-w-none leading-relaxed"
+          className="prose prose-invert prose-sm max-w-none leading-relaxed mt-4"
           dangerouslySetInnerHTML={{ __html: content }}
         />
       )}
-    </GlowCard>
-  )}
+    </div>
+  </GlowCard>
+)}
+
 
   {/* Examples gallery */}
   <GlowCard className="p-6 mt-8 space-y-4 group">
