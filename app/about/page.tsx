@@ -1,67 +1,77 @@
 // app/about/page.tsx
-import Container from "../components/Container";
-import PageHeader from "../components/PageHeader";
 
 export const metadata = {
-  title: "About – Hook & Script Studio",
+  title: "About — Hook & Script Studio",
   description:
-    "The story and intention behind Hook & Script Studio, a focused tool for creators who care about quality hooks and scripts.",
+    "Learn what Hook & Script Studio is, who it is for, and the vision behind it.",
 };
 
 export default function AboutPage() {
   return (
-    <Container>
-      <PageHeader
-        title="About Hook & Script Studio"
-        subtitle="A tiny, focused tool for creators who want better hooks and tighter scripts without spending hours staring at a blank page."
-      />
-
-      <main className="prose prose-sm max-w-2xl">
-        <p>
-          Hook &amp; Script Studio was created for short-form creators who care
-          about quality. Instead of yet another generic &quot;AI writer&quot;,
-          this tool is intentionally narrow: it&apos;s built to help you ship
-          better TikToks, Reels, and Shorts faster.
+    <main className="mx-auto max-w-3xl px-6 py-10 space-y-6">
+      <header className="space-y-2">
+        <p className="kicker">About</p>
+        <h1 className="font-display text-2xl font-semibold">
+          What is Hook &amp; Script Studio?
+        </h1>
+        <p className="text-sm opacity-75">
+          Hook &amp; Script Studio is built for creators, coaches, and founders
+          who want to make short-form content without staring at a blank screen
+          for hours. It&apos;s a practical tool for turning your ideas into
+          scripts, not just a toy demo.
         </p>
+      </header>
 
-        <p>
-          The goal is simple: remove the friction of coming up with{" "}
-          <em>that first good idea</em> — the hook, the angle, the opening line —
-          so you can focus on delivery, storytelling, and actually pressing
-          publish.
+      <section className="space-y-3">
+        <h2 className="font-semibold text-base">Built for short-form video first</h2>
+        <p className="text-sm opacity-80 leading-relaxed">
+          The tool is centered around TikTok, Reels, and Shorts style content:
+          punchy hooks, tight 45–60 second scripts, and clear calls to action
+          you can film today — not abstract ideas that never become content.
         </p>
+      </section>
 
-        <h2>What this tool is (and isn’t)</h2>
-        <ul>
-          <li>
-            <strong>Is:</strong> a fast way to explore angles, hooks, and
-            scripts that feel made for short-form video.
-          </li>
-          <li>
-            <strong>Isn&apos;t:</strong> a one-click &quot;viral hack&quot; or a
-            replacement for your voice, your stories, or your perspective.
-          </li>
+      <section className="space-y-3">
+        <h2 className="font-semibold text-base">For people who already care</h2>
+        <p className="text-sm opacity-80 leading-relaxed">
+          It&apos;s especially useful if you:
+        </p>
+        <ul className="list-disc pl-5 text-sm opacity-80 space-y-1">
+          <li>Sell digital products, coaching, or services.</li>
+          <li>Want to show up consistently on social without burning out.</li>
+          <li>Know your audience, but struggle to turn insights into scripts.</li>
         </ul>
+      </section>
 
-        <h2>How to get the most out of it</h2>
-        <ul>
-          <li>Bring a clear niche, audience, and offer into the inputs.</li>
-          <li>Edit and punch up the outputs so they sound like you.</li>
-          <li>Test multiple hooks from the same script across different clips.</li>
-          <li>Watch what actually performs, then come back and iterate.</li>
-        </ul>
-
-        <p>
-          Hook &amp; Script Studio will keep evolving over time — smarter
-          presets, better structures, and more ways to remix what you generate.
+      <section className="space-y-3">
+        <h2 className="font-semibold text-base">Why it exists</h2>
+        <p className="text-sm opacity-80 leading-relaxed">
+          Instead of giving you one generic hook, Hook &amp; Script Studio
+          leans into repeatable structure: multiple angles, clear scripts,
+          B-roll ideas, and CTAs that make sense for your offer. The goal is
+          to reduce friction between “I should post something” and “I have a
+          ready-to-film script.”
         </p>
+      </section>
 
-        <p className="text-xs opacity-70">
-          Have ideas or feedback? You can always reach out via{" "}
-          <a href="/support">Support</a>. Your input helps shape what gets built
-          next.
+      <section className="space-y-3">
+        <h2 className="font-semibold text-base">Where it&apos;s going</h2>
+        <p className="text-sm opacity-80 leading-relaxed">
+          Over time, the plan is to expand into more templates, more platforms,
+          and smarter analytics — while keeping the main experience fast and
+          focused. Every update in the{" "}
+          <a href="/changelog" className="underline hover:no-underline">
+            changelog
+          </a>{" "}
+          is aimed at making your next video easier to ship.
         </p>
-      </main>
-    </Container>
+      </section>
+
+      <p className="text-[11px] opacity-60 pt-4">
+        If you have feedback or ideas, the best way to influence what gets
+        built next is to send a quick note via the Support page.
+      </p>
+    </main>
   );
 }
+
