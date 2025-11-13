@@ -257,6 +257,46 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
         </header>
       </M.div>
 
+          {/* Quickstart helper */}
+    <section className="mx-auto max-w-3xl px-6">
+      <div className="card p-4 md:p-5 flex flex-col md:flex-row gap-4 md:items-center">
+        <div className="space-y-1">
+          <p className="kicker">Quickstart</p>
+          <h2 className="font-display text-sm font-semibold">
+            3 steps to your first script
+          </h2>
+          <p className="text-xs opacity-75">
+            Use this flow the first time you try the app (and anytime you feel stuck).
+          </p>
+        </div>
+
+        <ol className="flex-1 grid gap-2 text-xs md:grid-cols-3 mt-2 md:mt-0">
+          <li className="rounded-lg border border-white/10 bg-[color-mix(in_oklab,var(--surface)96%,transparent)] px-3 py-2">
+            <div className="font-semibold mb-1">1. Fill the basics</div>
+            <p className="opacity-75">
+              Niche, audience, offer, and tone. The more specific, the better.
+            </p>
+          </li>
+
+          <li className="rounded-lg border border-white/10 bg-[color-mix(in_oklab,var(--surface)96%,transparent)] px-3 py-2">
+            <div className="font-semibold mb-1">2. Hit Generate</div>
+            <p className="opacity-75">
+              Skim the hooks, pick 1–2 you like, and tweak the wording to sound like you.
+            </p>
+          </li>
+
+          <li className="rounded-lg border border-white/10 bg-[color-mix(in_oklab,var(--surface)96%,transparent)] px-3 py-2">
+            <div className="font-semibold mb-1">3. Film today</div>
+            <p className="opacity-75">
+              Use the script and B-roll notes as your shot list. Don&apos;t overthink it.
+            </p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+
+      
       {/* Main content */}
        <main className="mx-auto max-w-3xl px-6 py-8 space-y-6">
   {/* Top row: reset + free runs */}
