@@ -415,22 +415,18 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
         </section>
 
         <footer className="pt-10 text-xs opacity-60">
-          <div className="space-x-3">
-            <a className="hover:underline" href="/support">
-              Support
-            </a>
-            <span>·</span>
-            <a className="hover:underline" href="/terms">
-              Terms
-            </a>
-            <span>·</span>
-            <a className="hover:underline" href="/privacy">
-              Privacy
-            </a>
-            <span>·</span>
-            <a className="hover:underline" href="/changelog">
-              Changelog
-            </a>
+  <div className="space-x-3">
+    <a className="hover:underline" href="/support">Support</a>
+    <span>·</span>
+    <a className="hover:underline" href="/terms">Terms</a>
+    <span>·</span>
+    <a className="hover:underline" href="/privacy">Privacy</a>
+    <span>·</span>
+    <a className="hover:underline" href="/license">License</a>
+    <span>·</span>
+    <a className="hover:underline" href="mailto:aveeno350@gmail.com">
+      Email
+    </a>
           </div>
         </footer>
       </main>
