@@ -598,28 +598,31 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
 
 
 {/* Upgrade box */}
-<GlowCard className="p-6 mt-10 space-y-4 group">
-  <h2 className="font-display text-lg font-semibold">
-    Unlock unlimited generations
-  </h2>
+<Glowcard className="card p-6 md:p-7 mt-10 space-y-4 md:text-center">
+  <header className="space-y-1">
+    <h2 className="font-display text-lg font-semibold">
+      Unlock unlimited generations
+    </h2>
 
-  <p className="text-sm opacity-75 leading-relaxed max-w-md">
-    Includes unlimited hooks, scripts, B-roll suggestions, and CTAs.
-  </p>
+    <p className="text-sm opacity-75 leading-relaxed max-w-md md:mx-auto">
+      Includes unlimited hooks, scripts, B-roll suggestions, and CTAs.
+    </p>
+  </header>
 
   <M.a
     href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
     target="_blank"
     rel="noreferrer"
     onClick={() => track("paywall_open", { source: "cta_section" })}
-    className="btn btn-primary w-full !text-white mt-1"
+    className="btn btn-primary w-full md:w-auto md:px-10 mx-auto !text-white"
     whileHover={{ y: -1, scale: 1.01 }}
     whileTap={{ scale: 0.99 }}
     transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.25 }}
   >
     Upgrade Now
   </M.a>
-</GlowCard>
+</Glowcard>
+
 
 
 
