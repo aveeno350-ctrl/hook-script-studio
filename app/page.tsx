@@ -558,7 +558,7 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
   </div>
 
 
-    <div className="grid gap-4 md:grid-cols-3">
+    <div className="grid gap-4 md:grid-cols-3 mt-4">
       {EXAMPLES.map((ex) => (
         <article
   key={ex.label}
