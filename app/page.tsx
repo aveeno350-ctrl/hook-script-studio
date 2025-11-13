@@ -7,7 +7,7 @@ import TypingWave from "./components/TypingWave";
 import CopyButton from "./components/CopyButton";
 import UpdateBanner from "@/app/components/UpdateBanner";
 import { M, useMotion } from "./components/Motion";
-import { EXAMPLES } from "../../data/examples";
+import { EXAMPLES } from "@/data/examples";
 
 
 
