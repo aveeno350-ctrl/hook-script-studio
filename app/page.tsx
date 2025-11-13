@@ -439,6 +439,14 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
       Support
     </a>
     <span>·</span>
+    <a className="hover:underline" href="/pricing">
+      Pricing
+    </a>
+    <span>·</span>
+    <a className="hover:underline" href="/changelog">
+      Changelog
+    </a>
+    <span>·</span>
     <a className="hover:underline" href="/about">
       About
     </a>
