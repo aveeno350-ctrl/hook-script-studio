@@ -428,9 +428,19 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
     <span>·</span>
     <a className="hover:underline" href="/license">License</a>
     <span>·</span>
-    <a className="hover:underline" href="mailto:aveeno350@gmail.com">
-      Email
-    </a>
+    <a
+  className="hover:underline opacity-80 hover:opacity-100 transition"
+  href={`mailto:aveeno350@gmail.com?subject=Hook%20%26%20Script%20Studio%20Support%20Request&body=${encodeURIComponent(
+    "Please describe the issue you're experiencing.\n\nBrowser:\nDevice:\nSteps to reproduce:\n"
+  )}`}
+>
+  Contact Support
+</a>
+
+    <p className="text-xs opacity-60 mt-3">
+  Need help? We respond within 24–48 hours.
+</p>
+
           </div>
         </footer>
       </main>
