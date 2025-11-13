@@ -23,7 +23,9 @@ export default function AboutPage() {
       </header>
 
       <section className="space-y-3">
-        <h2 className="font-semibold text-base">Built for short-form video first</h2>
+        <h2 className="font-semibold text-base">
+          Built for short-form video first
+        </h2>
         <p className="text-sm opacity-80 leading-relaxed">
           The tool is centered around TikTok, Reels, and Shorts style content:
           punchy hooks, tight 45–60 second scripts, and clear calls to action
@@ -32,7 +34,9 @@ export default function AboutPage() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="font-semibold text-base">For people who already care</h2>
+        <h2 className="font-semibold text-base">
+          For people who already care
+        </h2>
         <p className="text-sm opacity-80 leading-relaxed">
           It&apos;s especially useful if you:
         </p>
@@ -43,14 +47,68 @@ export default function AboutPage() {
         </ul>
       </section>
 
+      {/* New: Who this is for / not for */}
+      <section className="space-y-3">
+        <h2 className="font-semibold text-base">
+          Who this is for (and who it&apos;s not for)
+        </h2>
+        <p className="text-sm opacity-80 leading-relaxed">
+          Hook &amp; Script Studio works best for people who already have real
+          ideas, offers, or expertise — and want help turning that into
+          repeatable, filmable content.
+        </p>
+
+        <div className="grid gap-3 md:grid-cols-2">
+          <div className="rounded-xl border border-white/10 bg-[color-mix(in_oklab,var(--surface)94%,transparent)] p-4 space-y-2">
+            <h3 className="font-semibold text-sm">It&apos;s for you if…</h3>
+            <ul className="list-disc pl-4 text-xs opacity-80 space-y-1">
+              <li>You create or want to create short-form content regularly.</li>
+              <li>
+                You have an offer (or are developing one) and care about your
+                audience.
+              </li>
+              <li>
+                You like editing scripts to sound like you, not copying them
+                blindly.
+              </li>
+              <li>
+                You want a simple, dependable tool — not 20+ dashboards and
+                overwhelming options.
+              </li>
+            </ul>
+          </div>
+
+          <div className="rounded-xl border border-white/10 bg-[color-mix(in_oklab,var(--surface)94%,transparent)] p-4 space-y-2">
+            <h3 className="font-semibold text-sm">Probably not a fit if…</h3>
+            <ul className="list-disc pl-4 text-xs opacity-80 space-y-1">
+              <li>
+                You&apos;re looking for a one-click “go viral” button with no
+                effort.
+              </li>
+              <li>
+                You don&apos;t have any offer, topic, or audience in mind yet.
+              </li>
+              <li>
+                You never want to edit or review what AI generates before
+                posting.
+              </li>
+              <li>
+                You need a full agency, done-for-you service — not a creative
+                tool.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       <section className="space-y-3">
         <h2 className="font-semibold text-base">Why it exists</h2>
         <p className="text-sm opacity-80 leading-relaxed">
           Instead of giving you one generic hook, Hook &amp; Script Studio
           leans into repeatable structure: multiple angles, clear scripts,
           B-roll ideas, and CTAs that make sense for your offer. The goal is
-          to reduce friction between “I should post something” and “I have a
-          ready-to-film script.”
+          to reduce friction between &quot;I should post something&quot; and
+          &quot;I have a ready-to-film script.&quot;
         </p>
       </section>
 
@@ -74,4 +132,3 @@ export default function AboutPage() {
     </main>
   );
 }
-
