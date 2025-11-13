@@ -469,7 +469,7 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
       target="_blank"
       rel="noreferrer"
       onClick={() => track("paywall_open", { source: "cta_section" })}
-      className="btn btn-primary w-full text-white"
+      className="btn btn-primary w-full !text-white"
       whileHover={{ y: -1, scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
       transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.25 }}
@@ -486,7 +486,7 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
           "Please describe the issue you're experiencing.\n\nBrowser:\nDevice:\nSteps to reproduce:\n"
         )}`}
       >
-        Contact Support
+        Contact
       </a>
       <span>·</span>
       <a className="hover:underline" href="/terms">
