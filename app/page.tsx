@@ -8,6 +8,8 @@ import CopyButton from "./components/CopyButton";
 import UpdateBanner from "@/app/components/UpdateBanner";
 import { M, useMotion } from "./components/Motion";
 import { EXAMPLES } from "@/data/examples";
+import GlowCard from "./components/GlowCard";
+
 
 
 
@@ -271,7 +273,7 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
   </div>
 
   {/* Inputs card */}
-  <section className="card p-4 md:p-6">
+  <GlowCard className="p-4 md:p-6 group">
     <M.section
       className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2"
       variants={stagger}
@@ -370,11 +372,13 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
         )}
       </M.button>
     </M.section>
-  </section>
+  </GlowCard>
+
 
   {/* Output */}
   {(loading || content) && (
-    <section ref={outRef} className="card p-5 mt-6 space-y-4">
+    <GlowCard className="p-5 mt-6 space-y-4 group" ref={outRef as any}>
+
       <div className="flex items-center justify-between">
         <div className="kicker">Output</div>
         <CopyButton getText={() => content ?? ""} />
@@ -405,11 +409,12 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
           dangerouslySetInnerHTML={{ __html: content }}
         />
       )}
-    </section>
+    </GlowCard>
   )}
 
   {/* Examples gallery */}
-  <section className="card p-6 mt-8 space-y-4">
+  <GlowCard className="p-6 mt-8 space-y-4 group">
+
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-1 md:gap-2">
       <div>
         <div className="kicker">Examples</div>
@@ -455,10 +460,12 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
         </article>
       ))}
     </div>
-  </section>
+  </GlowCard>
+
 
   {/* Upgrade box */}
-  <section className="card p-6 mt-10 space-y-3">
+  <GlowCard className="p-6 mt-10 space-y-3 group">
+
     <h2 className="font-display text-lg font-semibold">
       Unlock unlimited generations
     </h2>
@@ -479,7 +486,7 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
     >
       Upgrade Now
     </M.a>
-  </section>
+  </GlowCard>
 
   <footer className="pt-10 text-xs opacity-60">
     <div className="space-x-3">
