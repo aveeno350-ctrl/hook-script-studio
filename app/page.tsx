@@ -270,6 +270,7 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
         </div>
 
         {/* Inputs card */}
+        <section className:"card p-4 md:p-6">
         <M.section
   className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4"
   variants={stagger}
@@ -364,6 +365,7 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
 </p>
 
           </M.section>
+        </section>
     
 
         {/* Output */}
