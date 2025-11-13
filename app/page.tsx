@@ -270,95 +270,101 @@ setTimeout(() => outRef.current?.scrollIntoView({ behavior: "smooth", block: "st
         </div>
 
         {/* Inputs card */}
-        <section className="card p-4 md:p-6">
-          <M.section
-            className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2"
-            variants={stagger}
-            initial="hidden"
-            animate="show"
-          >
-            <M.div variants={item}>
-              <input
-                className="input"
-                value={niche}
-                onChange={(e) => setNiche(e.target.value)}
-                placeholder="niche"
-              />
-            </M.div>
+        <M.section
+  className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4"
+  variants={stagger}
+  initial="hidden"
+  animate="show"
+>
+  <M.div variants={item}>
+    <input
+      className="input"
+      value={niche}
+      onChange={(e) => setNiche(e.target.value)}
+      placeholder="niche"
+    />
+  </M.div>
 
-            <M.div variants={item}>
-              <input
-                className="input"
-                value={audience}
-                onChange={(e) => setAudience(e.target.value)}
-                placeholder="audience"
-              />
-            </M.div>
+  <M.div variants={item}>
+    <input
+      className="input"
+      value={audience}
+      onChange={(e) => setAudience(e.target.value)}
+      placeholder="audience"
+    />
+  </M.div>
 
-            <M.div variants={item}>
-              <input
-                className="input"
-                value={offer}
-                onChange={(e) => setOffer(e.target.value)}
-                placeholder="offer / product"
-              />
-            </M.div>
+  <M.div variants={item}>
+    <input
+      className="input"
+      value={offer}
+      onChange={(e) => setOffer(e.target.value)}
+      placeholder="offer / product"
+    />
+  </M.div>
 
-            <M.div variants={item}>
-              <input
-                className="input"
-                value={tone}
-                onChange={(e) => setTone(e.target.value)}
-                placeholder="tone (e.g., friendly, energetic)"
-              />
-            </M.div>
+  <M.div variants={item}>
+    <input
+      className="input"
+      value={tone}
+      onChange={(e) => setTone(e.target.value)}
+      placeholder="tone (e.g., friendly, energetic)"
+    />
+  </M.div>
 
-            <M.div variants={item}>
-              <select
-                className="input"
-                value={platform}
-                onChange={(e) => setPlatform(e.target.value)}
-              >
-                <option value="TikTok">TikTok</option>
-                <option value="Reels">Reels</option>
-                <option value="Shorts">Shorts</option>
-              </select>
-            </M.div>
+  <M.div variants={item}>
+    <select
+      className="input"
+      value={platform}
+      onChange={(e) => setPlatform(e.target.value)}
+    >
+      <option value="TikTok">TikTok</option>
+      <option value="Reels">Reels</option>
+      <option value="Shorts">Shorts</option>
+    </select>
+  </M.div>
 
-            <M.div variants={item}>
-              <input
-                className="input"
-                value={keywords}
-                onChange={(e) => setKeywords(e.target.value)}
-                placeholder="optional keywords"
-              />
-            </M.div>
+  <M.div variants={item}>
+    <input
+      className="input"
+      value={keywords}
+      onChange={(e) => setKeywords(e.target.value)}
+      placeholder="optional keywords"
+    />
+  </M.div>
 
-            <M.button
-              type="button"
-              onClick={generate}
-              disabled={loading}
-              aria-busy={loading}
-              className="btn btn-primary w-full md:col-span-2 min-h-[44px] disabled:opacity-60 disabled:cursor-not-allowed mt-2"
-              whileHover={{ y: -1, scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-              transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.25 }}
-            >
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <TypingWave />
-                  <span>Generating…</span>
-                </span>
-              ) : (
-                "Generate"
-              )}
-            </M.button>
+            <div className="text-xs opacity-70 leading-relaxed mb-1 md:col-span-2">
+  <strong>Tips for better results:</strong>  
+  • Be specific about your niche  
+  • Mention who the content is for  
+  • Describe your offer clearly  
+</div>
+
+<M.button
+    type="button"
+    onClick={generate}
+    disabled={loading}
+    aria-busy={loading}
+    className="btn btn-primary w-full md:col-span-2 min-h-[44px] disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+    whileHover={{ y: -1, scale: 1.01 }}
+    whileTap={{ scale: 0.99 }}
+    transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.25 }}
+  >
+    {loading ? (
+      <span className="flex items-center justify-center gap-2">
+        <TypingWave />
+        <span>Generating…</span>
+      </span>
+    ) : (
+      "Generate"
+    )}
+  </M.button>
             <p className="text-xs opacity-70 mt-1 text-center">
   You get <strong>3 free runs</strong>. Upgrade any time — unlimited unlocks everything.
 </p>
 
           </M.section>
-        </section>
+    
 
         {/* Output */}
         {(loading || content) && (
