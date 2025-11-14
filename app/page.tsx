@@ -9,7 +9,7 @@ import CopyButton from "./components/CopyButton";
 import UpdateBanner from "./components/UpdateBanner";
 import { EXAMPLES } from "@/data/examples";
 
-  // Reusable glowing card (used for quickstart, inputs, examples, upgrade, modal)
+  // Reusable card with soft hover lift (no glow)
 type GlowCardProps = React.HTMLAttributes<HTMLDivElement> & {
   children?: React.ReactNode;
 };
@@ -21,34 +21,24 @@ const GlowCard = React.forwardRef<HTMLDivElement, GlowCardProps>(
         ref={ref as any}
         {...(props as any)}
         className={`
-          group
           relative rounded-3xl border border-white/10
           bg-[color-mix(in_oklab,var(--surface)96%,transparent)]
-          shadow-[0_6px_16px_rgba(15,23,42,0.16)]
-          transition-transform duration-200
+          shadow-[0_4px_10px_rgba(15,23,42,0.10)]
+          transition-all duration-200 ease-out
           hover:-translate-y-[2px]
-          hover:shadow-[0_18px_40px_rgba(15,23,42,0.32)]
+          hover:shadow-[0_12px_24px_rgba(15,23,42,0.18)]
           ${className}
         `}
       >
-        {/* soft hover glow – subtle, only on hover */}
-        <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-80 transition-opacity duration-300">
-          <div
-            className="
-              absolute -inset-10
-              bg-[radial-gradient(circle_at_top,var(--accent-500)_0,transparent_60%)]
-              mix-blend-soft-light
-              opacity-35
-            "
-          />
+        {/* real card content */}
+        <div className="relative z-10">
+          {children}
         </div>
-
-        {/* actual card content */}
-        <div className="relative z-10">{children}</div>
       </M.div>
     );
   }
 );
+
 
 
 
