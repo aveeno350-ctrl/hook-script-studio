@@ -9,40 +9,27 @@ import CopyButton from "./components/CopyButton";
 import UpdateBanner from "./components/UpdateBanner";
 import { EXAMPLES } from "@/data/examples";
 
-  // Reusable card with soft hover lift (no glow)
-type GlowCardProps = React.HTMLAttributes<HTMLDivElement> & {
-  children?: React.ReactNode;
-};
+  // Reusable glowing card (hover lift, no radial gradient)
+function GlowCard(
+  props: React.HTMLAttributes<HTMLDivElement>
+) {
+  const { className = "", children, ...rest } = props;
 
-const GlowCard = React.forwardRef<HTMLDivElement, GlowCardProps>(
-  function GlowCard({ className = "", children, ...props }, ref) {
-    return (
-      <M.div
-        ref={ref as any}
-        {...(props as any)}
-        className={`
-          relative rounded-3xl border border-white/10
-          bg-[color-mix(in_oklab,var(--surface)96%,transparent)]
-          shadow-[0_4px_10px_rgba(15,23,42,0.10)]
-          transition-all duration-200 ease-out
-          hover:-translate-y-[2px]
-          hover:shadow-[0_12px_24px_rgba(15,23,42,0.18)]
-          ${className}
-        `}
-      >
-        {/* real card content */}
-        <div className="relative z-10">
-          {children}
-        </div>
-      </M.div>
-    );
-  }
-);
-
-
-
-
-
+  return (
+    <div
+      className={clsx(
+        "relative rounded-3xl border border-white/10",
+        "bg-[color-mix(in_oklab,var(--surface)96%,transparent)]",
+        "shadow-sm transition-all duration-200",
+        "hover:-translate-y-[2px] hover:shadow-[0_18px_45px_rgba(15,23,42,0.22)]",
+        className
+      )}
+      {...rest}
+    >
+      {children}
+    </div>
+  );
+}
 
 
 export default function Page() {
@@ -428,41 +415,50 @@ useEffect(() => {
           </M.section>
         </GlowCard>
 
-        {/* Output */}
+                {/* Output */}
         {(loading || content) && (
-          <GlowCard ref={outRef} className="p-5 mt-6 space-y-4 group">
-            <div className="flex items-center justify-between">
-              <div className="kicker">Output</div>
-              <CopyButton getText={() => content ?? ""} />
-            </div>
-
-            <div className="flex gap-2">
-              <button onClick={copyAll} className="btn btn-secondary">
-                Copy All
-              </button>
-              <button onClick={downloadTxt} className="btn btn-secondary">
-                Download .txt
-              </button>
-              <button onClick={clearOutput} className="btn btn-ghost">
-                Clear
-              </button>
-            </div>
-
-            {loading ? (
-              <div className="space-y-2">
-                <div className="skeleton h-5 w-3/4" />
-                <div className="skeleton h-5 w-full" />
-                <div className="skeleton h-5 w-11/12" />
-                <div className="skeleton h-5 w-5/6" />
+          <M.section
+            ref={outRef as any}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="mt-6"
+          >
+            <GlowCard className="p-5 space-y-4 group">
+              <div className="flex items-center justify-between">
+                <div className="kicker">Output</div>
+                <CopyButton getText={() => content ?? ""} />
               </div>
-            ) : (
-              <article
-                className="prose prose-invert prose-sm max-w-none leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: content }}
-              />
-            )}
-          </GlowCard>
+
+              <div className="flex gap-2">
+                <button onClick={copyAll} className="btn btn-secondary">
+                  Copy All
+                </button>
+                <button onClick={downloadTxt} className="btn btn-secondary">
+                  Download .txt
+                </button>
+                <button onClick={clearOutput} className="btn btn-ghost">
+                  Clear
+                </button>
+              </div>
+
+              {loading ? (
+                <div className="space-y-2">
+                  <div className="skeleton h-5 w-3/4" />
+                  <div className="skeleton h-5 w-full" />
+                  <div className="skeleton h-5 w-11/12" />
+                  <div className="skeleton h-5 w-5/6" />
+                </div>
+              ) : (
+                <article
+                  className="prose prose-invert prose-sm max-w-none leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: content }}
+                />
+              )}
+            </GlowCard>
+          </M.section>
         )}
+
 
                {/* Examples gallery */}
         <GlowCard className="p-6 mt-8 space-y-4">
