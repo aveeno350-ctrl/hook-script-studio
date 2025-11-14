@@ -624,8 +624,8 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
 
 {/* Upgrade modal – shows when free runs are exhausted */}
 {showUpgradeModal && (
-  <div className="fixed inset-0 z-50 flex items-left justify-center p-4 bg-black/40 backdrop-blur-sm">
-    <GlowCard className="p-6 md:p-8 space-y-5 max-w-sm w-full text-center group">
+  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+    <GlowCard className="p-6 md:p-8 space-y-7 max-w-sm w-full text-center group">
       
       <h2 className="font-display text-xl font-semibold">
         Unlock unlimited generations
