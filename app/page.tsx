@@ -91,25 +91,6 @@ export default function Page() {
   };
 
 
-  // persisted free-run counter
-const [runs, setRuns] = useState<number>(0);
-
-// Read initial value from localStorage on mount
-useEffect(() => {
-  if (typeof window === "undefined") return;
-
-  try {
-    const stored = window.localStorage.getItem("hss_runs_v1");
-    if (stored != null) {
-      const parsed = Number.parseInt(stored, 10);
-      if (!Number.isNaN(parsed)) {
-        setRuns(parsed);
-      }
-    }
-  } catch (err) {
-    console.error("Failed to read runs from localStorage", err);
-  }
-}, []);
 
 // Persist whenever runs changes
 useEffect(() => {
