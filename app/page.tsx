@@ -39,6 +39,7 @@ export default function Home() {
   const [content, setContent] = useState<string>("");
   const { fadeUp, stagger, item } = useMotion();
   const [history, setHistory] = useState<string[]>([]);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
 
 
@@ -88,17 +89,13 @@ export default function Home() {
 
   /** ----- generate handler with analytics + free limit ----- */
   async function generate(): Promise<void> {
-    // free limit gate
-    if (runs >= 3) {
-      const link =
-        (process.env.NEXT_PUBLIC_PAYMENT_LINK as unknown as string) || "";
-      alert("Free limit reached. Please purchase to unlock unlimited generations.");
-      if (link) {
-        track("paywall_open", { source: "free_limit" });
-        window.open(link, "_blank");
-      }
-      return;
-    }
+    // free limit gate (new version)
+if (runs >= 3) {
+  setShowUpgradeModal(true);
+  track("paywall_open", { source: "runs_exhausted" });
+  return;
+}
+
 
     setLoading(true);
 
@@ -625,6 +622,66 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
   </M.a>
 </GlowCard>
 
+{/* Upgrade modal – shows when free runs are exhausted */}
+{showUpgradeModal && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+    <M.div
+      initial={{ opacity: 0, y: 12, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className="w-full max-w-md px-4"
+    >
+      <GlowCard className="p-6 md:p-7 space-y-4 group">
+        <div className="space-y-1">
+          <div className="kicker">Upgrade</div>
+          <h2 className="font-display text-lg font-semibold">
+            You’ve used your 3 free runs
+          </h2>
+          <p className="text-sm opacity-75 leading-relaxed">
+            Unlock unlimited hooks, scripts, B-roll suggestions, and CTAs.
+            Keep your ideas flowing without hitting a limit.
+          </p>
+        </div>
+
+        <ul className="text-xs opacity-80 space-y-1.5">
+          <li>• Unlimited generations on this device</li>
+          <li>• Hooks by angle + tight 45–60s scripts</li>
+          <li>• B-roll prompts and CTA suggestions</li>
+        </ul>
+
+        <div className="flex flex-col gap-2 pt-1">
+          <M.a
+            href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() =>
+              track("paywall_open", { source: "modal_runs_exhausted" })
+            }
+            className="btn btn-primary w-full !text-white"
+            whileHover={{ y: -1, scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            transition={{
+              type: "spring",
+              stiffness: 420,
+              damping: 30,
+              mass: 0.25,
+            }}
+          >
+            Upgrade to keep generating
+          </M.a>
+
+          <button
+            type="button"
+            onClick={() => setShowUpgradeModal(false)}
+            className="btn btn-ghost w-full text-xs"
+          >
+            Maybe later
+          </button>
+        </div>
+      </GlowCard>
+    </M.div>
+  </div>
+)}
 
 
 
