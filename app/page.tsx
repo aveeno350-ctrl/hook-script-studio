@@ -623,83 +623,75 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
 </GlowCard>
 
 {/* Upgrade modal – shows when free runs are exhausted */}
-{showUpgradeModal && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+<AnimatePresence>
+  {showUpgradeModal && (
     <M.div
-      initial={{ opacity: 0, y: 12, scale: 0.97 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.22, ease: "easeOut" }}
-      className="w-full max-w-sm"
+      key="upgrade-modal-backdrop"
+      className="fixed inset-0 z-[200] flex items-center justify-center backdrop-blur-sm bg-black/40"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}        // BACKDROP FADES OUT
+      transition={{ duration: 0.2 }}
     >
-      <GlowCard className="p-6 md:p-8 space-y-5 w-full group">
-        {/* Text block – left aligned, animated */}
-        <M.div
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.05, duration: 0.18, ease: "easeOut" }}
-          className="text-left space-y-3"
-        >
-          <h2 className="font-display text-xl font-semibold">
-            Unlock unlimited generations
-          </h2>
+      <M.div
+        key="upgrade-modal"
+        className="w-[90%] max-w-md"
+        initial={{ opacity: 0, scale: 0.92 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.92 }}  // MODAL FADES OUT + SHRINK
+        transition={{ duration: 0.22, ease: "easeOut" }}
+      >
+        <GlowCard className="p-6 space-y-4">
+          <div>
+            <h2 className="font-display text-lg font-semibold">
+              Unlock unlimited generations
+            </h2>
+            <p className="text-sm opacity-75 mt-2">
+              You’ve used your 3 free runs on this device. Upgrade once to unlock
+              unlimited hooks, scripts, B-roll ideas, and CTAs.
+            </p>
+          </div>
 
-          <p className="text-sm opacity-80 leading-relaxed">
-            You’ve used your 3 free runs on this device. Upgrade once to unlock
-            unlimited hooks, scripts, B-roll ideas, and CTAs.
-          </p>
-        </M.div>
+          {/* Buttons */}
+          <div className="mt-4 space-y-3">
+            {/* Upgrade button */}
+            <M.a
+              href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => {
+                track("paywall_open", { source: "modal" });
+                setShowUpgradeModal(false); // triggers fade-out
+              }}
+              className="btn btn-primary w-full !text-white"
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.12, duration: 0.2 }}
+            >
+              Upgrade Now
+            </M.a>
 
-        {/* Primary CTA */}
-        <M.div
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.18, ease: "easeOut" }}
-          className="pt-2"
-        >
-          <M.a
-            href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
-            target="_blank"
-            rel="noreferrer"
-            onClick={() =>
-              track("paywall_open", { source: "modal_runs_exhausted" })
-            }
-            className="btn btn-primary w-full !text-white"
-            whileHover={{ y: -1, scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
-            transition={{
-              type: "spring",
-              stiffness: 420,
-              damping: 30,
-              mass: 0.25,
-            }}
-          >
-            Upgrade Now
-          </M.a>
-        </M.div>
-
-        {/* Secondary CTA */}
-        <M.div
-  className="w-full flex justify-center"
-  initial={{ opacity: 0 }}
-  animate={{ opacity: 1 }}
-  transition={{ delay: 0.16, duration: 0.18 }}
->
-  <button
-    type="button"
-    onClick={() => setShowUpgradeModal(false)}
-    className="text-xs opacity-70 hover:opacity-100 transition text-center"
-  >
-    Maybe later
-  </button>
-</M.div>
-      </GlowCard>
+            {/* Maybe later (centered) */}
+            <M.div
+              className="w-full flex justify-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.18, duration: 0.2 }}
+            >
+              <button
+                type="button"
+                onClick={() => setShowUpgradeModal(false)} // fade-out triggered
+                className="text-xs opacity-70 hover:opacity-100 transition text-center"
+              >
+                Maybe later
+              </button>
+            </M.div>
+          </div>
+        </GlowCard>
+      </M.div>
     </M.div>
-  </div>
-)}
-
-
-
-
+  )}
+</AnimatePresence>
 
 
   <footer className="pt-10 text-xs opacity-60">
