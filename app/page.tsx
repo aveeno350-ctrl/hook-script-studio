@@ -468,47 +468,39 @@ useEffect(() => {
           </GlowCard>
         )}
 
-        
-        {/* Examples gallery */}
-<GlowCard className="p-6 mt-8 space-y-4">
-  <div className="space-y-2">
-    <div className="kicker">Examples</div>
+               {/* Examples gallery */}
+        <GlowCard className="p-6 mt-8 space-y-4">
+          <div className="space-y-2">
+            <div className="kicker">Examples</div>
 
-    <div className="flex items-center gap-2">
-      <h2 className="font-display text-base font-semibold">
-        What can you make with it?
-      </h2>
+            <div className="flex items-center gap-2">
+              <h2 className="font-display text-base font-semibold">
+                What can you make with it?
+              </h2>
 
-      <span
-        className="
-          inline-flex items-center px-2 py-[2px] rounded-full
-          text-[10px] uppercase tracking-wide
-          bg-[color-mix(in_oklab,var(--accent-500)80%,transparent)]
-          text-white/95
-        "
-      >
-        New
-      </span>
-    </div>
+              <span
+                className="
+                  inline-flex items-center px-2 py-[2px] rounded-full
+                  text-[10px] uppercase tracking-wide
+                  bg-[color-mix(in_oklab,var(--accent-500)80%,transparent)]
+                  text-white/95
+                "
+              >
+                New
+              </span>
+            </div>
 
-    <p className="text-xs opacity-70 max-w-sm">
-      These are sample hooks + scripts. Tweak them to sound like you.
-    </p>
-  </div>
+            <p className="text-xs opacity-70 max-w-sm">
+              These are sample hooks + scripts. Tweak them to sound like you.
+            </p>
+          </div>
 
-  {/* Cards */}
-  <div className="grid gap-4 md:grid-cols-3 mt-2">
-    {/* your EXAMPLES.map(...) stays exactly the same here */}
-
-
-          {/* extra breathing room between header + cards */}
-          <div className="h-3" />
-
-          <div className="grid gap-4 md:grid-cols-3">
+          {/* Cards */}
+          <div className="grid gap-4 md:grid-cols-3 mt-3">
             {EXAMPLES.map((ex) => (
               <article
                 key={ex.label}
-                className="rounded-2xl border border-white/5 bg-[color-mix(in_oklab,var(--surface)92%,transparent)] p-3 space-y-2 group-hover:border-white/10 transition-colors"
+                className="rounded-lg border border-white/5 bg-[color-mix(in_oklab,var(--surface)92%,transparent)] p-3 space-y-2"
               >
                 <div className="text-[11px] uppercase tracking-wide opacity-70">
                   {ex.label}
@@ -539,12 +531,13 @@ useEffect(() => {
         </GlowCard>
 
         {/* Upgrade box */}
-        <GlowCard className="p-6 mt-10 space-y-4 group">
-          <div>
+        <GlowCard className="p-6 mt-10 space-y-4">
+          <div className="space-y-2">
             <h2 className="font-display text-lg font-semibold">
               Unlock unlimited generations
             </h2>
-            <p className="mt-1 text-sm opacity-75 leading-relaxed">
+
+            <p className="text-sm opacity-75 leading-relaxed">
               Includes unlimited hooks, scripts, B-roll suggestions, and CTAs.
             </p>
           </div>
@@ -557,12 +550,7 @@ useEffect(() => {
             className="btn btn-primary w-full !text-white mt-2"
             whileHover={{ y: -1, scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
-            transition={{
-              type: "spring",
-              stiffness: 420,
-              damping: 30,
-              mass: 0.25,
-            }}
+            transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.25 }}
           >
             Upgrade Now
           </M.a>
@@ -570,128 +558,62 @@ useEffect(() => {
 
         {/* Footer */}
         <footer className="pt-10 text-xs opacity-60">
-          <div className="flex flex-wrap gap-x-3 gap-y-1">
-            <a className="hover:underline" href="/support">
-              Contact
-            </a>
-            <span>·</span>
-            <a className="hover:underline" href="/terms">
-              Terms
-            </a>
-            <span>·</span>
-            <a className="hover:underline" href="/privacy">
-              Privacy
-            </a>
-            <span>·</span>
-            <a className="hover:underline" href="/license">
-              License
-            </a>
-            <span>·</span>
-            <a className="hover:underline" href="/support">
-              Support
-            </a>
-            <span>·</span>
-            <a className="hover:underline" href="/pricing">
-              Pricing
-            </a>
-            <span>·</span>
-            <a className="hover:underline" href="/changelog">
-              Changelog
-            </a>
-            <span>·</span>
-            <a className="hover:underline" href="/about">
-              About
-            </a>
-          </div>
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <nav className="flex flex-wrap gap-x-3 gap-y-2">
+              <a
+                className="hover:underline opacity-80 hover:opacity-100 transition"
+                href={`mailto:aveeno350@gmail.com?subject=Hook%20%26%20Script%20Studio%20Support%20Request&body=${encodeURIComponent(
+                  "Please describe the issue you're experiencing.\n\nBrowser:\nDevice:\nSteps to reproduce:\n"
+                )}`}
+              >
+                Contact
+              </a>
+              <span className="hidden md:inline">·</span>
 
-          <p className="text-xs opacity-60 mt-3">
-            Need help? We respond within 24–48 hours.
-          </p>
+              <a className="hover:underline" href="/terms">
+                Terms
+              </a>
+              <span className="hidden md:inline">·</span>
+
+              <a className="hover:underline" href="/privacy">
+                Privacy
+              </a>
+              <span className="hidden md:inline">·</span>
+
+              <a className="hover:underline" href="/license">
+                License
+              </a>
+              <span className="hidden md:inline">·</span>
+
+              <a className="hover:underline" href="/support">
+                Support
+              </a>
+              <span className="hidden md:inline">·</span>
+
+              <a className="hover:underline" href="/pricing">
+                Pricing
+              </a>
+              <span className="hidden md:inline">·</span>
+
+              <a className="hover:underline" href="/changelog">
+                Changelog
+              </a>
+              <span className="hidden md:inline">·</span>
+
+              <a className="hover:underline" href="/about">
+                About
+              </a>
+            </nav>
+
+            <p className="opacity-70">
+              Need help? We respond within 24–48 hours.
+            </p>
+          </div>
         </footer>
       </main>
-
-      {/* Upgrade modal */}
-      <AnimatePresence>
-        {showUpgradeModal && (
-          <M.div
-            key="upgrade-backdrop"
-            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={() => setShowUpgradeModal(false)}
-          >
-            <M.div
-              key="upgrade-card"
-              ref={modalRef}
-              className="w-[90%] max-w-md"
-              initial={{ opacity: 0, scale: 0.92, y: 8 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.92, y: 8 }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <GlowCard className="relative p-6 space-y-4 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
-                {/* X close */}
-                <button
-                  type="button"
-                  onClick={() => setShowUpgradeModal(false)}
-                  aria-label="Close"
-                  className="absolute right-3 top-3 inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-black/10 text-xs opacity-70 hover:bg-black/20 hover:opacity-100 transition"
-                >
-                  ✕
-                </button>
-
-                <div className="pr-6">
-                  <h2 className="font-display text-lg font-semibold">
-                    Unlock unlimited generations
-                  </h2>
-                  <p className="mt-2 text-sm opacity-75 leading-relaxed">
-                    You&apos;ve used your 3 free runs on this device. Upgrade
-                    once to unlock unlimited hooks, scripts, B-roll ideas, and
-                    CTAs.
-                  </p>
-                </div>
-
-                <div className="mt-4 space-y-3">
-                  <M.a
-                    href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={() => {
-                      track("paywall_open", { source: "modal" });
-                      setShowUpgradeModal(false);
-                    }}
-                    className="btn btn-primary w-full !text-white"
-                    initial={{ opacity: 0, y: 4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.12, duration: 0.2 }}
-                  >
-                    Upgrade Now
-                  </M.a>
-
-                  <M.div
-                    className="flex justify-center"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.18, duration: 0.2 }}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => setShowUpgradeModal(false)}
-                      className="text-xs opacity-70 hover:opacity-100 transition text-center"
-                    >
-                      Maybe later
-                    </button>
-                  </M.div>
-                </div>
-              </GlowCard>
-            </M.div>
-          </M.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
-
+ 
+        
+        
