@@ -58,7 +58,8 @@ export default function Page() {
 
   const [runs, setRuns] = useLocalStorage<number>("hss_runs_v1", 0);
   const [loading, setLoading] = useState(false);
-  const [content, setContent] = useState<string | null>(null);
+  const [content, setContent] = useState<string>("");
+
 
   // 🔐 Saved scripts library (local to this device)
   const [savedRuns, setSavedRuns] = useLocalStorage<SavedRun[]>(
@@ -476,48 +477,42 @@ function useLocalStorage<T>(key: string, initialValue: T) {
           </M.section>
         </GlowCard>
 
-                {/* Output */}
-{(loading || content) && (
-  <GlowCard className="p-5 mt-6 space-y-4 group" ref={outRef}>
-    <div className="flex items-center justify-between">
-      <div className="kicker">Output</div>
-      <CopyButton getText={() => content ?? ""} />
-    </div>
+                        {/* Output */}
+        {(loading || content) && (
+          <GlowCard className="p-5 mt-6 space-y-4 group" ref={outRef}>
+            <div className="flex items-center justify-between">
+              <div className="kicker">Output</div>
+              <CopyButton getText={() => content || ""} />
+            </div>
 
-    <div className="flex flex-wrap gap-2">
-      <button onClick={copyAll} className="btn btn-secondary">
-        Copy All
-      </button>
-      <button onClick={downloadTxt} className="btn btn-secondary">
-        Download .txt
-      </button>
-      <button onClick={clearOutput} className="btn btn-ghost">
-        Clear
-      </button>
-      <button
-        onClick={handleSaveCurrent}
-        className="btn btn-secondary ml-auto"
-        disabled={!content || loading}
-      >
-        Save script
-      </button>
-    </div>
+            <div className="flex gap-2 flex-wrap">
+              <button onClick={copyAll} className="btn btn-secondary">
+                Copy All
+              </button>
+              <button onClick={downloadTxt} className="btn btn-secondary">
+                Download .txt
+              </button>
+              <button onClick={clearOutput} className="btn btn-ghost">
+                Clear
+              </button>
+            </div>
 
-    {loading ? (
-      <div className="space-y-2">
-        <div className="skeleton h-5 w-3/4" />
-        <div className="skeleton h-5 w-full" />
-        <div className="skeleton h-5 w-11/12" />
-        <div className="skeleton h-5 w-5/6" />
-      </div>
-    ) : (
-      <article
-        className="prose prose-invert prose-sm max-w-none leading-relaxed"
-        dangerouslySetInnerHTML={{ __html: content }}
-      />
-    )}
-  </GlowCard>
-)}
+            {loading ? (
+              <div className="space-y-2">
+                <div className="skeleton h-5 w-3/4" />
+                <div className="skeleton h-5 w-full" />
+                <div className="skeleton h-5 w-11/12" />
+                <div className="skeleton h-5 w-5/6" />
+              </div>
+            ) : content ? (
+              <article
+                className="prose prose-invert prose-sm max-w-none leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: content }}
+              />
+            ) : null}
+          </GlowCard>
+        )}
+
 
 
         {/* Saved scripts library */}
