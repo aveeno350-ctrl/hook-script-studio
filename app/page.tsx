@@ -33,17 +33,63 @@ function GlowCard(
 
 
 
-export default function Page() {
-  // ---- state ----
-  const [niche, setNiche] = React.useState("");
-  const [audience, setAudience] = React.useState("");
-  const [offer, setOffer] = React.useState("");
-  const [tone, setTone] = React.useState("");
-  const [platform, setPlatform] = React.useState("TikTok");
-  const [keywords, setKeywords] = React.useState("");
+type SavedRun = {
+  id: string;
+  createdAt: string;
+  niche: string;
+  audience: string;
+  offer: string;
+  platform: string;
+  tone: string;
+  keywords: string;
+  html: string;
+};
 
-  const [content, setContent] = React.useState("");
-  const [loading, setLoading] = React.useState(false);
+export default function Page() {
+  const [niche, setNiche] = useState(DEFAULTS.niche);
+  const [audience, setAudience] = useState(DEFAULTS.audience);
+  const [offer, setOffer] = useState(DEFAULTS.offer);
+  const [tone, setTone] = useState(DEFAULTS.tone);
+  const [platform, setPlatform] = useState(DEFAULTS.platform);
+  const [keywords, setKeywords] = useState(DEFAULTS.keywords);
+
+  const [runs, setRuns] = useLocalStorage<number>("hss_runs_v1", 0);
+  const [loading, setLoading] = useState(false);
+  const [content, setContent] = useState<string | null>(null);
+
+  // 🔐 Saved scripts library (local to this device)
+  const [savedRuns, setSavedRuns] = useLocalStorage<SavedRun[]>(
+    "hss_saved_v1",
+    []
+  );
+
+  const outRef = useRef<HTMLDivElement | null>(null);
+  const [showPaywall, setShowPaywall] = useState(false);
+
+  const handleSaveCurrent = () => {
+    if (!content) return;
+
+    const newRun: SavedRun = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      createdAt: new Date().toISOString(),
+      niche,
+      audience,
+      offer,
+      platform,
+      tone,
+      keywords,
+      html: content,
+    };
+
+    setSavedRuns((prev) => [newRun, ...prev].slice(0, 20));
+  };
+
+  const handleCopySaved = (run: SavedRun) => {
+    // Strip HTML tags before copying
+    const plain = run.html.replace(/<[^>]+>/g, "");
+    navigator.clipboard?.writeText(plain);
+  };
+
 
   // persisted free-run counter
 const [runs, setRuns] = useState<number>(0);
@@ -417,48 +463,113 @@ useEffect(() => {
         </GlowCard>
 
                 {/* Output */}
-        {(loading || content) && (
-          <M.section
-            ref={outRef as any}
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="mt-6"
+{(loading || content) && (
+  <GlowCard className="p-5 mt-6 space-y-4 group" ref={outRef}>
+    <div className="flex items-center justify-between">
+      <div className="kicker">Output</div>
+      <CopyButton getText={() => content ?? ""} />
+    </div>
+
+    <div className="flex flex-wrap gap-2">
+      <button onClick={copyAll} className="btn btn-secondary">
+        Copy All
+      </button>
+      <button onClick={downloadTxt} className="btn btn-secondary">
+        Download .txt
+      </button>
+      <button onClick={clearOutput} className="btn btn-ghost">
+        Clear
+      </button>
+      <button
+        onClick={handleSaveCurrent}
+        className="btn btn-secondary ml-auto"
+        disabled={!content || loading}
+      >
+        Save script
+      </button>
+    </div>
+
+    {loading ? (
+      <div className="space-y-2">
+        <div className="skeleton h-5 w-3/4" />
+        <div className="skeleton h-5 w-full" />
+        <div className="skeleton h-5 w-11/12" />
+        <div className="skeleton h-5 w-5/6" />
+      </div>
+    ) : (
+      <article
+        className="prose prose-invert prose-sm max-w-none leading-relaxed"
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
+    )}
+  </GlowCard>
+)}
+
+
+        {/* Saved scripts library */}
+{savedRuns.length > 0 && (
+  <GlowCard className="p-5 mt-6 space-y-3 group">
+    <div className="flex items-center justify-between gap-2">
+      <div>
+        <div className="kicker">Saved scripts</div>
+        <h2 className="font-display text-base font-semibold">
+          Your recent runs
+        </h2>
+        <p className="text-xs opacity-70 mt-1">
+          Stored on this device only. Great for keeping your favorite hooks and
+          scripts handy.
+        </p>
+      </div>
+
+      <button
+        onClick={() => setSavedRuns([])}
+        className="text-[11px] opacity-60 hover:opacity-100 underline-offset-2 hover:underline"
+      >
+        Clear all
+      </button>
+    </div>
+
+    <ul className="space-y-2 text-xs">
+      {savedRuns.map((run) => (
+        <li
+          key={run.id}
+          className="flex items-center justify-between gap-3 rounded-lg border border-white/5 bg-[color-mix(in_oklab,var(--surface-2)90%,transparent)] px-3 py-2"
+        >
+          <div className="min-w-0">
+            <div className="font-medium truncate">
+              {run.niche} · {run.offer}
+            </div>
+            <div className="opacity-70 truncate">
+              {new Date(run.createdAt).toLocaleString(undefined, {
+                month: "short",
+                day: "numeric",
+                hour: "numeric",
+                minute: "2-digit",
+              })}{" "}
+              · {run.platform}
+            </div>
+            {run.keywords && (
+              <div className="opacity-60 truncate">
+                <span className="uppercase tracking-wide mr-1">
+                  Keywords:
+                </span>
+                {run.keywords}
+              </div>
+            )}
+          </div>
+
+          <button
+            onClick={() => handleCopySaved(run)}
+            className="btn btn-secondary text-[11px] px-2 py-1 whitespace-nowrap"
           >
-            <GlowCard className="p-5 space-y-4 group">
-              <div className="flex items-center justify-between">
-                <div className="kicker">Output</div>
-                <CopyButton getText={() => content ?? ""} />
-              </div>
+            Copy
+          </button>
+        </li>
+      ))}
+    </ul>
+  </GlowCard>
+)}
 
-              <div className="flex gap-2">
-                <button onClick={copyAll} className="btn btn-secondary">
-                  Copy All
-                </button>
-                <button onClick={downloadTxt} className="btn btn-secondary">
-                  Download .txt
-                </button>
-                <button onClick={clearOutput} className="btn btn-ghost">
-                  Clear
-                </button>
-              </div>
-
-              {loading ? (
-                <div className="space-y-2">
-                  <div className="skeleton h-5 w-3/4" />
-                  <div className="skeleton h-5 w-full" />
-                  <div className="skeleton h-5 w-11/12" />
-                  <div className="skeleton h-5 w-5/6" />
-                </div>
-              ) : (
-                <article
-                  className="prose prose-invert prose-sm max-w-none leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: content }}
-                />
-              )}
-            </GlowCard>
-          </M.section>
-        )}
 
 
                {/* Examples gallery */}
