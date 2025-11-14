@@ -125,6 +125,71 @@ export default function Page() {
     navigator.clipboard?.writeText(plain);
   };
 
+// Local storage key
+const HISTORY_KEY = "hss_history_v1";
+
+// Run snapshot type for saving
+type SavedRun = {
+  id: string;
+  createdAt: string;
+  niche: string;
+  audience: string;
+  offer: string;
+  platform: string;
+  tone: string;
+  keywords: string;
+  html: string; // The generated script HTML
+};
+
+// Drawer state
+const [drawerOpen, setDrawerOpen] = useState(false);
+
+// History list state
+const [savedHistory, setSavedHistory] = useState<SavedRun[]>([]);
+
+// Viewing a single saved run
+const [selectedRun, setSelectedRun] = useState<SavedRun | null>(null);
+
+// Load existing saved runs on mount
+useEffect(() => {
+  const existing = localStorage.getItem(HISTORY_KEY);
+  if (existing) {
+    setSavedHistory(JSON.parse(existing));
+  }
+}, []);
+
+// Save a new run
+const saveScript = (html: string) => {
+  const newRun: SavedRun = {
+    id: crypto.randomUUID(),
+    createdAt: new Date().toISOString(),
+    niche,
+    audience,
+    offer,
+    platform,
+    tone,
+    keywords,
+    html,
+  };
+
+  const updated = [newRun, ...savedHistory];
+  setSavedHistory(updated);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
+};
+
+// Delete a saved run
+const deleteRun = (id: string) => {
+  const updated = savedHistory.filter((r) => r.id !== id);
+  setSavedHistory(updated);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
+  setSelectedRun(null);
+};
+
+// Format date helper
+const formatDate = (iso: string) => {
+  const d = new Date(iso);
+  return d.toLocaleString();
+};
 
 
 // Persist whenever runs changes
@@ -996,6 +1061,87 @@ function useLocalStorage<T>(key: string, initialValue: T) {
         )}
       </AnimatePresence>
 
+<>
+  {/* Saved Scripts Button */}
+  <button
+    onClick={() => setDrawerOpen(true)}
+    className="fixed bottom-6 right-6 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-full shadow-lg"
+  >
+    Saved Scripts
+  </button>
+
+  {/* Drawer Overlay */}
+  {drawerOpen && (
+    <div
+      className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+      onClick={() => setDrawerOpen(false)}
+    />
+  )}
+
+  {/* Drawer */}
+  <div
+    className={`fixed top-0 right-0 h-full w-[420px] bg-white shadow-xl transform transition-transform duration-300 ${
+      drawerOpen ? "translate-x-0" : "translate-x-full"
+    }`}
+  >
+    <div className="p-6 border-b flex justify-between items-center">
+      <h2 className="text-xl font-semibold">Saved Scripts</h2>
+      <button onClick={() => setDrawerOpen(false)}>✕</button>
+    </div>
+
+    {/* List of saved runs */}
+    <div className="overflow-y-auto h-[calc(100%-160px)] p-4 space-y-4">
+      {savedHistory.length === 0 && (
+        <p className="text-gray-500 text-center">No saved scripts yet.</p>
+      )}
+
+      {savedHistory.map((run) => (
+        <div
+          key={run.id}
+          className="border rounded-lg p-4 cursor-pointer hover:bg-gray-50"
+          onClick={() => setSelectedRun(run)}
+        >
+          <p className="font-medium">{run.niche}</p>
+          <p className="text-sm text-gray-600">
+            {formatDate(run.createdAt)}
+          </p>
+        </div>
+      ))}
+    </div>
+
+    {/* Selected run viewer */}
+    {selectedRun && (
+      <div className="absolute inset-0 bg-white p-6 overflow-y-auto">
+        <button
+          onClick={() => setSelectedRun(null)}
+          className="text-sm underline mb-4"
+        >
+          ← Back to list
+        </button>
+
+        <h3 className="font-semibold text-lg mb-2">{selectedRun.niche}</h3>
+        <p className="text-gray-500 mb-4">
+          {formatDate(selectedRun.createdAt)}
+        </p>
+
+        {/* Render stored HTML */}
+        <div
+          className="prose max-w-none"
+          dangerouslySetInnerHTML={{ __html: selectedRun.html }}
+        />
+
+        <button
+          onClick={() => deleteRun(selectedRun.id)}
+          className="mt-6 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
+        >
+          Delete
+        </button>
+      </div>
+    )}
+  </div>
+</>
+
+      
     </div>
   );
 }
