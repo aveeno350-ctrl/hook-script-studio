@@ -10,7 +10,7 @@ import UpdateBanner from "./components/UpdateBanner";
 import { EXAMPLES } from "@/data/examples";
 
   // Reusable glowing card with optional ref (used for output + examples)
-type GlowCardProps = React.ComponentPropsWithoutRef<"div">;
+type GlowCardProps = React.ComponentPropsWithoutRef<typeof M.div>;
 
 const GlowCard = React.forwardRef<HTMLDivElement, GlowCardProps>(
   function GlowCard({ className = "", children, ...props }, ref) {
@@ -41,6 +41,7 @@ const GlowCard = React.forwardRef<HTMLDivElement, GlowCardProps>(
     );
   }
 );
+
 
 
 
