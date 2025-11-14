@@ -104,7 +104,6 @@ useEffect(() => {
 }, [runs]);
 
 
-  const outRef = React.useRef<HTMLDivElement | null>(null);
 
   // upgrade modal
   const [showUpgradeModal, setShowUpgradeModal] = React.useState(false);
