@@ -625,38 +625,74 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
 {/* Upgrade modal – shows when free runs are exhausted */}
 {showUpgradeModal && (
   <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-    <GlowCard className="p-6 md:p-8 space-y-7 max-w-sm w-full text-center group">
-      
-      <h2 className="font-display text-xl font-semibold">
-        Unlock unlimited generations
-      </h2>
-
-      <p className="text-sm opacity-80 leading-relaxed">
-        You’ve used your 3 free runs on this device. Upgrade once to unlock
-        unlimited hooks, scripts, B-roll ideas, and CTAs.
-      </p>
-
-      {/* Extra spacing above the CTA button */}
-      <div className="pt-2">
-        <a
-          href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
-          target="_blank"
-          rel="noreferrer"
-          className="btn btn-primary w-full !text-white"
+    <M.div
+      initial={{ opacity: 0, y: 12, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.22, ease: "easeOut" }}
+      className="w-full max-w-sm"
+    >
+      <GlowCard className="p-6 md:p-8 space-y-5 w-full group">
+        {/* Text block – left aligned, animated */}
+        <M.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05, duration: 0.18, ease: "easeOut" }}
+          className="text-left space-y-3"
         >
-          Upgrade Now
-        </a>
-      </div>
+          <h2 className="font-display text-xl font-semibold">
+            Unlock unlimited generations
+          </h2>
 
-      <button
-        onClick={() => setShowUpgradeModal(false)}
-        className="text-xs opacity-70 hover:opacity-100 transition"
-      >
-        Maybe later
-      </button>
-    </GlowCard>
+          <p className="text-sm opacity-80 leading-relaxed">
+            You’ve used your 3 free runs on this device. Upgrade once to unlock
+            unlimited hooks, scripts, B-roll ideas, and CTAs.
+          </p>
+        </M.div>
+
+        {/* Primary CTA */}
+        <M.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.18, ease: "easeOut" }}
+          className="pt-2"
+        >
+          <M.a
+            href={process.env.NEXT_PUBLIC_PAYMENT_LINK}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() =>
+              track("paywall_open", { source: "modal_runs_exhausted" })
+            }
+            className="btn btn-primary w-full !text-white"
+            whileHover={{ y: -1, scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            transition={{
+              type: "spring",
+              stiffness: 420,
+              damping: 30,
+              mass: 0.25,
+            }}
+          >
+            Upgrade Now
+          </M.a>
+        </M.div>
+
+        {/* Secondary CTA */}
+        <M.button
+          type="button"
+          onClick={() => setShowUpgradeModal(false)}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.16, duration: 0.18 }}
+          className="text-xs opacity-70 hover:opacity-100 transition"
+        >
+          Maybe later
+        </M.button>
+      </GlowCard>
+    </M.div>
   </div>
 )}
+
 
 
 
