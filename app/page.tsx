@@ -10,36 +10,38 @@ import UpdateBanner from "./components/UpdateBanner";
 import { EXAMPLES } from "@/data/examples";
 
   // Reusable glowing card with optional ref (used for output + examples)
-const GlowCard = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(function GlowCard({ className = "", children, ...props }, ref) {
-  return (
-    <M.div
-      ref={ref}
-      className={`
-        relative rounded-3xl border border-white/10
-        bg-[color-mix(in_oklab,var(--surface)94%,transparent)]/90
-        shadow-[0_18px_45px_rgba(15,23,42,0.32)]
-        overflow-hidden
-        transition-transform transition-shadow duration-200
-        hover:-translate-y-[2px]
-        hover:shadow-[0_24px_65px_rgba(15,23,42,0.45)]
-        group
-        ${className}
-      `}
-      {...props}
-    >
-      {/* soft glow layer */}
-      <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-        <div className="absolute inset-[-40%] bg-[radial-gradient(circle_at_top,var(--accent-500)_0,transparent_55%)] mix-blend-soft-light" />
-      </div>
+type GlowCardProps = React.ComponentPropsWithoutRef<"div">;
 
-      {/* actual card content */}
-      <div className="relative z-10">{children}</div>
-    </M.div>
-  );
-});
+const GlowCard = React.forwardRef<HTMLDivElement, GlowCardProps>(
+  function GlowCard({ className = "", children, ...props }, ref) {
+    return (
+      <M.div
+        ref={ref}
+        className={`
+          relative rounded-3xl border border-white/10
+          bg-[color-mix(in_oklab,var(--surface)94%,transparent)]/90
+          shadow-[0_18px_45px_rgba(15,23,42,0.32)]
+          overflow-hidden
+          transition-transform transition-shadow duration-200
+          hover:-translate-y-[2px]
+          hover:shadow-[0_24px_65px_rgba(15,23,42,0.45)]
+          group
+          ${className}
+        `}
+        {...props}
+      >
+        {/* soft glow layer */}
+        <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div className="absolute inset-[-40%] bg-[radial-gradient(circle_at_top,var(--accent-500)_0,transparent_55%)] mix-blend-soft-light" />
+        </div>
+
+        {/* actual card content */}
+        <div className="relative z-10">{children}</div>
+      </M.div>
+    );
+  }
+);
+
 
 
 
