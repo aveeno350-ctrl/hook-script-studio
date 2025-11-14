@@ -7,7 +7,7 @@ import { DEFAULTS } from "@/lib/prompts";
 import TypingWave from "./components/TypingWave";
 import CopyButton from "./components/CopyButton";
 import UpdateBanner from "./components/UpdateBanner";
-import { EXAMPLES } from "./data/examples";
+import { EXAMPLES } from "../../data/examples";
 
 // Reusable glowing card with optional ref (used for output + modal)
 const GlowCard = React.forwardRef<
