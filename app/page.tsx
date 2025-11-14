@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef, useState, useId } from "react";
 import { motion as M, AnimatePresence } from "framer-motion";
-import { track } from "@lib/metric";
-import { DEFAULTS } from "@lib/prompts";
+import { track } from "@/lib/metric";
+import { DEFAULTS } from "@/lib/prompts";
 import TypingWave from "./components/TypingWave";
 import CopyButton from "./components/CopyButton";
 import UpdateBanner from "./components/UpdateBanner";
