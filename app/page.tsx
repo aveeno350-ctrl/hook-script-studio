@@ -128,6 +128,17 @@ export default function Page() {
 
   // UI state
   const [showSavedDrawer, setShowSavedDrawer] = useState(false);
+  const [selectedSavedRun, setSelectedSavedRun] = useState<SavedRun | null>(
+    null
+  );
+
+  const formatSavedDate = (iso: string) =>
+    new Date(iso).toLocaleString(undefined, {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const outRef = useRef<HTMLDivElement | null>(null);
@@ -881,121 +892,178 @@ export default function Page() {
         </footer>
       </main>
 
-      {/* Saved scripts drawer (centered modal) */}
+            {/* Saved scripts slide-out drawer */}
       <AnimatePresence>
         {showSavedDrawer && (
-          <M.div
-            className="fixed inset-0 z-40 flex items-end md:items-center justify-center bg-black/40 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
+          <>
+            {/* Backdrop */}
             <M.div
-              className="w-full max-w-lg mx-auto mb-3 md:mb-0 px-4"
-              initial={{ y: 32, opacity: 0, scale: 0.98 }}
-              animate={{ y: 0, opacity: 1, scale: 1 }}
-              exit={{ y: 32, opacity: 0, scale: 0.98 }}
-              transition={{
-                type: "spring",
-                stiffness: 420,
-                damping: 30,
-                mass: 0.9,
+              className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => {
+                setShowSavedDrawer(false);
+                setSelectedSavedRun(null);
               }}
-            >
-              <GlowCard className="p-4 md:p-6 space-y-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="kicker">Saved scripts</div>
-                    <h2 className="font-display text-base font-semibold">
-                      Your hook &amp; script library
-                    </h2>
-                    <p className="text-xs opacity-70 mt-1">
-                      Load a saved run back into the editor, or copy it out as
-                      plain text.
-                    </p>
-                  </div>
+            />
 
-                  <button
-                    type="button"
-                    onClick={() => setShowSavedDrawer(false)}
-                    className="btn btn-ghost text-xs px-2 py-1"
-                  >
-                    Close
-                  </button>
+            {/* Drawer panel */}
+            <M.div
+              className="fixed top-0 right-0 z-50 h-full w-full max-w-md bg-white shadow-xl flex flex-col"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", stiffness: 320, damping: 30 }}
+            >
+              {/* Header */}
+              <div className="p-5 border-b flex items-center justify-between">
+                <div>
+                  <div className="text-xs font-medium uppercase tracking-wide text-gray-500">
+                    Saved scripts
+                  </div>
+                  <h2 className="text-base font-semibold text-gray-900">
+                    Your hook &amp; script library
+                  </h2>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Click a script to preview it, then load it back into the
+                    editor or copy the text.
+                  </p>
                 </div>
 
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowSavedDrawer(false);
+                    setSelectedSavedRun(null);
+                  }}
+                  className="text-sm text-gray-500 hover:text-gray-900"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {savedRuns.length === 0 ? (
-                  <p className="text-xs opacity-70">
-                    You haven&apos;t saved anything yet. Generate a script, then
-                    hit <span className="font-medium">Save to library</span>.
+                  <p className="text-sm text-gray-500">
+                    You haven&apos;t saved anything yet. Generate a script,
+                    then hit <span className="font-medium">Save to library</span>.
                   </p>
                 ) : (
-                  <ul className="space-y-3 max-h-[60vh] overflow-y-auto pr-1">
-                    {savedRuns.map((run) => (
-                      <li
-                        key={run.id}
-                        className="rounded-lg border border-white/5 bg-[color-mix(in_oklab,var(--surface)96%,transparent)] p-3 space-y-2"
-                      >
-                        <div className="flex items-center justify-between gap-2 text-[11px] uppercase tracking-wide opacity-70">
-                          <span className="truncate">
-                            {run.niche || "Untitled script"}
-                          </span>
-                          <span>
-                            {new Date(run.createdAt).toLocaleString(undefined, {
-                              month: "short",
-                              day: "numeric",
-                            })}
-                          </span>
-                        </div>
+                  <>
+                    {/* List of saved runs */}
+                    <div className="space-y-2">
+                      {savedRuns.map((run) => (
+                        <button
+                          key={run.id}
+                          type="button"
+                          onClick={() => setSelectedSavedRun(run)}
+                          className={clsx(
+                            "w-full text-left rounded-lg border px-3 py-2 text-xs transition bg-gray-50/80 hover:bg-gray-100",
+                            selectedSavedRun?.id === run.id
+                              ? "border-purple-500 bg-purple-50/70"
+                              : "border-gray-200"
+                          )}
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="font-medium truncate text-gray-900">
+                              {run.niche || "Untitled script"}
+                            </span>
+                            <span className="text-[11px] text-gray-500 whitespace-nowrap">
+                              {formatSavedDate(run.createdAt)}
+                            </span>
+                          </div>
+                          <div className="mt-1 text-[11px] text-gray-600 truncate">
+                            {run.offer || run.audience || run.tone}
+                          </div>
+                          {run.platform && (
+                            <div className="mt-1 text-[10px] uppercase tracking-wide text-gray-500">
+                              {run.platform}
+                            </div>
+                          )}
+                        </button>
+                      ))}
+                    </div>
 
-                        <p className="text-xs opacity-80 line-clamp-2">
-                          {run.offer || run.audience || run.tone}
-                        </p>
-
-                        <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                          <div className="flex flex-wrap gap-2">
-                            {run.platform && (
-                              <span className="rounded-full border border-white/10 px-2 py-[2px] text-[10px] uppercase tracking-wide opacity-80">
-                                {run.platform}
-                              </span>
-                            )}
+                    {/* Preview panel */}
+                    {selectedSavedRun && (
+                      <div className="mt-4 border-t pt-4 space-y-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <h3 className="text-sm font-semibold text-gray-900">
+                              {selectedSavedRun.niche || "Saved script"}
+                            </h3>
+                            <p className="text-[11px] text-gray-500">
+                              {formatSavedDate(selectedSavedRun.createdAt)} ·{" "}
+                              {selectedSavedRun.platform}
+                            </p>
                           </div>
 
-                          <div className="flex flex-wrap gap-2">
+                          <div className="flex flex-wrap gap-2 justify-end">
                             <button
                               type="button"
-                              onClick={() => handleLoadSaved(run)}
+                              onClick={() => handleLoadSaved(selectedSavedRun)}
                               className="btn btn-secondary btn-xs"
                             >
                               Load into editor
                             </button>
                             <button
                               type="button"
-                              onClick={() => handleCopySaved(run)}
+                              onClick={() => handleCopySaved(selectedSavedRun)}
                               className="btn btn-ghost btn-xs"
                             >
                               Copy text
                             </button>
                             <button
                               type="button"
-                              onClick={() =>
+                              onClick={() => {
                                 setSavedRuns((prev) =>
-                                  prev.filter((r) => r.id !== run.id)
-                                )
-                              }
-                              className="btn btn-ghost btn-xs text-red-300"
+                                  prev.filter((r) => r.id !== selectedSavedRun.id)
+                                );
+                                setSelectedSavedRun(null);
+                              }}
+                              className="btn btn-ghost btn-xs text-red-500"
                             >
                               Delete
                             </button>
                           </div>
                         </div>
-                      </li>
-                    ))}
-                  </ul>
+
+                        <div className="border rounded-lg p-3 max-h-[40vh] overflow-y-auto">
+                          <div
+                            className="prose max-w-none text-sm"
+                            dangerouslySetInnerHTML={{
+                              __html: selectedSavedRun.html,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
-              </GlowCard>
+              </div>
+
+              {/* Footer clear-all */}
+              {savedRuns.length > 0 && (
+                <div className="p-4 border-t flex items-center justify-between">
+                  <p className="text-[11px] text-gray-500">
+                    Stored on this device only.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSavedRuns([]);
+                      setSelectedSavedRun(null);
+                    }}
+                    className="text-[11px] text-red-500 hover:underline"
+                  >
+                    Clear all
+                  </button>
+                </div>
+              )}
             </M.div>
-          </M.div>
+          </>
         )}
       </AnimatePresence>
     </div>
