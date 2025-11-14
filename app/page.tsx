@@ -46,8 +46,37 @@ export default function Page() {
   const [content, setContent] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
-  // persisted free-run counter (keep using your existing hook)
-  const [runs, setRuns] = useLocalStorage<number>("hss_runs_v1", 0);
+  // persisted free-run counter
+const [runs, setRuns] = useState<number>(0);
+
+// Read initial value from localStorage on mount
+useEffect(() => {
+  if (typeof window === "undefined") return;
+
+  try {
+    const stored = window.localStorage.getItem("hss_runs_v1");
+    if (stored != null) {
+      const parsed = Number.parseInt(stored, 10);
+      if (!Number.isNaN(parsed)) {
+        setRuns(parsed);
+      }
+    }
+  } catch (err) {
+    console.error("Failed to read runs from localStorage", err);
+  }
+}, []);
+
+// Persist whenever runs changes
+useEffect(() => {
+  if (typeof window === "undefined") return;
+
+  try {
+    window.localStorage.setItem("hss_runs_v1", String(runs));
+  } catch (err) {
+    console.error("Failed to write runs to localStorage", err);
+  }
+}, [runs]);
+
 
   const outRef = React.useRef<HTMLDivElement | null>(null);
 
