@@ -84,6 +84,20 @@ export default function Page() {
     []
   );
 
+  const [showSavedDrawer, setShowSavedDrawer] = useState(false);
+
+  const handleLoadSaved = (run: SavedRun) => {
+    setNiche(run.niche);
+    setAudience(run.audience);
+    setOffer(run.offer);
+    setTone(run.tone);
+    setPlatform(run.platform);
+    setKeywords(run.keywords);
+    setContent(run.html);
+    setShowSavedDrawer(false);
+  };
+
+  
   const outRef = useRef<HTMLDivElement | null>(null);
   const [showPaywall, setShowPaywall] = useState(false);
 
@@ -530,17 +544,39 @@ function useLocalStorage<T>(key: string, initialValue: T) {
               <CopyButton getText={() => content || ""} />
             </div>
 
-            <div className="flex gap-2 flex-wrap">
-              <button onClick={copyAll} className="btn btn-secondary">
-                Copy All
-              </button>
-              <button onClick={downloadTxt} className="btn btn-secondary">
-                Download .txt
-              </button>
-              <button onClick={clearOutput} className="btn btn-ghost">
-                Clear
-              </button>
-            </div>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap gap-2">
+        <button onClick={copyAll} className="btn btn-secondary">
+          Copy All
+        </button>
+        <button onClick={downloadTxt} className="btn btn-secondary">
+          Download .txt
+        </button>
+        <button onClick={clearOutput} className="btn btn-ghost">
+          Clear
+        </button>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={handleSaveCurrent}
+          disabled={!content}
+          className="btn btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Save to library
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setShowSavedDrawer(true)}
+          className="btn btn-ghost"
+        >
+          View saved scripts
+        </button>
+      </div>
+    </div>
+
 
             {loading ? (
               <div className="space-y-2">
@@ -842,6 +878,124 @@ function useLocalStorage<T>(key: string, initialValue: T) {
           </div>
         </footer>
       </main>
+            {/* Saved scripts drawer */}
+      <AnimatePresence>
+        {showSavedDrawer && (
+          <M.div
+            className="fixed inset-0 z-40 flex items-end md:items-center justify-center bg-black/40 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <M.div
+              className="w-full max-w-lg mx-auto mb-3 md:mb-0 px-4"
+              initial={{ y: 32, opacity: 0, scale: 0.98 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              exit={{ y: 32, opacity: 0, scale: 0.98 }}
+              transition={{
+                type: "spring",
+                stiffness: 420,
+                damping: 30,
+                mass: 0.9,
+              }}
+            >
+              <GlowCard className="p-4 md:p-6 space-y-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="kicker">Saved scripts</div>
+                    <h2 className="font-display text-base font-semibold">
+                      Your hook &amp; script library
+                    </h2>
+                    <p className="text-xs opacity-70 mt-1">
+                      Load a saved run back into the editor, or copy it out as
+                      plain text.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowSavedDrawer(false)}
+                    className="btn btn-ghost text-xs px-2 py-1"
+                  >
+                    Close
+                  </button>
+                </div>
+
+                {savedRuns.length === 0 ? (
+                  <p className="text-xs opacity-70">
+                    You haven&apos;t saved anything yet. Generate a script, then
+                    hit <span className="font-medium">Save to library</span>.
+                  </p>
+                ) : (
+                  <ul className="space-y-3 max-h-[60vh] overflow-y-auto pr-1">
+                    {savedRuns.map((run) => (
+                      <li
+                        key={run.id}
+                        className="rounded-lg border border-white/5 bg-[color-mix(in_oklab,var(--surface)96%,transparent)] p-3 space-y-2"
+                      >
+                        <div className="flex items-center justify-between gap-2 text-[11px] uppercase tracking-wide opacity-70">
+                          <span className="truncate">
+                            {run.niche || "Untitled script"}
+                          </span>
+                          <span>
+                            {new Date(run.createdAt).toLocaleString(undefined, {
+                              month: "short",
+                              day: "numeric",
+                            })}
+                          </span>
+                        </div>
+
+                        <p className="text-xs opacity-80 line-clamp-2">
+                          {run.offer || run.audience || run.tone}
+                        </p>
+
+                        <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                          <div className="flex flex-wrap gap-2">
+                            {run.platform && (
+                              <span className="rounded-full border border-white/10 px-2 py-[2px] text-[10px] uppercase tracking-wide opacity-80">
+                                {run.platform}
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="flex flex-wrap gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleLoadSaved(run)}
+                              className="btn btn-secondary btn-xs"
+                            >
+                              Load into editor
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleCopySaved(run)}
+                              className="btn btn-ghost btn-xs"
+                            >
+                              Copy text
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setSavedRuns((prev) =>
+                                  prev.filter((r) => r.id !== run.id)
+                                )
+                              }
+                              className="btn btn-ghost btn-xs text-red-300"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </GlowCard>
+            </M.div>
+          </M.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }
