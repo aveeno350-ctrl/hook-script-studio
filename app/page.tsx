@@ -9,27 +9,28 @@ import CopyButton from "./components/CopyButton";
 import UpdateBanner from "./components/UpdateBanner";
 import { EXAMPLES } from "@/data/examples";
 
-  // Reusable glowing card (hover lift, no radial gradient)
+  // Reusable glowing card (hover lift, no radial gradient, no clsx)
 function GlowCard(
-  props: React.HTMLAttributes<HTMLDivElement>
+  props: React.HTMLAttributes<HTMLDivElement> & { children?: React.ReactNode }
 ) {
   const { className = "", children, ...rest } = props;
 
+  const baseClasses =
+    "relative rounded-3xl border border-white/10 " +
+    "bg-[color-mix(in_oklab,var(--surface)96%,transparent)] " +
+    "shadow-sm transition-all duration-200 " +
+    "hover:-translate-y-[2px] hover:shadow-[0_18px_45px_rgba(15,23,42,0.22)]";
+
   return (
     <div
-      className={clsx(
-        "relative rounded-3xl border border-white/10",
-        "bg-[color-mix(in_oklab,var(--surface)96%,transparent)]",
-        "shadow-sm transition-all duration-200",
-        "hover:-translate-y-[2px] hover:shadow-[0_18px_45px_rgba(15,23,42,0.22)]",
-        className
-      )}
+      className={className ? `${baseClasses} ${className}` : baseClasses}
       {...rest}
     >
       {children}
     </div>
   );
 }
+
 
 
 export default function Page() {
