@@ -34,6 +34,21 @@ const GlowCard = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
 
 GlowCard.displayName = "GlowCard";
 
+// Saved run snapshot for history panel
+type RunSnapshot = {
+  id: string;
+  createdAt: number;
+  niche: string;
+  audience: string;
+  offer: string;
+  tone: string;
+  platform: string;
+  keywords: string;
+  content: string;
+};
+
+const HISTORY_KEY = "hss_history_v1";
+
 
 
 type SavedRun = {
@@ -59,6 +74,8 @@ export default function Page() {
   const [runs, setRuns] = useLocalStorage<number>("hss_runs_v1", 0);
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<string>("");
+  const [history, setHistory] = useLocalStorage<RunSnapshot[]>(HISTORY_KEY, []);
+
 
 
   // 🔐 Saved scripts library (local to this device)
@@ -175,8 +192,30 @@ useEffect(() => {
       return;
     }
 
-    setLoading(true);
-    setContent("");
+    // after you get the HTML from the API
+setContent(html);
+setRuns(runs + 1);
+
+// save this run into local history (keep latest 10)
+setHistory((prev) => {
+  const entry: RunSnapshot = {
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    createdAt: Date.now(),
+    niche,
+    audience,
+    offer,
+    tone,
+    platform,
+    keywords,
+    content: html,
+  };
+
+  const next = [entry, ...prev];
+  return next.slice(0, 10); // cap at 10 recent runs
+});
+
+setLoading(false);
+
 
     try {
       track("generate_click", { runs_before: runs });
@@ -513,6 +552,79 @@ function useLocalStorage<T>(key: string, initialValue: T) {
           </GlowCard>
         )}
 
+{/* Recent runs history */}
+{history.length > 0 && (
+  <GlowCard className="p-5 mt-6 space-y-3 group">
+    <div className="flex items-center justify-between gap-2">
+      <div>
+        <div className="kicker">Recent runs</div>
+        <h2 className="font-display text-sm font-semibold">
+          Your last {Math.min(history.length, 10)} scripts
+        </h2>
+      </div>
+      <button
+        type="button"
+        className="text-[11px] opacity-70 hover:opacity-100 hover:underline"
+        onClick={() => setHistory([])}
+      >
+        Clear history
+      </button>
+    </div>
+
+    <div className="space-y-2">
+      {history.map((run) => (
+        <div
+          key={run.id}
+          className="rounded-lg border border-white/5 bg-[color-mix(in_oklab,var(--surface)96%,transparent)] px-3 py-2 text-xs flex flex-col md:flex-row md:items-center md:justify-between gap-2"
+        >
+          <div className="space-y-0.5">
+            <div className="font-medium line-clamp-1">
+              {run.niche || "Untitled niche"} · {run.platform}
+            </div>
+            <div className="opacity-70 line-clamp-1">
+              {run.audience || "Audience not set"}
+            </div>
+            <div className="opacity-50 text-[11px]">
+              {new Date(run.createdAt).toLocaleString()}
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2 md:justify-end">
+            <button
+              type="button"
+              className="btn btn-ghost px-2 py-1 text-[11px]"
+              onClick={() => {
+                setNiche(run.niche);
+                setAudience(run.audience);
+                setOffer(run.offer);
+                setTone(run.tone);
+                setPlatform(run.platform);
+                setKeywords(run.keywords);
+              }}
+            >
+              Restore inputs
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-secondary px-2 py-1 text-[11px]"
+              onClick={() => {
+                setContent(run.content);
+                // scroll to output smooth on load
+                outRef.current?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }}
+            >
+              Load output
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  </GlowCard>
+)}
 
 
         {/* Saved scripts library */}
