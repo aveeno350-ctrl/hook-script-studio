@@ -678,16 +678,20 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
         </M.div>
 
         {/* Secondary CTA */}
-        <M.button
-          type="button"
-          onClick={() => setShowUpgradeModal(false)}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.16, duration: 0.18 }}
-          className="text-xs opacity-70 hover:opacity-100 transition"
-        >
-          Maybe later
-        </M.button>
+        <M.div
+  className="w-full flex justify-center"
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ delay: 0.16, duration: 0.18 }}
+>
+  <button
+    type="button"
+    onClick={() => setShowUpgradeModal(false)}
+    className="text-xs opacity-70 hover:opacity-100 transition text-center"
+  >
+    Maybe later
+  </button>
+</M.div>
       </GlowCard>
     </M.div>
   </div>
