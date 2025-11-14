@@ -387,8 +387,9 @@ useEffect(() => {
                 className="input"
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
-                placeholder="optional keywords"
+                placeholder="e.g. hook, script, cta"
               />
+
             </M.div>
 
             <div className="text-xs opacity-70 leading-relaxed md:col-span-2 mt-1">
