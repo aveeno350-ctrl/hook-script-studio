@@ -433,7 +433,10 @@ export default function Page() {
 
           <div className="flex flex-col items-end gap-1 text-[11px]">
             <div
-              className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px]"
+              className={clsx(
+  "inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] transition-opacity",
+  loading && "opacity-70"
+)}
               style={{
                 background:
                   "color-mix(in oklab, var(--surface-2) 85%, transparent)",
@@ -539,13 +542,16 @@ export default function Page() {
               }}
             >
               {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <TypingWave />
-                  <span>Generating…</span>
-                </span>
-              ) : (
-                "Generate"
-              )}
+  <span className="flex items-center justify-center gap-2">
+    <TypingWave />
+    <span>
+      Generating {platform} script…
+    </span>
+  </span>
+) : (
+  "Generate"
+)}
+
             </M.button>
           </M.section>
         </GlowCard>
@@ -553,58 +559,33 @@ export default function Page() {
         {/* Output */}
         {(loading || content) && (
           <GlowCard className="p-5 mt-6 space-y-4 group" ref={outRef}>
-            <div className="flex items-center justify-between">
-              <div className="kicker">Output</div>
-              <CopyButton getText={() => content || ""} />
-            </div>
+  {/* loading progress strip */}
+  {loading && (
+    <M.div
+      className="h-[3px] w-full rounded-full overflow-hidden mb-2 bg-white/10"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
+      <M.div
+        className="h-full w-1/3 rounded-full bg-gradient-to-r from-purple-500 via-fuchsia-500 to-blue-500"
+        initial={{ x: "-100%" }}
+        animate={{ x: "200%" }}
+        transition={{
+          repeat: Infinity,
+          duration: 1.4,
+          ease: "easeInOut",
+        }}
+      />
+    </M.div>
+  )}
 
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-wrap gap-2">
-                <button onClick={copyAll} className="btn btn-secondary">
-                  Copy All
-                </button>
-                <button onClick={downloadTxt} className="btn btn-secondary">
-                  Download .txt
-                </button>
-                <button onClick={clearOutput} className="btn btn-ghost">
-                  Clear
-                </button>
-              </div>
+  <div className="flex items-center justify-between">
+    <div className="kicker">Output</div>
+    <CopyButton getText={() => content || ""} />
+  </div>
+  ...
+</GlowCard>
 
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={handleSaveCurrent}
-                  disabled={!content}
-                  className="btn btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Save to library
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setShowSavedDrawer(true)}
-                  className="btn btn-ghost"
-                >
-                  View saved scripts
-                </button>
-              </div>
-            </div>
-
-            {loading ? (
-              <div className="space-y-2">
-                <div className="skeleton h-5 w-3/4" />
-                <div className="skeleton h-5 w-full" />
-                <div className="skeleton h-5 w-11/12" />
-                <div className="skeleton h-5 w-5/6" />
-              </div>
-            ) : content ? (
-              <article
-                className="prose prose-invert prose-sm max-w-none leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: content }}
-              />
-            ) : null}
-          </GlowCard>
         )}
 
         {/* Recent runs history */}
