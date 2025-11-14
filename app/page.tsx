@@ -184,7 +184,7 @@ useEffect(() => {
     URL.revokeObjectURL(url);
   }
 
-  async function generate(): Promise<void> {
+      async function generate(): Promise<void> {
     // free-limit gate with modal
     if (runs >= 3) {
       setShowUpgradeModal(true);
@@ -192,34 +192,7 @@ useEffect(() => {
       return;
     }
 
-    const safeHtml = data.choices[0].message.content ?? "";
-
-// after you get the HTML from the API
-const html = safeHtml;
-
-setContent(html);
-setRuns(runs + 1);
-
-setHistory((prev) => {
-  const entry: RunSnapshot = {
-    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    createdAt: Date.now(),
-    niche,
-    audience,
-    offer,
-    tone,
-    platform,
-    keywords,
-    content: nextHtml,
-  };
-
-  const next = [entry, ...prev];
-  return next.slice(0, 10);
-});
-
-setLoading(false);
-
-
+    setLoading(true);
 
     try {
       track("generate_click", { runs_before: runs });
@@ -241,21 +214,50 @@ setLoading(false);
         throw new Error("Request failed");
       }
 
-      const data = await res.json();
-      setContent(data.html ?? data.text ?? "");
-      setRuns(runs + 1);
+      const data = await res.json() as { html?: string; text?: string };
+      const html = (data.html ?? data.text ?? "").trim();
+
+      // set main output
+      setContent(html);
+
+      // increment runs safely
+      setRuns((prev) => prev + 1);
+
+      // save this run into local history (keep latest 10)
+      setHistory((prev) => {
+        const entry: RunSnapshot = {
+          id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          createdAt: Date.now(),
+          niche,
+          audience,
+          offer,
+          tone,
+          platform,
+          keywords,
+          content: html,
+        };
+
+        return [entry, ...prev].slice(0, 10);
+      });
 
       // scroll to output
       requestAnimationFrame(() => {
-        outRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        outRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
       });
     } catch (err) {
       console.error(err);
-      alert("Something went wrong generating your script. Please try again.");
+      alert(
+        "Something went wrong generating your script. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   }
+
+
 
   // stagger variants for inputs
   const stagger = {
