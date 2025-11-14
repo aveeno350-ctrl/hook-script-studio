@@ -125,8 +125,6 @@ export default function Page() {
     navigator.clipboard?.writeText(plain);
   };
 
-// Local storage key
-const HISTORY_KEY = "hss_history_v1";
 
 // Run snapshot type for saving
 type SavedRun = {
