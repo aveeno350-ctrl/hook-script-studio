@@ -192,11 +192,14 @@ useEffect(() => {
       return;
     }
 
-    // after you get the HTML from the API
+    const safeHtml = data.choices[0].message.content ?? "";
+
+// after you get the HTML from the API
+const html = safeHtml;
+
 setContent(html);
 setRuns(runs + 1);
 
-// save this run into local history (keep latest 10)
 setHistory((prev) => {
   const entry: RunSnapshot = {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
@@ -207,14 +210,15 @@ setHistory((prev) => {
     tone,
     platform,
     keywords,
-    content: html,
+    content: nextHtml,
   };
 
   const next = [entry, ...prev];
-  return next.slice(0, 10); // cap at 10 recent runs
+  return next.slice(0, 10);
 });
 
 setLoading(false);
+
 
 
     try {
