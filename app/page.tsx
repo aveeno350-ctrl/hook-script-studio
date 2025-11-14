@@ -18,24 +18,29 @@ const GlowCard = React.forwardRef<HTMLDivElement, GlowCardProps>(
   function GlowCard({ className = "", children, ...props }, ref) {
     return (
       <M.div
-        // we cast to any here so framer-motion's extra props don't upset TS
         ref={ref as any}
         {...(props as any)}
         className={`
-          relative rounded-3xl border border-white/10
-          bg-[color-mix(in_oklab,var(--surface)94%,transparent)]/90
-          shadow-[0_18px_45px_rgba(15,23,42,0.32)]
-          overflow-hidden
-          transition-transform transition-shadow duration-200
-          hover:-translate-y-[2px]
-          hover:shadow-[0_24px_65px_rgba(15,23,42,0.45)]
           group
+          relative rounded-3xl border border-white/10
+          bg-[color-mix(in_oklab,var(--surface)96%,transparent)]
+          shadow-[0_6px_16px_rgba(15,23,42,0.16)]
+          transition-transform duration-200
+          hover:-translate-y-[2px]
+          hover:shadow-[0_18px_40px_rgba(15,23,42,0.32)]
           ${className}
         `}
       >
-        {/* soft glow layer */}
-        <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <div className="absolute inset-[-40%] bg-[radial-gradient(circle_at_top,var(--accent-500)_0,transparent_55%)] mix-blend-soft-light" />
+        {/* soft hover glow – subtle, only on hover */}
+        <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-80 transition-opacity duration-300">
+          <div
+            className="
+              absolute -inset-10
+              bg-[radial-gradient(circle_at_top,var(--accent-500)_0,transparent_60%)]
+              mix-blend-soft-light
+              opacity-35
+            "
+          />
         </div>
 
         {/* actual card content */}
@@ -44,6 +49,7 @@ const GlowCard = React.forwardRef<HTMLDivElement, GlowCardProps>(
     );
   }
 );
+
 
 
 
