@@ -630,49 +630,63 @@ setHistory((prev) => [nextContent, ...prev].slice(0, 5));
 
 
   <footer className="pt-10 text-xs opacity-60">
-    <div className="space-x-3">
-      <a
-        className="hover:underline opacity-80 hover:opacity-100 transition"
-        href={`mailto:aveeno350@gmail.com?subject=Hook%20%26%20Script%20Studio%20Support%20Request&body=${encodeURIComponent(
-          "Please describe the issue you're experiencing.\n\nBrowser:\nDevice:\nSteps to reproduce:\n"
-        )}`}
-      >
-        Contact
-      </a>
-      <span>·</span>
-      <a className="hover:underline" href="/terms">
-        Terms
-      </a>
-      <span>·</span>
-      <a className="hover:underline" href="/privacy">
-        Privacy
-      </a>
-      <span>·</span>
-      <a className="hover:underline" href="/license">
-        License
-      </a>
-      <span>·</span>
-      <a className="hover:underline" href="/support">
-        Support
-      </a>
-      <span>·</span>
-      <a className="hover:underline" href="/pricing">
-        Pricing
-      </a>
-      <span>·</span>
-      <a className="hover:underline" href="/changelog">
-        Changelog
-      </a>
-      <span>·</span>
-      <a className="hover:underline" href="/about">
-        About
-      </a>
-    </div>
+  <div className="flex flex-wrap gap-x-3 gap-y-2">
+    <a
+      className="hover:underline opacity-80 hover:opacity-100 transition"
+      href={`mailto:aveeno350@gmail.com?subject=Hook%20%26%20Script%20Studio%20Support%20Request&body=${encodeURIComponent(
+        "Please describe the issue you're experiencing.\n\nBrowser:\nDevice:\nSteps to reproduce:\n"
+      )}`}
+    >
+      Contact
+    </a>
 
-        <p className="text-xs opacity-60 mt-3">
-      Need help? We respond within 24–48 hours.
-    </p>
-  </footer>
+    <span className="hidden sm:inline">·</span>
+
+    <a className="hover:underline" href="/terms">
+      Terms
+    </a>
+
+    <span className="hidden sm:inline">·</span>
+
+    <a className="hover:underline" href="/privacy">
+      Privacy
+    </a>
+
+    <span className="hidden sm:inline">·</span>
+
+    <a className="hover:underline" href="/license">
+      License
+    </a>
+
+    <span className="hidden sm:inline">·</span>
+
+    <a className="hover:underline" href="/support">
+      Support
+    </a>
+
+    <span className="hidden sm:inline">·</span>
+
+    <a className="hover:underline" href="/pricing">
+      Pricing
+    </a>
+
+    <span className="hidden sm:inline">·</span>
+
+    <a className="hover:underline" href="/changelog">
+      Changelog
+    </a>
+
+    <span className="hidden sm:inline">·</span>
+
+    <a className="hover:underline" href="/about">
+      About
+    </a>
+  </div>
+
+  <p className="text-xs opacity-60 mt-3">
+    Need help? We respond within 24–48 hours.
+  </p>
+</footer>
 </main>
 </div>
 );
