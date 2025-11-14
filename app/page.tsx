@@ -9,30 +9,46 @@ import CopyButton from "./components/CopyButton";
 import UpdateBanner from "./components/UpdateBanner";
 import { EXAMPLES } from "@/data/examples";
 
-// Reusable glowing card with optional ref (used for output + modal)
+  // Reusable glowing card with optional ref (used for output + examples)
 const GlowCard = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(function GlowCard({ className = "", children, ...rest }, ref) {
+  { children: React.ReactNode; className?: string }
+>(function GlowCardInner({ children, className = "" }, ref) {
   return (
-    <div
-      ref={ref}
-      className={[
-        "relative rounded-3xl border border-white/8 bg-[color-mix(in_oklab,var(--surface)94%,transparent)]",
-        "shadow-[0_24px_80px_rgba(15,23,42,0.45)]",
-        "before:pointer-events-none before:absolute before:inset-0 before:rounded-3xl",
-        "before:border before:border-white/5 before:opacity-0 group-hover:before:opacity-100",
-        "before:transition-opacity before:duration-300",
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
-      {...rest}
-    >
-      {children}
+    <div className={`relative group ${className}`}>
+      {/* Hover glow */}
+      <div
+        className="
+          pointer-events-none absolute inset-0 rounded-3xl
+          opacity-0 group-hover:opacity-100
+          transition-opacity duration-400
+        "
+        style={{
+          background:
+            "radial-gradient(circle at top, rgba(167, 139, 250, 0.35), transparent 55%), radial-gradient(circle at bottom, rgba(56, 189, 248, 0.25), transparent 55%)",
+          filter: "blur(18px)",
+        }}
+      />
+
+      {/* Card surface */}
+      <motion.div
+        ref={ref}
+        className="
+          relative rounded-3xl border border-white/8
+          bg-[color-mix(in_oklab,var(--surface)94%,transparent)]
+          shadow-sm
+          transition-shadow duration-300
+          group-hover:shadow-xl
+        "
+        whileHover={{ y: -2 }}
+        transition={{ type: "spring", stiffness: 260, damping: 26, mass: 0.6 }}
+      >
+        {children}
+      </motion.div>
     </div>
   );
 });
+
 
 export default function Page() {
   // ---- state ----
@@ -225,25 +241,27 @@ useEffect(() => {
 
       {/* Marketing hero */}
       <M.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-        className="text-center mb-8"
-      >
-        <header className="mx-auto max-w-3xl px-6 pt-14 pb-10 space-y-2">
-          <div className="kicker">AI Video Hook Engine</div>
+  initial={{ opacity: 0, y: 12 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+  className="mb-8"
+>
+  <header className="mx-auto max-w-3xl px-6 pt-14 pb-10 space-y-3 text-left">
+    <div className="kicker">AI video hook engine</div>
 
-          <h1 className="font-display text-4xl font-semibold leading-tight">
-            <span className="gradient-shimmer">Hook & Script Studio</span>
-          </h1>
+    <h1 className="font-display text-4xl font-semibold leading-tight">
+      <span className="gradient-shimmer">Hook &amp; Script Studio</span>
+    </h1>
 
-          <p className="text-sm opacity-75 max-w-md mx-auto">
-            Generate scroll-stopping hooks, tight 60s scripts, B-roll ideas, and
-            CTAs — built for TikTok, Reels, and Shorts. You get{" "}
-            <strong>3 free runs</strong>, then unlock unlimited.
-          </p>
-        </header>
-      </M.div>
+    <p className="text-sm opacity-75 max-w-lg">
+      Generate scroll-stopping hooks, tight 60s scripts, B-roll ideas, and CTAs
+      — built for TikTok, Reels, and Shorts.{" "}
+      <span className="font-medium">You get 3 free runs</span>, then unlock
+      unlimited.
+    </p>
+  </header>
+</M.div>
+
 
       {/* Main content */}
       <main className="mx-auto max-w-3xl px-6 pb-10 space-y-6">
@@ -450,34 +468,38 @@ useEffect(() => {
           </GlowCard>
         )}
 
+        
         {/* Examples gallery */}
-        <GlowCard className="p-6 mt-8 space-y-4 group">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-            <div>
-              <div className="kicker">Examples</div>
+<GlowCard className="p-6 mt-8 space-y-4">
+  <div className="space-y-2">
+    <div className="kicker">Examples</div>
 
-              <div className="flex items-center gap-2">
-                <h2 className="font-display text-base font-semibold">
-                  What can you make with it?
-                </h2>
+    <div className="flex items-center gap-2">
+      <h2 className="font-display text-base font-semibold">
+        What can you make with it?
+      </h2>
 
-                <span
-                  className="
-                    inline-flex items-center px-2 py-[2px] rounded-full
-                    text-[10px] uppercase tracking-wide
-                    bg-[color-mix(in_oklab,var(--accent-500)80%,transparent)]
-                    text-white/95
-                  "
-                >
-                  New
-                </span>
-              </div>
-            </div>
+      <span
+        className="
+          inline-flex items-center px-2 py-[2px] rounded-full
+          text-[10px] uppercase tracking-wide
+          bg-[color-mix(in_oklab,var(--accent-500)80%,transparent)]
+          text-white/95
+        "
+      >
+        New
+      </span>
+    </div>
 
-            <p className="text-xs opacity-70 md:text-right max-w-xs">
-              These are sample hooks + scripts. Tweak them to sound like you.
-            </p>
-          </div>
+    <p className="text-xs opacity-70 max-w-sm">
+      These are sample hooks + scripts. Tweak them to sound like you.
+    </p>
+  </div>
+
+  {/* Cards */}
+  <div className="grid gap-4 md:grid-cols-3 mt-2">
+    {/* your EXAMPLES.map(...) stays exactly the same here */}
+
 
           {/* extra breathing room between header + cards */}
           <div className="h-3" />
