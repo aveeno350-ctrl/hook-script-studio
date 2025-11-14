@@ -9,14 +9,18 @@ import CopyButton from "./components/CopyButton";
 import UpdateBanner from "./components/UpdateBanner";
 import { EXAMPLES } from "@/data/examples";
 
-  // Reusable glowing card with optional ref (used for output + examples)
-type GlowCardProps = React.ComponentPropsWithoutRef<typeof M.div>;
+  // Reusable glowing card (used for quickstart, inputs, examples, upgrade, modal)
+type GlowCardProps = React.HTMLAttributes<HTMLDivElement> & {
+  children?: React.ReactNode;
+};
 
 const GlowCard = React.forwardRef<HTMLDivElement, GlowCardProps>(
   function GlowCard({ className = "", children, ...props }, ref) {
     return (
       <M.div
-        ref={ref}
+        // we cast to any here so framer-motion's extra props don't upset TS
+        ref={ref as any}
+        {...(props as any)}
         className={`
           relative rounded-3xl border border-white/10
           bg-[color-mix(in_oklab,var(--surface)94%,transparent)]/90
@@ -28,7 +32,6 @@ const GlowCard = React.forwardRef<HTMLDivElement, GlowCardProps>(
           group
           ${className}
         `}
-        {...props}
       >
         {/* soft glow layer */}
         <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
