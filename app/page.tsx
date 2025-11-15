@@ -120,6 +120,23 @@ export default function Page() {
   // Auto recent history
   const [history, setHistory] = useLocalStorage<RunSnapshot[]>(HISTORY_KEY, []);
 
+  // Normalize any legacy history entries so they always have a `content` string
+    useEffect(() => {
+      setHistory((prev) =>
+        prev.map((r: any) => ({
+          ...r,
+          content:
+            typeof r.content === "string"
+              ? r.content
+              : typeof r.html === "string"
+              ? r.html
+              : "",
+         }))
+       );
+      // we intentionally only want this once on mount
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, []);
+
   // Saved scripts library
   const [savedRuns, setSavedRuns] = useLocalStorage<SavedRun[]>(
     "hss_saved_v1",
@@ -694,24 +711,29 @@ export default function Page() {
                       type="button"
                       className="btn btn-secondary px-2 py-1 text-[11px]"
                       onClick={() => {
+                        // after the normalization effect, `run.content` should always be a string
+                        const anyRun = run as any;
                         const next =
-                          (run as any).content ?? (run as any).html ?? "";
+                          typeof anyRun.content === "string"
+                            ? anyRun.content
+                            : typeof anyRun.html === "string"
+                            ? anyRun.html
+                             : "";
 
-                        if (!next) return;
-
-                        setContent(next);
-                        
+                        setContent(next ?? "");
+                        setHasOutput(true);
 
                         requestAnimationFrame(() => {
-                          outRef.current?.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start",
-                          });
-                        });
-                      }}
-                    >
-                      Load output
-                    </button>
+                           outRef.current?.scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                            });
+                           });
+                          }}
+
+                         >
+                          Load output
+                        </button>
                   </div>
                 </div>
               ))}
