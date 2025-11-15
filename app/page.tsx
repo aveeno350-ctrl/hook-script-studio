@@ -115,7 +115,6 @@ export default function Page() {
   const [runs, setRuns] = useLocalStorage<number>("hss_runs_v1", 0);
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<string>("");
-  const [hasOutput, setHasOutput] = useState(false);
 
 
   // Auto recent history
@@ -135,6 +134,10 @@ export default function Page() {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const outRef = useRef<HTMLDivElement | null>(null);
+
+  const shouldShowOutput =
+  loading || content.length > 0 || history.length > 0;
+
 
   // Close upgrade modal on ESC
   useEffect(() => {
@@ -224,7 +227,6 @@ export default function Page() {
     setPlatform(run.platform);
     setKeywords(run.keywords);
     setContent(run.html);
-    setHasOutput(true);
     setShowSavedDrawer(false);
 
     requestAnimationFrame(() => {
@@ -286,7 +288,6 @@ export default function Page() {
 
       // even if html is weirdly empty, mark that we've generated at least once
       setContent(html);
-      setHasOutput(true);
       setRuns((prev) => prev + 1);
 
 
@@ -560,7 +561,7 @@ export default function Page() {
         </GlowCard>
 
         {/* Output */}
-        {(loading || hasOutput) && (
+        {shouldShowOutput && (
           <GlowCard className="p-5 mt-6 space-y-4 group" ref={outRef}>
             {/* Loading strip */}
             {loading && (
@@ -699,7 +700,7 @@ export default function Page() {
                         if (!next) return;
 
                         setContent(next);
-                        setHasOutput(true);
+                        
 
                         requestAnimationFrame(() => {
                           outRef.current?.scrollIntoView({
