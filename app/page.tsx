@@ -720,8 +720,8 @@ export default function Page() {
                             ? anyRun.html
                              : "";
 
-                        setContent(next ?? "");
-                        setHasOutput(true);
+                        setContent(next);
+                       
 
                         requestAnimationFrame(() => {
                            outRef.current?.scrollIntoView({
