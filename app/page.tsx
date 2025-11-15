@@ -128,17 +128,17 @@ export default function Page() {
 
   // UI state
   const [showSavedDrawer, setShowSavedDrawer] = useState(false);
-  const [selectedSavedRun, setSelectedSavedRun] = useState<SavedRun | null>(
-    null
-  );
+  
+  const [selectedSavedRun, setSelectedSavedRun] = useState<SavedRun | null>(null);
 
   const formatSavedDate = (iso: string) =>
-    new Date(iso).toLocaleString(undefined, {
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-    });
+  new Date(iso).toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const outRef = useRef<HTMLDivElement | null>(null);
@@ -645,12 +645,22 @@ export default function Page() {
                       type="button"
                       className="btn btn-secondary px-2 py-1 text-[11px]"
                       onClick={() => {
-                        setContent(run.content);
-                        outRef.current?.scrollIntoView({
-                          behavior: "smooth",
-                          block: "start",
-                        });
-                      }}
+                        // support both old & new shapes, just in case
+                      const next =
+                      (run as any).content ?? (run as any).html ?? "";
+
+                      if (!next) return;
+
+                      setContent(next);
+
+                        // wait for the Output card to mount, then scroll
+                      requestAnimationFrame(() => {
+                      outRef.current?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                      });
+                    });
+                  }}
                     >
                       Load output
                     </button>
@@ -873,7 +883,66 @@ export default function Page() {
         </footer>
       </main>
 
-            {/* Saved scripts slide-out drawer */}
+                        {/* Upgrade / free-limit modal */}
+      <AnimatePresence>
+        {showUpgradeModal && (
+          <M.div
+            className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <M.div
+              className="max-w-sm w-full mx-4 rounded-2xl bg-[color-mix(in_oklab,var(--surface)96%,white)] border border-white/10 p-6 shadow-xl space-y-4"
+              initial={{ y: 24, opacity: 0, scale: 0.98 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              exit={{ y: 24, opacity: 0, scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 420, damping: 30 }}
+            >
+              <div className="space-y-1">
+                <h2 className="font-display text-lg font-semibold">
+                  You’ve used your 3 free runs
+                </h2>
+                <p className="text-sm opacity-75">
+                  Thanks for trying Hook &amp; Script Studio! Unlock unlimited
+                  hooks, scripts, B-roll ideas, and CTAs with the full version.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-2 text-sm">
+                <button
+                  className="btn btn-primary w-full !text-white"
+                  onClick={() => {
+                    setShowUpgradeModal(false);
+                    track("paywall_open", { source: "limit_modal" });
+                    window.open(
+                      process.env.NEXT_PUBLIC_PAYMENT_LINK,
+                      "_blank",
+                      "noopener,noreferrer"
+                    );
+                  }}
+                >
+                  Upgrade for unlimited scripts
+                </button>
+                <button
+                  className="btn btn-ghost w-full text-xs opacity-80 hover:opacity-100"
+                  onClick={() => setShowUpgradeModal(false)}
+                >
+                  Not yet – just close this
+                </button>
+              </div>
+
+              <p className="text-[11px] opacity-60">
+                Free tier is limited per device. Upgrading helps me keep building
+                new features for creators. 💜
+              </p>
+            </M.div>
+          </M.div>
+        )}
+      </AnimatePresence>
+
+      
+                  {/* Saved scripts slide-out drawer */}
       <AnimatePresence>
         {showSavedDrawer && (
           <>
@@ -929,7 +998,8 @@ export default function Page() {
                 {savedRuns.length === 0 ? (
                   <p className="text-sm text-gray-500">
                     You haven&apos;t saved anything yet. Generate a script,
-                    then hit <span className="font-medium">Save to library</span>.
+                    then hit{" "}
+                    <span className="font-medium">Save to library</span>.
                   </p>
                 ) : (
                   <>
@@ -984,14 +1054,18 @@ export default function Page() {
                           <div className="flex flex-wrap gap-2 justify-end">
                             <button
                               type="button"
-                              onClick={() => handleLoadSaved(selectedSavedRun)}
+                              onClick={() =>
+                                handleLoadSaved(selectedSavedRun)
+                              }
                               className="btn btn-secondary btn-xs"
                             >
                               Load into editor
                             </button>
                             <button
                               type="button"
-                              onClick={() => handleCopySaved(selectedSavedRun)}
+                              onClick={() =>
+                                handleCopySaved(selectedSavedRun)
+                              }
                               className="btn btn-ghost btn-xs"
                             >
                               Copy text
@@ -1000,7 +1074,9 @@ export default function Page() {
                               type="button"
                               onClick={() => {
                                 setSavedRuns((prev) =>
-                                  prev.filter((r) => r.id !== selectedSavedRun.id)
+                                  prev.filter(
+                                    (r) => r.id !== selectedSavedRun.id
+                                  )
                                 );
                                 setSelectedSavedRun(null);
                               }}
@@ -1046,7 +1122,7 @@ export default function Page() {
             </M.div>
           </>
         )}
-      </AnimatePresence>
+      </AnimatePresence>      
     </div>
   );
 }
