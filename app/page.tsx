@@ -15,7 +15,6 @@ import { EXAMPLES } from "@/data/examples";
 // Reusable components & types
 // -----------------------------------------------------------------------------
 
-// Reusable glowing card (hover lift, no radial gradient, no clsx)
 const GlowCard = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -40,7 +39,7 @@ GlowCard.displayName = "GlowCard";
 
 const HISTORY_KEY = "hss_history_v1";
 
-// Recent runs shown in the history card
+// Recent runs history entries
 type RunSnapshot = {
   id: string;
   createdAt: number;
@@ -50,24 +49,24 @@ type RunSnapshot = {
   tone: string;
   platform: string;
   keywords: string;
-  content: string;
+  content: string; // HTML string
 };
 
-// Explicit “saved to library” runs with HTML
+// Explicit “saved to library” runs
 type SavedRun = {
   id: string;
-  createdAt: string;
+  createdAt: string; // ISO string
   niche: string;
   audience: string;
   offer: string;
   platform: string;
   tone: string;
   keywords: string;
-  html: string;
+  html: string; // HTML string
 };
 
 // -----------------------------------------------------------------------------
-// Simple typed localStorage hook
+// Typed localStorage hook
 // -----------------------------------------------------------------------------
 
 function useLocalStorage<T>(key: string, initialValue: T) {
@@ -82,7 +81,7 @@ function useLocalStorage<T>(key: string, initialValue: T) {
         setValue(JSON.parse(stored) as T);
       }
     } catch {
-      // fall back to initial if anything weird happens
+      // ignore and keep initial
     }
   }, [key]);
 
@@ -112,15 +111,15 @@ export default function Page() {
   const [platform, setPlatform] = useState(DEFAULTS.platform);
   const [keywords, setKeywords] = useState(DEFAULTS.keywords);
 
-  // Usage + output state
+  // Usage + output
   const [runs, setRuns] = useLocalStorage<number>("hss_runs_v1", 0);
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<string>("");
 
-  // Auto history (last 10 runs)
+  // Auto recent history
   const [history, setHistory] = useLocalStorage<RunSnapshot[]>(HISTORY_KEY, []);
 
-  // Saved scripts library (explicit saves)
+  // Saved scripts library
   const [savedRuns, setSavedRuns] = useLocalStorage<SavedRun[]>(
     "hss_saved_v1",
     []
@@ -128,17 +127,9 @@ export default function Page() {
 
   // UI state
   const [showSavedDrawer, setShowSavedDrawer] = useState(false);
-  
-  const [selectedSavedRun, setSelectedSavedRun] = useState<SavedRun | null>(null);
-
-  const formatSavedDate = (iso: string) =>
-  new Date(iso).toLocaleString(undefined, {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
-
+  const [selectedSavedRun, setSelectedSavedRun] = useState<SavedRun | null>(
+    null
+  );
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const outRef = useRef<HTMLDivElement | null>(null);
@@ -176,26 +167,26 @@ export default function Page() {
 
   function copyAll() {
     if (!content) return;
-    navigator.clipboard.writeText(
-      content
-        .replace(/<br\s*\/?>/g, "\n")
-        .replace(/<\/p><p>/g, "\n\n")
-        .replace(/<\/?[^>]+(>|$)/g, "")
-    );
+
+    const plain = content
+      .replace(/<br\s*\/?>/g, "\n")
+      .replace(/<\/p><p>/g, "\n\n")
+      .replace(/<\/?[^>]+(>|$)/g, "");
+
+    navigator.clipboard.writeText(plain);
   }
 
   function downloadTxt() {
     if (!content) return;
 
-    const blob = new Blob(
-      [
-        content
-          .replace(/<br\s*\/?>/g, "\n")
-          .replace(/<\/p><p>/g, "\n\n")
-          .replace(/<\/?[^>]+(>|$)/g, ""),
-      ],
-      { type: "text/plain;charset=utf-8" }
-    );
+    const plain = content
+      .replace(/<br\s*\/?>/g, "\n")
+      .replace(/<\/p><p>/g, "\n\n")
+      .replace(/<\/?[^>]+(>|$)/g, "");
+
+    const blob = new Blob([plain], {
+      type: "text/plain;charset=utf-8",
+    });
 
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -232,19 +223,33 @@ export default function Page() {
     setKeywords(run.keywords);
     setContent(run.html);
     setShowSavedDrawer(false);
+
+    requestAnimationFrame(() => {
+      outRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
   };
 
   const handleCopySaved = (run: SavedRun) => {
-    const plain = run.html.replace(/<[^>]+>/g, "");
+    const plain = run.html.replace(/<\/?[^>]+(>|$)/g, "");
     navigator.clipboard?.writeText(plain);
   };
+
+  const formatSavedDate = (iso: string) =>
+    new Date(iso).toLocaleString(undefined, {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
 
   // ---------------------------------------------------------------------------
   // Generate
   // ---------------------------------------------------------------------------
 
   async function generate(): Promise<void> {
-    // free-limit gate with modal
     if (runs >= 3) {
       setShowUpgradeModal(true);
       track("free_limit_reached", { runs });
@@ -279,7 +284,7 @@ export default function Page() {
       setContent(html);
       setRuns((prev) => prev + 1);
 
-      // Save into recent history (keep latest 10)
+      // update recent history
       setHistory((prev) => {
         const entry: RunSnapshot = {
           id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
@@ -296,7 +301,6 @@ export default function Page() {
         return [entry, ...prev].slice(0, 10);
       });
 
-      // Scroll to output
       requestAnimationFrame(() => {
         outRef.current?.scrollIntoView({
           behavior: "smooth",
@@ -322,9 +326,7 @@ export default function Page() {
     show: {
       opacity: 1,
       y: 0,
-      transition: {
-        staggerChildren: 0.04,
-      },
+      transition: { staggerChildren: 0.04 },
     },
   };
 
@@ -358,7 +360,7 @@ export default function Page() {
 
       <UpdateBanner />
 
-      {/* Marketing hero */}
+      {/* Hero */}
       <M.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -383,7 +385,7 @@ export default function Page() {
 
       {/* Main content */}
       <main className="mx-auto max-w-3xl px-6 pb-10 space-y-6">
-        {/* Quickstart helper */}
+        {/* Quickstart */}
         <GlowCard className="p-5 md:p-6 group">
           <div className="grid gap-6 md:grid-cols-[minmax(0,1.25fr)_minmax(0,2fr)] md:items-start">
             <div className="space-y-2">
@@ -405,7 +407,6 @@ export default function Page() {
                   better.
                 </p>
               </div>
-
               <div className="space-y-1">
                 <div className="font-semibold">2. Hit Generate</div>
                 <p className="opacity-75">
@@ -413,7 +414,6 @@ export default function Page() {
                   sound like you.
                 </p>
               </div>
-
               <div className="space-y-1">
                 <div className="font-semibold">3. Film today</div>
                 <p className="opacity-75">
@@ -434,9 +434,9 @@ export default function Page() {
           <div className="flex flex-col items-end gap-1 text-[11px]">
             <div
               className={clsx(
-  "inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] transition-opacity",
-  loading && "opacity-70"
-)}
+                "inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px]",
+                loading && "opacity-70"
+              )}
               style={{
                 background:
                   "color-mix(in oklab, var(--surface-2) 85%, transparent)",
@@ -542,16 +542,13 @@ export default function Page() {
               }}
             >
               {loading ? (
-  <span className="flex items-center justify-center gap-2">
-    <TypingWave />
-    <span>
-      Generating {platform} script…
-    </span>
-  </span>
-) : (
-  "Generate"
-)}
-
+                <span className="flex items-center justify-center gap-2">
+                  <TypingWave />
+                  <span>Generating {platform} script…</span>
+                </span>
+              ) : (
+                "Generate"
+              )}
             </M.button>
           </M.section>
         </GlowCard>
@@ -559,33 +556,78 @@ export default function Page() {
         {/* Output */}
         {(loading || content) && (
           <GlowCard className="p-5 mt-6 space-y-4 group" ref={outRef}>
-  {/* loading progress strip */}
-  {loading && (
-    <M.div
-      className="h-[3px] w-full rounded-full overflow-hidden mb-2 bg-white/10"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-    >
-      <M.div
-        className="h-full w-1/3 rounded-full bg-gradient-to-r from-purple-500 via-fuchsia-500 to-blue-500"
-        initial={{ x: "-100%" }}
-        animate={{ x: "200%" }}
-        transition={{
-          repeat: Infinity,
-          duration: 1.4,
-          ease: "easeInOut",
-        }}
-      />
-    </M.div>
-  )}
+            {/* Loading strip */}
+            {loading && (
+              <M.div
+                className="h-[3px] w-full rounded-full overflow-hidden mb-2 bg-white/10"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+              >
+                <M.div
+                  className="h-full w-1/3 rounded-full bg-gradient-to-r from-purple-500 via-fuchsia-500 to-blue-500"
+                  initial={{ x: "-100%" }}
+                  animate={{ x: "200%" }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 1.4,
+                    ease: "easeInOut",
+                  }}
+                />
+              </M.div>
+            )}
 
-  <div className="flex items-center justify-between">
-    <div className="kicker">Output</div>
-    <CopyButton getText={() => content || ""} />
-  </div>
-  ...
-</GlowCard>
+            <div className="flex items-center justify-between">
+              <div className="kicker">Output</div>
+              <CopyButton getText={() => content || ""} />
+            </div>
 
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap gap-2">
+                <button onClick={copyAll} className="btn btn-secondary">
+                  Copy All
+                </button>
+                <button onClick={downloadTxt} className="btn btn-secondary">
+                  Download .txt
+                </button>
+                <button onClick={clearOutput} className="btn btn-ghost">
+                  Clear
+                </button>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={handleSaveCurrent}
+                  disabled={!content}
+                  className="btn btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Save to library
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setShowSavedDrawer(true)}
+                  className="btn btn-ghost"
+                >
+                  View saved scripts
+                </button>
+              </div>
+            </div>
+
+            {loading ? (
+              <div className="space-y-2">
+                <div className="skeleton h-5 w-3/4" />
+                <div className="skeleton h-5 w-full" />
+                <div className="skeleton h-5 w-11/12" />
+                <div className="skeleton h-5 w-5/6" />
+              </div>
+            ) : content ? (
+              <article
+                className="prose prose-invert prose-sm max-w-none leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: content }}
+              />
+            ) : null}
+          </GlowCard>
         )}
 
         {/* Recent runs history */}
@@ -645,22 +687,20 @@ export default function Page() {
                       type="button"
                       className="btn btn-secondary px-2 py-1 text-[11px]"
                       onClick={() => {
-                        // support both old & new shapes, just in case
-                      const next =
-                      (run as any).content ?? (run as any).html ?? "";
+                        const next =
+                          (run as any).content ?? (run as any).html ?? "";
 
-                      if (!next) return;
+                        if (!next) return;
 
-                      setContent(next);
+                        setContent(next);
 
-                        // wait for the Output card to mount, then scroll
-                      requestAnimationFrame(() => {
-                      outRef.current?.scrollIntoView({
-                      behavior: "smooth",
-                      block: "start",
-                      });
-                    });
-                  }}
+                        requestAnimationFrame(() => {
+                          outRef.current?.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                          });
+                        });
+                      }}
                     >
                       Load output
                     </button>
@@ -705,13 +745,7 @@ export default function Page() {
                       {run.niche} · {run.offer}
                     </div>
                     <div className="opacity-70 truncate">
-                      {new Date(run.createdAt).toLocaleString(undefined, {
-                        month: "short",
-                        day: "numeric",
-                        hour: "numeric",
-                        minute: "2-digit",
-                      })}{" "}
-                      · {run.platform}
+                      {formatSavedDate(run.createdAt)} · {run.platform}
                     </div>
                     {run.keywords && (
                       <div className="opacity-60 truncate">
@@ -735,7 +769,7 @@ export default function Page() {
           </GlowCard>
         )}
 
-        {/* Examples gallery */}
+        {/* Examples */}
         <GlowCard className="p-6 mt-8 space-y-4">
           <div className="space-y-2">
             <div className="kicker">Examples</div>
@@ -883,7 +917,7 @@ export default function Page() {
         </footer>
       </main>
 
-                        {/* Upgrade / free-limit modal */}
+      {/* Upgrade modal */}
       <AnimatePresence>
         {showUpgradeModal && (
           <M.div
@@ -915,11 +949,13 @@ export default function Page() {
                   onClick={() => {
                     setShowUpgradeModal(false);
                     track("paywall_open", { source: "limit_modal" });
-                    window.open(
-                      process.env.NEXT_PUBLIC_PAYMENT_LINK,
-                      "_blank",
-                      "noopener,noreferrer"
-                    );
+                    if (process.env.NEXT_PUBLIC_PAYMENT_LINK) {
+                      window.open(
+                        process.env.NEXT_PUBLIC_PAYMENT_LINK,
+                        "_blank",
+                        "noopener,noreferrer"
+                      );
+                    }
                   }}
                 >
                   Upgrade for unlimited scripts
@@ -933,20 +969,18 @@ export default function Page() {
               </div>
 
               <p className="text-[11px] opacity-60">
-                Free tier is limited per device. Upgrading helps me keep building
-                new features for creators. 💜
+                Free tier is limited per device. Upgrading helps me keep
+                building new features for creators. 💜
               </p>
             </M.div>
           </M.div>
         )}
       </AnimatePresence>
 
-      
-                  {/* Saved scripts slide-out drawer */}
+      {/* Saved scripts drawer */}
       <AnimatePresence>
         {showSavedDrawer && (
           <>
-            {/* Backdrop */}
             <M.div
               className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
               initial={{ opacity: 0 }}
@@ -958,7 +992,6 @@ export default function Page() {
               }}
             />
 
-            {/* Drawer panel */}
             <M.div
               className="fixed top-0 right-0 z-50 h-full w-full max-w-md bg-white shadow-xl flex flex-col"
               initial={{ x: "100%" }}
@@ -966,7 +999,6 @@ export default function Page() {
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 320, damping: 30 }}
             >
-              {/* Header */}
               <div className="p-5 border-b flex items-center justify-between">
                 <div>
                   <div className="text-xs font-medium uppercase tracking-wide text-gray-500">
@@ -993,7 +1025,6 @@ export default function Page() {
                 </button>
               </div>
 
-              {/* Content */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {savedRuns.length === 0 ? (
                   <p className="text-sm text-gray-500">
@@ -1003,7 +1034,6 @@ export default function Page() {
                   </p>
                 ) : (
                   <>
-                    {/* List of saved runs */}
                     <div className="space-y-2">
                       {savedRuns.map((run) => (
                         <button
@@ -1037,7 +1067,6 @@ export default function Page() {
                       ))}
                     </div>
 
-                    {/* Preview panel */}
                     {selectedSavedRun && (
                       <div className="mt-4 border-t pt-4 space-y-3">
                         <div className="flex items-start justify-between gap-3">
@@ -1046,8 +1075,10 @@ export default function Page() {
                               {selectedSavedRun.niche || "Saved script"}
                             </h3>
                             <p className="text-[11px] text-gray-500">
-                              {formatSavedDate(selectedSavedRun.createdAt)} ·{" "}
-                              {selectedSavedRun.platform}
+                              {formatSavedDate(
+                                selectedSavedRun.createdAt
+                              )}{" "}
+                              · {selectedSavedRun.platform}
                             </p>
                           </div>
 
@@ -1101,7 +1132,6 @@ export default function Page() {
                 )}
               </div>
 
-              {/* Footer clear-all */}
               {savedRuns.length > 0 && (
                 <div className="p-4 border-t flex items-center justify-between">
                   <p className="text-[11px] text-gray-500">
@@ -1122,7 +1152,7 @@ export default function Page() {
             </M.div>
           </>
         )}
-      </AnimatePresence>      
+      </AnimatePresence>
     </div>
   );
 }
