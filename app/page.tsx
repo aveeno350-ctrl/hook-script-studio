@@ -654,7 +654,7 @@ export default function Page() {
           </GlowCard>
         )}
 
-        {/* Recent runs history */}
+                {/* Recent runs history */}
         {history.length > 0 && (
           <GlowCard className="p-5 mt-6 space-y-3 group">
             <div className="flex items-center justify-between gap-2">
@@ -674,64 +674,77 @@ export default function Page() {
             </div>
 
             <div className="space-y-2">
-              {history.map((run) => (
-                <div
-                  key={run.id}
-                  className="rounded-lg border border-white/5 bg-[color-mix(in_oklab,var(--surface)96%,transparent)] px-3 py-2 text-xs flex flex-col md:flex-row md:items-center md:justify-between gap-2"
-                >
-                  <div className="space-y-0.5">
-                    <div className="font-medium line-clamp-1">
-                      {run.niche || "Untitled niche"} · {run.platform}
-                    </div>
-                    <div className="opacity-70 line-clamp-1">
-                      {run.audience || "Audience not set"}
-                    </div>
-                    <div className="opacity-50 text-[11px]">
-                      {new Date(run.createdAt).toLocaleString()}
-                    </div>
-                  </div>
+              {history.map((run) => {
+                // make a human-readable preview of the saved HTML
+                const plainPreview = run.content
+                  ? run.content
+                      .replace(/<\/?[^>]+(>|$)/g, "") // strip HTML tags
+                      .slice(0, 120)
+                  : "";
 
-                  <div className="flex flex-wrap gap-2 md:justify-end">
-                    <button
-                      type="button"
-                      className="btn btn-ghost px-2 py-1 text-[11px]"
-                      onClick={() => {
-                        setNiche(run.niche);
-                        setAudience(run.audience);
-                        setOffer(run.offer);
-                        setTone(run.tone);
-                        setPlatform(run.platform);
-                        setKeywords(run.keywords);
-                      }}
-                    >
-                      Restore inputs
-                    </button>
+                return (
+                  <div
+                    key={run.id}
+                    className="rounded-lg border border-white/5 bg-[color-mix(in_oklab,var(--surface)96%,transparent)] px-3 py-2 text-xs flex flex-col md:flex-row md:items-center md:justify-between gap-2"
+                  >
+                    <div className="space-y-1">
+                      <div className="font-medium line-clamp-1">
+                        {run.niche || "Untitled niche"} · {run.platform}
+                      </div>
+                      <div className="opacity-70 line-clamp-1">
+                        {run.audience || "Audience not set"}
+                      </div>
+                      <div className="opacity-50 text-[11px]">
+                        {new Date(run.createdAt).toLocaleString()}
+                      </div>
+                      <div className="opacity-60 text-[11px] line-clamp-2 mt-1">
+                        <span className="font-semibold">Preview: </span>
+                        {plainPreview || "(no content saved for this run)"}
+                      </div>
+                    </div>
 
-                    <button
-                      type="button"
-                      className="btn btn-secondary px-2 py-1 text-[11px]"
-                      onClick={() => {
-                        // For v2 history, every entry we add has a `content` string
-                        setContent(run.content);
-                       
+                    <div className="flex flex-wrap gap-2 md:justify-end">
+                      <button
+                        type="button"
+                        className="btn btn-ghost px-2 py-1 text-[11px]"
+                        onClick={() => {
+                          setNiche(run.niche);
+                          setAudience(run.audience);
+                          setOffer(run.offer);
+                          setTone(run.tone);
+                          setPlatform(run.platform);
+                          setKeywords(run.keywords);
+                        }}
+                      >
+                        Restore inputs
+                      </button>
 
-                        requestAnimationFrame(() => {
-                           outRef.current?.scrollIntoView({
+                      <button
+                        type="button"
+                        className="btn btn-secondary px-2 py-1 text-[11px]"
+                        onClick={() => {
+                          // for our history entries, `content` is the HTML string we want
+                          setContent(run.content || "");
+
+                          // keep the output card in view
+                          requestAnimationFrame(() => {
+                            outRef.current?.scrollIntoView({
                               behavior: "smooth",
                               block: "start",
                             });
-                           });
-                          }}
-
-                         >
-                          Load output
-                        </button>
+                          });
+                        }}
+                      >
+                        Load output
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </GlowCard>
         )}
+
 
         {/* Saved scripts library card */}
         {savedRuns.length > 0 && (
