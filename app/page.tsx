@@ -37,7 +37,7 @@ const GlowCard = React.forwardRef<
 
 GlowCard.displayName = "GlowCard";
 
-const HISTORY_KEY = "hss_history_v1";
+const HISTORY_KEY = "hss_history_v2";
 
 // Recent runs history entries
 type RunSnapshot = {
@@ -711,16 +711,8 @@ export default function Page() {
                       type="button"
                       className="btn btn-secondary px-2 py-1 text-[11px]"
                       onClick={() => {
-                        // after the normalization effect, `run.content` should always be a string
-                        const anyRun = run as any;
-                        const next =
-                          typeof anyRun.content === "string"
-                            ? anyRun.content
-                            : typeof anyRun.html === "string"
-                            ? anyRun.html
-                             : "";
-
-                        setContent(next);
+                        // For v2 history, every entry we add has a `content` string
+                        setContent(run.content);
                        
 
                         requestAnimationFrame(() => {
