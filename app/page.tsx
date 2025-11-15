@@ -300,8 +300,11 @@ export default function Page() {
         throw new Error("Request failed");
       }
 
-      const data = (await res.json()) as { html?: string; text?: string };
+      const data = (await res.json()) as any;
+      console.log("🔍 /api/generate response:", data);
+
       const html = (data.html ?? data.text ?? "").trim();
+
 
       // even if html is weirdly empty, mark that we've generated at least once
       setContent(html);
