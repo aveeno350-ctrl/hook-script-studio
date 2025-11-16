@@ -303,7 +303,9 @@ export default function Page() {
       const data = (await res.json()) as any;
       console.log("🔍 /api/generate response:", data);
 
-      const html = (data.html ?? data.text ?? "").trim();
+      // your API returns the script in `data.content`
+      const html = (data.html ?? data.text ?? data.content ?? "").trim();
+
 
 
       // even if html is weirdly empty, mark that we've generated at least once
