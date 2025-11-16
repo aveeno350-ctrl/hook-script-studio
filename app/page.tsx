@@ -660,7 +660,13 @@ export default function Page() {
               </div>
             ) : content ? (
               <article
-                className="prose prose-invert prose-sm max-w-none leading-relaxed"
+                className="prose prose-invert prose-sm max-w-none leading-relaxed
+                  prose-headings:font-semibold
+                  prose-h2:text-[15px] prose-h2:mt-3 prose-h2:mb-1
+                  prose-h3:text-[13px] prose-h3:mt-2 prose-h3:mb-1
+                  prose-p:my-1
+                  prose-ul:my-1 prose-li:my-0.5
+                "
                 dangerouslySetInnerHTML={{ __html: marked.parse(content) }}
               />
             ) : null}
