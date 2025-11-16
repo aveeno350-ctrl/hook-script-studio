@@ -112,11 +112,6 @@ export default function TermsPage() {
         </p>
       </section>
 
-      <p className="text-[11px] opacity-60 pt-4">
-        This page is a simple, human-readable version of your Terms of Use.
-        It&apos;s not legal advice. For a fully customized policy, consider
-        working with an attorney and replacing or expanding this content.
-      </p>
     </main>
   );
 }
