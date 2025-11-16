@@ -262,14 +262,9 @@ export default function Page() {
 
   function copyAll() {
     if (!content) return;
-
-    const plain = content
-      .replace(/<br\s*\/?>/g, "\n")
-      .replace(/<\/p><p>/g, "\n\n")
-      .replace(/<\/?[^>]+(>|$)/g, "");
-
-    navigator.clipboard.writeText(plain);
+    navigator.clipboard.writeText(stripMarkdown(content));
   }
+
 
   function downloadTxt() {
     if (!content) return;
