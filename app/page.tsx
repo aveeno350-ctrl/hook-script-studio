@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { motion as M, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
 
@@ -10,6 +10,8 @@ import TypingWave from "./components/TypingWave";
 import CopyButton from "./components/CopyButton";
 import UpdateBanner from "./components/UpdateBanner";
 import { EXAMPLES } from "@/data/examples";
+import { marked } from "marked";
+
 
 // -----------------------------------------------------------------------------
 // Reusable components & types
@@ -115,6 +117,12 @@ export default function Page() {
   const [runs, setRuns] = useLocalStorage<number>("hss_runs_v1", 0);
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<string>("");
+
+  const renderedHtml = useMemo(() => {
+    if (!content) return "";
+    return marked.parse(content);
+  }, [content]);
+
 
 
   // Auto recent history
@@ -653,7 +661,7 @@ export default function Page() {
             ) : content ? (
               <article
                 className="prose prose-invert prose-sm max-w-none leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: content }}
+                dangerouslySetInnerHTML={{ __html: renderedHtml }}
               />
             ) : null}
           </GlowCard>
