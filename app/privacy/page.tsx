@@ -128,11 +128,6 @@ export default function PrivacyPage() {
         </p>
       </section>
 
-      <p className="text-[11px] opacity-60 pt-4">
-        This page is a simple, human-readable privacy overview. It&apos;s not
-        legal advice. For stricter compliance (for example with GDPR or CCPA),
-        consider having a lawyer review and customize this policy.
-      </p>
     </main>
   );
 }
