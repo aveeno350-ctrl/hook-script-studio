@@ -116,10 +116,7 @@ export default function LicensePage() {
       </section>
 
       <p className="text-[11px] opacity-60 pt-4">
-        This page is a simple, human-readable summary of how your license
-        currently works. It&apos;s not formal legal advice. If you need a custom
-        legal document, consider consulting an attorney and replacing this text
-        with language they provide.
+        Happy Generating!
       </p>
     </main>
   );
