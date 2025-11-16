@@ -123,6 +123,53 @@ export default function Page() {
     return marked.parse(content);
   }, [content]);
 
+  // Strip some basic markdown formatting to plain text for copy-only buttons
+  function stripMarkdown(md: string): string {
+    if (!md) return "";
+    return md
+      // remove code blocks
+      .replace(/```[\s\S]*?```/g, "")
+      // remove inline code backticks
+      .replace(/`([^`]+)`/g, "$1")
+      // remove headings markers
+      .replace(/^#{1,6}\s*/gm, "")
+      // bold/italic
+      .replace(/\*\*([^*]+)\*\*/g, "$1")
+      .replace(/\*([^*]+)\*/g, "$1")
+      .replace(/_([^_]+)_/g, "$1")
+      // links [text](url) -> text
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+      // bullet markers
+      .replace(/^\s*[-*+]\s+/gm, "- ")
+      // collapse extra blank lines
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+    }
+
+  // Split the full markdown into "hooks part" and "script part"
+  // using the "## Script" heading as the divider.
+  function splitHooksAndScript(md: string): { hooksText: string; scriptText: string } {
+    if (!md) return { hooksText: "", scriptText: "" };
+
+    const lower = md.toLowerCase();
+    const markerIndex = lower.indexOf("## script");
+
+    if (markerIndex === -1) {
+      // no Script heading found – treat everything as hooks
+      return {
+        hooksText: stripMarkdown(md),
+        scriptText: "",
+      };
+    }
+
+    const before = md.slice(0, markerIndex);
+    const after = md.slice(markerIndex);
+
+    return {
+      hooksText: stripMarkdown(before),
+      scriptText: stripMarkdown(after),
+    };
+  }
 
 
   // Auto recent history
@@ -177,6 +224,24 @@ export default function Page() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [showUpgradeModal]);
+
+    // Derived script chunks and word count
+  const { hooksText, scriptText } = useMemo(
+    () => splitHooksAndScript(content),
+    [content]
+  );
+
+  const wordCount = useMemo(() => {
+    if (!content) return 0;
+    return content.split(/\s+/).filter(Boolean).length;
+  }, [content]);
+
+  const approxSeconds = useMemo(() => {
+    if (!wordCount) return 0;
+    // ~150 words per minute speaking speed (~2.5 words/sec)
+    return Math.round(wordCount / 2.5);
+  }, [wordCount]);
+
 
   // ---------------------------------------------------------------------------
   // Helpers
@@ -422,6 +487,32 @@ export default function Page() {
 
       {/* Main content */}
       <main className="mx-auto max-w-3xl px-6 pb-10 space-y-6">
+                {/* Who it's for / mini marketing card */}
+        <GlowCard className="p-5 md:p-6 space-y-3 group">
+          <div className="kicker">Built for creators who ship</div>
+          <h2 className="font-display text-base font-semibold">
+            Hook &amp; Script Studio is perfect if you:
+          </h2>
+
+          <ul className="text-xs opacity-80 space-y-1 list-disc list-inside">
+            <li>
+              Want short-form content ideas without staring at a blank Notion page for an hour.
+            </li>
+            <li>
+              Need <span className="font-medium">hooks, angles, and scripts</span> that match a specific niche &amp; audience.
+            </li>
+            <li>
+              Care more about <span className="font-medium">publishing consistently</span> than tweaking word-by-word forever.
+            </li>
+          </ul>
+
+          <p className="text-xs opacity-75">
+            Drop in your niche, audience, and offer — Hook &amp; Script Studio gives you scroll-stopping hooks,
+            a tight 60s script, B-roll ideas, and CTAs you can film today.
+          </p>
+        </GlowCard>
+
+        
         {/* Quickstart */}
         <GlowCard className="p-5 md:p-6 group">
           <div className="grid gap-6 md:grid-cols-[minmax(0,1.25fr)_minmax(0,2fr)] md:items-start">
@@ -590,8 +681,8 @@ export default function Page() {
           </M.section>
         </GlowCard>
 
-        {/* Output */}
-        {shouldShowOutput && (
+                {/* Output */}
+        {(loading || content) && (
           <GlowCard className="p-5 mt-6 space-y-4 group" ref={outRef}>
             {/* Loading strip */}
             {loading && (
@@ -618,41 +709,89 @@ export default function Page() {
               <CopyButton getText={() => content || ""} />
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-wrap gap-2">
-                <button onClick={copyAll} className="btn btn-secondary">
-                  Copy All
-                </button>
-                <button onClick={downloadTxt} className="btn btn-secondary">
-                  Download .txt
-                </button>
-                <button onClick={clearOutput} className="btn btn-ghost">
-                  Clear
-                </button>
+            {/* Top actions + new quick-copy row */}
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap gap-2">
+                  <button onClick={copyAll} className="btn btn-secondary">
+                    Copy All
+                  </button>
+                  <button onClick={downloadTxt} className="btn btn-secondary">
+                    Download .txt
+                  </button>
+                  <button onClick={clearOutput} className="btn btn-ghost">
+                    Clear
+                  </button>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={handleSaveCurrent}
+                    disabled={!content}
+                    className="btn btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Save to library
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowSavedDrawer(true)}
+                    className="btn btn-ghost"
+                  >
+                    View saved scripts
+                  </button>
+                </div>
               </div>
 
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={handleSaveCurrent}
-                  disabled={!content}
-                  className="btn btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Save to library
-                </button>
+              {/* Quick copy row */}
+              {content && (hooksText || scriptText) && (
+                <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] mt-1">
+                  <span className="opacity-70">Quick copy:</span>
+                  <div className="flex flex-wrap gap-2">
+                    {hooksText && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          navigator.clipboard.writeText(hooksText)
+                        }
+                        className="btn btn-ghost px-2 py-1"
+                      >
+                        Hooks & angles
+                      </button>
+                    )}
+                    {scriptText && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          navigator.clipboard.writeText(scriptText)
+                        }
+                        className="btn btn-ghost px-2 py-1"
+                      >
+                        Script only
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
 
-                <button
-                  type="button"
-                  onClick={() => setShowSavedDrawer(true)}
-                  className="btn btn-ghost"
-                >
-                  View saved scripts
-                </button>
-              </div>
+              {/* Tiny meta row */}
+              {content && (
+                <div className="flex flex-wrap items-center justify-between text-[11px] opacity-60">
+                  <span>Formatted script</span>
+                  {wordCount > 0 && (
+                    <span>
+                      ~{wordCount} words
+                      {approxSeconds > 0 && ` · ~${approxSeconds}s spoken`}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
 
+            {/* Body */}
             {loading ? (
-              <div className="space-y-2">
+              <div className="space-y-2 mt-1">
                 <div className="skeleton h-5 w-3/4" />
                 <div className="skeleton h-5 w-full" />
                 <div className="skeleton h-5 w-11/12" />
@@ -660,7 +799,8 @@ export default function Page() {
               </div>
             ) : content ? (
               <article
-                className="prose prose-invert prose-sm max-w-none leading-relaxed
+                className="
+                  prose prose-invert prose-sm max-w-none leading-relaxed
                   prose-headings:font-semibold
                   prose-h2:text-[15px] prose-h2:mt-3 prose-h2:mb-1
                   prose-h3:text-[13px] prose-h3:mt-2 prose-h3:mb-1
@@ -672,6 +812,7 @@ export default function Page() {
             ) : null}
           </GlowCard>
         )}
+
 
                 {/* Recent runs history */}
         {history.length > 0 && (
