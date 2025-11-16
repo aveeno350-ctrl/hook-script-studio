@@ -633,7 +633,7 @@ function stripMarkdown(md: string): string {
                 className="input"
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
-                placeholder="e.g. hook, script, cta"
+                placeholder="keywords to include"
               />
             </M.div>
 
