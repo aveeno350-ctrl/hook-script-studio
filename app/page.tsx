@@ -661,7 +661,7 @@ export default function Page() {
             ) : content ? (
               <article
                 className="prose prose-invert prose-sm max-w-none leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: renderedHtml }}
+                dangerouslySetInnerHTML={{ __html: marked.parse(content) }}
               />
             ) : null}
           </GlowCard>
