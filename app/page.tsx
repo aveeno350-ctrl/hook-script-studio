@@ -123,28 +123,30 @@ export default function Page() {
     return marked.parse(content);
   }, [content]);
 
-  // Strip some basic markdown formatting to plain text for copy-only buttons
-  function stripMarkdown(md: string): string {
-    if (!md) return "";
-    return md
-      // remove code blocks
-      .replace(/```[\s\S]*?```/g, "")
-      // remove inline code backticks
-      .replace(/`([^`]+)`/g, "$1")
-      // remove headings markers
-      .replace(/^#{1,6}\s*/gm, "")
-      // bold/italic
-      .replace(/\*\*([^*]+)\*\*/g, "$1")
-      .replace(/\*([^*]+)\*/g, "$1")
-      .replace(/_([^_]+)_/g, "$1")
-      // links [text](url) -> text
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-      // bullet markers
-      .replace(/^\s*[-*+]\s+/gm, "- ")
-      // collapse extra blank lines
-      .replace(/\n{3,}/g, "\n\n")
-      .trim();
-    }
+  // Strip markdown formatting to plain text for copy-only buttons
+function stripMarkdown(md: string): string {
+  if (!md) return "";
+
+  return md
+    // remove fenced code blocks
+    .replace(/```[\s\S]*?```/g, "")
+    // headings like "## Title" -> "Title"
+    .replace(/^\s{0,3}#{1,6}\s+(.+)$/gm, "$1")
+    // bold/italic markers
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\*([^*]+)\*/g, "$1")
+    .replace(/_([^_]+)_/g, "$1")
+    // inline code backticks
+    .replace(/`([^`]+)`/g, "$1")
+    // links [text](url) -> text
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    // bullet markers at line start: "- something" -> "• something"
+    .replace(/^\s*[-*+]\s+/gm, "• ")
+    // collapse 3+ blank lines to 2
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 
   // Split the full markdown into "hooks part" and "script part"
   // using the "## Script" heading as the divider.
@@ -247,7 +249,7 @@ export default function Page() {
   // Helpers
   // ---------------------------------------------------------------------------
 
-  function resetInputs() {
+    function resetInputs() {
     setNiche("");
     setAudience("");
     setOffer("");
@@ -262,22 +264,16 @@ export default function Page() {
 
   function copyAll() {
     if (!content) return;
-    navigator.clipboard.writeText(stripMarkdown(content));
+    const plain = stripMarkdown(content);
+    navigator.clipboard.writeText(plain);
   }
-
 
   function downloadTxt() {
     if (!content) return;
-
-    const plain = content
-      .replace(/<br\s*\/?>/g, "\n")
-      .replace(/<\/p><p>/g, "\n\n")
-      .replace(/<\/?[^>]+(>|$)/g, "");
-
+    const plain = stripMarkdown(content);
     const blob = new Blob([plain], {
       type: "text/plain;charset=utf-8",
     });
-
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -285,6 +281,7 @@ export default function Page() {
     a.click();
     URL.revokeObjectURL(url);
   }
+
 
   const handleSaveCurrent = () => {
     if (!content) return;
